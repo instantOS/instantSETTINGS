@@ -11,6 +11,7 @@ from gi.repository import Gtk
 import pathlib
 import subprocess
 import webbrowser
+import os
 
 # won't show icons otherwise
 settings = Gtk.Settings.get_default()
@@ -33,8 +34,21 @@ class Handler:
         builder.get_object('mousewindow').destroy()
 
     def networkbutton_clicked_cb(self, button):
+        os.system('pgrep nm-applet || nm-applet &')
         popover = builder.get_object('networkpopover')
         popover.popup()
+
+    def softwarebutton_clicked_cb(self, button):
+        subprocess.Popen(["pamac-manager"])
+
+    def learnbutton_clicked_cb(self, button):
+        webbrowser.open_new_tab('https://instantos.github.io/instantos.github.io/documentation')
+
+    def soundbutton_clicked_cb(self, button):
+        subprocess.Popen(["pavucontrol"])
+
+    def keyboardbutton_clicked_cb(self, button):
+        subprocess.Popen(["/opt/instantos/menus/dm/tk.sh"])
 
     def appearancebutton_clicked_cb(self, button):
         subprocess.Popen(["lxappearance"])
