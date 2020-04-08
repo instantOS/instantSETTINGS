@@ -55,6 +55,10 @@ class Handler:
 
     def displaychange_clicked_cb(self, button):
         subprocess.Popen(['arandr'])
+        
+    def displaysave_clicked_cb(self, button):
+        print("saving display settings")
+        subprocess.Popen(['autorandr', '--force', '--save', 'instantos'])
 
 
 builder = Gtk.Builder()

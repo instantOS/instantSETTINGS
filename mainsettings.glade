@@ -83,6 +83,7 @@
         <property name="image">image1</property>
         <property name="always_show_image">True</property>
         <signal name="activate" handler="learnbutton_activate_cb" swapped="no"/>
+        <signal name="clicked" handler="learnbutton_clicked_cb" swapped="no"/>
       </object>
     </child>
     <child>
@@ -319,11 +320,12 @@
         <property name="orientation">vertical</property>
         <property name="homogeneous">True</property>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="displaysave">
             <property name="label" translatable="yes">make current display settings permanent</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <signal name="clicked" handler="displaysave_clicked_cb" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
