@@ -26,13 +26,6 @@ class Handler:
         popover = builder.get_object('displaypopover')
         popover.popup()
 
-    def mousebutton_clicked_cb(self, button):
-        mousewin = builder.get_object('mousewindow')
-        mousewin.show_all()
-
-    def mousecancel_clicked_cb(self, button):
-        builder.get_object('mousewindow').destroy()
-
     def networkbutton_clicked_cb(self, button):
         os.system('pgrep nm-applet || nm-applet &')
         popover = builder.get_object('networkpopover')
@@ -60,6 +53,13 @@ class Handler:
         print("saving display settings")
         subprocess.Popen(['autorandr', '--force', '--save', 'instantos'])
 
+    def printerbutton_clicked_cb(self, button):
+        subprocess.Popen(['system-config-printer'])
+
+    def mousebutton_clicked_cb(self, button):
+        subprocess.Popen(['/usr/share/instantsettings/modules/mouse/mousesettings.py'])
+    def quitbutton_clicked_cb(self, button):
+        window.destroy()
 
 builder = Gtk.Builder()
 
