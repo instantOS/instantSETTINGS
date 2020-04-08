@@ -7,8 +7,9 @@
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
-  <object class="GtkWindow">
+  <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
+    <signal name="destroy" handler="window_destroy_cb" swapped="no"/>
     <child type="titlebar">
       <placeholder/>
     </child>
