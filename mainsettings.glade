@@ -8,6 +8,13 @@
     <property name="pixel_size">50</property>
     <property name="icon_name">gnome-color-manager</property>
   </object>
+  <object class="GtkImage" id="bluetooth">
+    <property name="name">mouse</property>
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixel_size">50</property>
+    <property name="icon_name">blueman</property>
+  </object>
   <object class="GtkImage" id="dotfiles">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -263,6 +270,7 @@
             <property name="image">settings</property>
             <property name="image_position">top</property>
             <property name="always_show_image">True</property>
+            <signal name="clicked" handler="instantosbutton_clicked_cb" swapped="no"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -328,12 +336,28 @@
             <signal name="clicked" handler="quitbutton_clicked_cb" swapped="no"/>
           </object>
           <packing>
-            <property name="left_attach">1</property>
+            <property name="left_attach">2</property>
             <property name="top_attach">3</property>
           </packing>
         </child>
         <child>
-          <placeholder/>
+          <object class="GtkButton" id="bluethoothbutton">
+            <property name="label" translatable="yes">Bluetooth</property>
+            <property name="name">appearancebutton</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="margin_top">10</property>
+            <property name="margin_bottom">10</property>
+            <property name="image">bluetooth</property>
+            <property name="image_position">top</property>
+            <property name="always_show_image">True</property>
+            <signal name="clicked" handler="bluethoothbutton_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="top_attach">3</property>
+          </packing>
         </child>
       </object>
     </child>
