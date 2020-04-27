@@ -59,6 +59,13 @@
     <property name="pixel_size">50</property>
     <property name="icon_name">package</property>
   </object>
+  <object class="GtkImage" id="power">
+    <property name="name">mouse</property>
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixel_size">50</property>
+    <property name="icon_name">xfce4-power-manager-settings</property>
+  </object>
   <object class="GtkImage" id="printer">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -337,7 +344,7 @@
           </object>
           <packing>
             <property name="left_attach">2</property>
-            <property name="top_attach">3</property>
+            <property name="top_attach">4</property>
           </packing>
         </child>
         <child>
@@ -347,6 +354,8 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">10</property>
             <property name="margin_top">10</property>
             <property name="margin_bottom">10</property>
             <property name="image">bluetooth</property>
@@ -358,6 +367,33 @@
             <property name="left_attach">1</property>
             <property name="top_attach">3</property>
           </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="powerbutton">
+            <property name="label" translatable="yes">Power</property>
+            <property name="name">appearancebutton</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">10</property>
+            <property name="margin_top">10</property>
+            <property name="margin_bottom">10</property>
+            <property name="image">power</property>
+            <property name="image_position">top</property>
+            <property name="always_show_image">True</property>
+            <signal name="clicked" handler="powerbutton_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="left_attach">2</property>
+            <property name="top_attach">3</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
         </child>
       </object>
     </child>

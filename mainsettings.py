@@ -57,8 +57,6 @@ class Handler:
         subprocess.Popen(['system-config-printer'])
     def bluethoothbutton_clicked_cb(self, button):
         subprocess.Popen(['blueman'])
-    def dotfilesbutton_clicked_cb(self, button):
-        os.system('notify-send "not implemented yet"')
     def instantosbutton_clicked_cb(self, button):
         os.system('notify-send "not implemented yet"')
 
@@ -66,6 +64,9 @@ class Handler:
         subprocess.Popen(['/usr/share/instantsettings/modules/mouse/mousesettings.py'])
     def quitbutton_clicked_cb(self, button):
         window.destroy()
+    def powerbutton_clicked_cb(self, button):
+        subprocess.Popen(['xfce4-power-manager-settings'])
+
     def dotfilesbutton_clicked_cb(self, button):
         if not pathlib.Path(os.environ['HOME'] + '/.instantrc').exists():
             os.system('instantdotfiles')
