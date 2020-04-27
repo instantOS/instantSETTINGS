@@ -55,6 +55,12 @@ class Handler:
 
     def printerbutton_clicked_cb(self, button):
         subprocess.Popen(['system-config-printer'])
+    def bluethoothbutton_clicked_cb(self, button):
+        subprocess.Popen(['blueman'])
+    def dotfilesbutton_clicked_cb(self, button):
+        os.system('notify-send "not implemented yet"')
+    def instantosbutton_clicked_cb(self, button):
+        os.system('notify-send "not implemented yet"')
 
     def mousebutton_clicked_cb(self, button):
         subprocess.Popen(['/usr/share/instantsettings/modules/mouse/mousesettings.py'])

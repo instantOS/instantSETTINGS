@@ -3,19 +3,20 @@
 ##########################################
 ## set mouse sensitivity using libinput ##
 ##########################################
+import gi
+gi.require_version('Gtk', '3.0')
 
 from gi.repository import Gtk
 import subprocess
 import pathlib
-import gi
 import os
 
-gi.require_version('Gtk', '3.0')
 
 # won't show icons otherwise
 settings = Gtk.Settings.get_default()
 settings.props.gtk_button_images = True
 
+subprocess.Popen(["instantmouse", "gen"])
 
 def applyscale(value):
     mousefactor = (int(value) - 50) / 50
