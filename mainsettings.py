@@ -60,6 +60,10 @@ class Handler:
         subprocess.Popen(['/usr/share/instantsettings/modules/mouse/mousesettings.py'])
     def quitbutton_clicked_cb(self, button):
         window.destroy()
+    def dotfilesbutton_clicked_cb(self, button):
+        if not pathlib.Path(os.environ['HOME'] + '/.instantrc').exists():
+            os.system('instantdotfiles')
+        os.system('urxvt -e "nvim" -c ":e ~/.instantrc"')
 
 builder = Gtk.Builder()
 
