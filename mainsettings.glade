@@ -24,9 +24,9 @@
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="margin_left">10</property>
-    <property name="margin_right">10</property>
-    <property name="icon_name">youtube</property>
+    <property name="margin_left">20</property>
+    <property name="margin_right">20</property>
+    <property name="icon_name">help-browser</property>
   </object>
   <object class="GtkImage" id="keyboard">
     <property name="visible">True</property>
