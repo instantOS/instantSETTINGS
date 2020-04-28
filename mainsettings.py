@@ -56,7 +56,7 @@ class Handler:
     def printerbutton_clicked_cb(self, button):
         subprocess.Popen(['system-config-printer'])
     def bluethoothbutton_clicked_cb(self, button):
-        subprocess.Popen(['blueman'])
+        subprocess.Popen(['blueman-assistant'])
     def instantosbutton_clicked_cb(self, button):
         os.system('notify-send "not implemented yet"')
 
