@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkWindow">
+  <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
     <child type="titlebar">
       <placeholder/>
@@ -25,10 +25,11 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSwitch">
+          <object class="GtkSwitch" id="themeswitch">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="active">True</property>
+            <signal name="state-set" handler="themeswitch_state_set_cb" swapped="no"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -47,9 +48,10 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSwitch">
+          <object class="GtkSwitch" id="wifiswitch">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <signal name="state-set" handler="wifiswitch_state_set_cb" swapped="no"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -68,10 +70,11 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSwitch">
+          <object class="GtkSwitch" id="logoswitch">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="active">True</property>
+            <signal name="state-set" handler="logoswitch_state_set_cb" swapped="no"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -90,10 +93,11 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSwitch">
+          <object class="GtkSwitch" id="conkyswitch">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="active">True</property>
+            <signal name="state-set" handler="conkyswitch_state_set_cb" swapped="no"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -101,7 +105,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="editbutton">
             <property name="label" translatable="yes">Edit Autostart Script</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -112,6 +116,7 @@
             <property name="margin_bottom">10</property>
             <property name="image_position">right</property>
             <property name="always_show_image">True</property>
+            <signal name="clicked" handler="editbutton_clicked_cb" swapped="no"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -119,7 +124,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkImage" id="image1">
+          <object class="GtkImage" id="editicon">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_left">10</property>
@@ -133,7 +138,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkImage" id="image2">
+          <object class="GtkImage" id="conkyicon">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="pixel_size">50</property>
@@ -145,7 +150,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkImage" id="image3">
+          <object class="GtkImage" id="wallicon">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="pixel_size">50</property>
@@ -157,7 +162,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkImage" id="image4">
+          <object class="GtkImage" id="wifiicon">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="pixel_size">50</property>
@@ -169,7 +174,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkImage" id="image5">
+          <object class="GtkImage" id="themeicon">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="pixel_size">50</property>
@@ -192,13 +197,14 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="okbutton">
             <property name="label">gtk-ok</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="use_stock">True</property>
             <property name="always_show_image">True</property>
+            <signal name="clicked" handler="okbutton_clicked_cb" swapped="no"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -206,13 +212,14 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="applybutton">
             <property name="label">gtk-apply</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="use_stock">True</property>
             <property name="always_show_image">True</property>
+            <signal name="clicked" handler="applybutton_clicked_cb" swapped="no"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -220,13 +227,14 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="cancelbutton">
             <property name="label">gtk-cancel</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="use_stock">True</property>
             <property name="always_show_image">True</property>
+            <signal name="clicked" handler="cancelbutton_clicked_cb" swapped="no"/>
           </object>
           <packing>
             <property name="left_attach">0</property>
