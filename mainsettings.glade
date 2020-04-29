@@ -103,7 +103,6 @@
         <property name="receives_default">True</property>
         <property name="image">image1</property>
         <property name="always_show_image">True</property>
-        <signal name="activate" handler="learnbutton_activate_cb" swapped="no"/>
         <signal name="clicked" handler="learnbutton_clicked_cb" swapped="no"/>
       </object>
     </child>
@@ -390,7 +389,25 @@
           </packing>
         </child>
         <child>
-          <placeholder/>
+          <object class="GtkButton" id="wallpaperbutton">
+            <property name="label" translatable="yes">Wallpaper</property>
+            <property name="name">appearancebutton</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">10</property>
+            <property name="margin_top">10</property>
+            <property name="margin_bottom">10</property>
+            <property name="image">wallpaper</property>
+            <property name="image_position">top</property>
+            <property name="always_show_image">True</property>
+            <signal name="clicked" handler="wallpaperbutton_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">4</property>
+          </packing>
         </child>
         <child>
           <placeholder/>
@@ -450,5 +467,50 @@
         <property name="label" translatable="yes">network applet in the top right corner</property>
       </object>
     </child>
+  </object>
+  <object class="GtkPopover" id="wallpopover">
+    <property name="can_focus">False</property>
+    <property name="relative_to">wallpaperbutton</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkButton" id="wallgenbutton">
+            <property name="label" translatable="yes">Generate new wallpaper</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="wallgenbutton_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="wallsetbutton">
+            <property name="label" translatable="yes">Set own wallpaper</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="wallsetbutton_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkImage" id="wallpaper">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixel_size">50</property>
+    <property name="icon_name">image</property>
   </object>
 </interface>

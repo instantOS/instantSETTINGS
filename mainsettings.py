@@ -72,6 +72,14 @@ class Handler:
             os.system('instantdotfiles')
         os.system('urxvt -e "nvim" -c ":e ~/.instantrc" &')
 
+    def wallpaperbutton_clicked_cb(self, button):
+        popover = builder.get_object('wallpopover')
+        popover.popup()
+    def wallgenbutton_clicked_cb(self, button):
+        os.system('(instantwallpaper clear && instantwallpaper w) &')
+    def wallsetbutton_clicked_cb(self, button):
+        os.system('instantwallpaper gui &')
+
 builder = Gtk.Builder()
 
 if pathlib.Path('./mainsettings.glade').exists():
