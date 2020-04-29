@@ -58,7 +58,7 @@ class Handler:
     def bluethoothbutton_clicked_cb(self, button):
         subprocess.Popen(['blueman-assistant'])
     def instantosbutton_clicked_cb(self, button):
-        os.system('notify-send "not implemented yet"')
+        subprocess.Popen(['/usr/share/instantsettings/modules/instantos/settings.py'])
 
     def mousebutton_clicked_cb(self, button):
         subprocess.Popen(['/usr/share/instantsettings/modules/mouse/mousesettings.py'])

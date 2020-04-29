@@ -22,30 +22,6 @@ logo = True
 theming = True
 wifi = False
 
-def applysettings():
-    if not conky:
-        os.system("iconf -i noconky 1")
-    else:
-        os.system("iconf -i noconky 0")
-
-    if not theming:
-        os.system("iconf -i notheming 1")
-    else:
-        os.system("iconf -i notheming 0")
-
-    if not logo:
-        os.system("iconf -i nologo 1")
-    else:
-        os.system("iconf -i nologo 0")
-
-    if not wifi:
-        os.system("iconf -i nowifi 1")
-        os.system("nm-applet &")
-    else:
-        os.system("pkill nm-applet &")
-        os.system("iconf -i nowifi 0")
-
-
 class Handler:
     def mainwindow_destroy_cb(self, *args):
         Gtk.main_quit()
@@ -62,13 +38,40 @@ class Handler:
         os.system('urxvt -e "nvim" -c ":e ~/.instantautostart" &')
 
     def themeswitch_state_set_cb(self, button, state):
+        global theming
         theming = state
     def wifiswitch_state_set_cb(self, button, state):
+        global wifi
         wifi = state
     def logoswitch_state_set_cb(self, button, state):
+        global logo
         logo = state
-    def conkywitch_state_set_cb(self, button, state):
+    def conkyswitch_state_set_cb(self, button, state):
+        global conky
         conky = state
+
+def applysettings():
+    print(wifi)
+    if not conky:
+        os.system("iconf -i noconky 1")
+    else:
+        os.system("iconf -i noconky 0")
+
+    if not theming:
+        os.system("iconf -i notheming 1")
+    else:
+        os.system("iconf -i notheming 0")
+    if not logo:
+        os.system("iconf -i nologo 1")
+    else:
+        os.system("iconf -i nologo 0")
+
+    if wifi:
+        os.system("iconf -i wifiapplet 1")
+        os.system("nm-applet &")
+    else:
+        os.system("pkill nm-applet &")
+        os.system("iconf -i wifiapplet 0")
 
 builder = Gtk.Builder()
 
