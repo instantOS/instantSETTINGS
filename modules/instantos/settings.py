@@ -88,8 +88,13 @@ def applysettings():
 
     if desktop:
         os.system("iconf -i desktop 1")
+        os.system("iconf -i desktopicons 1")
+        os.system("rox --pinboard Default &")
     else:
+        os.system("pgre ROX && pkill ROX")
         os.system("iconf -i desktop 0")
+        os.system("iconf -i desktopicons 0")
+
 
 
 builder = Gtk.Builder()
