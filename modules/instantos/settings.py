@@ -30,6 +30,7 @@ logo = not getsetting("nologo")
 theming = not getsetting("notheming")
 wifi = getsetting("wifiapplet")
 desktop = getsetting("desktop")
+animations = not getsetting("noanimations")
 
 class Handler:
     def window_destroy_cb(self, *args):
@@ -61,23 +62,23 @@ class Handler:
     def desktopswitch_state_set_cb(self, button, state):
         global desktop
         desktop = state
+    def animationswitch_state_set_cb(self, button, state):
+        global animations
+        animations = state
 
+def applysetting(boolean, iconf):
+    if boolean:
+        os.system("iconf -i " + iconf + " 1")
+    else:
+        os.system("iconf -i " + iconf + " 0")
 
 def applysettings():
     print(wifi)
-    if not conky:
-        os.system("iconf -i noconky 1")
-    else:
-        os.system("iconf -i noconky 0")
 
-    if not theming:
-        os.system("iconf -i notheming 1")
-    else:
-        os.system("iconf -i notheming 0")
-    if not logo:
-        os.system("iconf -i nologo 1")
-    else:
-        os.system("iconf -i nologo 0")
+    applysetting(not conky, "noconky")
+    applysetting(not theming, "notheming")
+    applysetting(not animations, "noanimations")
+    applysetting(not logo, "nologo")
 
     if wifi:
         os.system("iconf -i wifiapplet 1")
@@ -108,6 +109,7 @@ builder.get_object("conkyswitch").set_active(conky)
 builder.get_object("wifiswitch").set_active(wifi)
 builder.get_object("logoswitch").set_active(logo)
 builder.get_object("themeswitch").set_active(logo)
+builder.get_object("animationswitch").set_active(animations)
 
 window = builder.get_object('window')
 window.show_all()
