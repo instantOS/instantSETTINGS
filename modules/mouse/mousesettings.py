@@ -46,10 +46,10 @@ class Handler:
     def reversetoggle_state_set_cb(self, button, state):
         if state:
             os.system("iconf -i reversemouse 1")
-            os.system("imouse r 1")
+            os.system("instantmouse r 1")
         else:
             os.system("iconf -i reversemouse 0")
-            os.system("imouse r 0")
+            os.system("instantmouse r 0")
 
 builder = Gtk.Builder()
 builder.add_from_file(os.path.dirname(
