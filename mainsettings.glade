@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 -->
+<!-- Generated with glade 3.36.0 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkImage" id="appearance">
@@ -91,21 +91,15 @@
     <property name="pixel_size">50</property>
     <property name="icon_name">speaker</property>
   </object>
+  <object class="GtkImage" id="wallpaper">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixel_size">50</property>
+    <property name="icon_name">image</property>
+  </object>
   <object class="GtkWindow" id="mainwindow">
     <property name="can_focus">False</property>
     <signal name="destroy" handler="mainwindow_destroy_cb" swapped="no"/>
-    <child type="titlebar">
-      <object class="GtkButton" id="learnbutton">
-        <property name="label" translatable="yes">Learn instantOS</property>
-        <property name="name">learnbutton</property>
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="receives_default">True</property>
-        <property name="image">image1</property>
-        <property name="always_show_image">True</property>
-        <signal name="clicked" handler="learnbutton_clicked_cb" swapped="no"/>
-      </object>
-    </child>
     <child>
       <object class="GtkGrid">
         <property name="visible">True</property>
@@ -414,6 +408,18 @@
         </child>
       </object>
     </child>
+    <child type="titlebar">
+      <object class="GtkButton" id="learnbutton">
+        <property name="label" translatable="yes">Learn instantOS</property>
+        <property name="name">learnbutton</property>
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <property name="image">image1</property>
+        <property name="always_show_image">True</property>
+        <signal name="clicked" handler="learnbutton_clicked_cb" swapped="no"/>
+      </object>
+    </child>
   </object>
   <object class="GtkPopover" id="displaypopover">
     <property name="can_focus">False</property>
@@ -504,13 +510,21 @@
             <property name="position">1</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkButton" id="wallprebutton">
+            <property name="label" translatable="yes">Browse wallpapers</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="wallprebutton_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
       </object>
     </child>
-  </object>
-  <object class="GtkImage" id="wallpaper">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixel_size">50</property>
-    <property name="icon_name">image</property>
   </object>
 </interface>
