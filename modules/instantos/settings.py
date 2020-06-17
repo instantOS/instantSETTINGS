@@ -108,7 +108,7 @@ builder.get_object("desktopswitch").set_active(desktop)
 builder.get_object("conkyswitch").set_active(conky)
 builder.get_object("wifiswitch").set_active(wifi)
 builder.get_object("logoswitch").set_active(logo)
-builder.get_object("themeswitch").set_active(logo)
+builder.get_object("themeswitch").set_active(theming)
 builder.get_object("animationswitch").set_active(animations)
 
 window = builder.get_object('window')
