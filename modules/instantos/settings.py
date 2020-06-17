@@ -92,7 +92,7 @@ def applysettings():
         os.system("iconf -i desktopicons 1")
         os.system("rox --pinboard Default &")
     else:
-        os.system("pgre ROX && pkill ROX")
+        os.system("pgrep ROX && pkill ROX")
         os.system("iconf -i desktop 0")
         os.system("iconf -i desktopicons 0")
 
