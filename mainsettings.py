@@ -78,7 +78,7 @@ class Handler:
     def wallgenbutton_clicked_cb(self, button):
         os.system('(instantwallpaper clear && instantwallpaper w) &')
     def wallprebutton_clicked_cb(self, button):
-        os.system('instantwallpaper select')
+        os.system('instantwallpaper select &')
     def wallsetbutton_clicked_cb(self, button):
         os.system('instantwallpaper gui &')
 
