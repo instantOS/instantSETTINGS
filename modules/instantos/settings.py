@@ -45,7 +45,7 @@ class Handler:
         applysettings()
 
     def editbutton_clicked_cb(self, button):
-        os.system('urxvt -e "nvim" -c ":e ~/.instantautostart" &')
+        os.system('st -e "nvim" -c ":e ~/.instantautostart" &')
 
     def themeswitch_state_set_cb(self, button, state):
         global theming

@@ -70,7 +70,7 @@ class Handler:
     def dotfilesbutton_clicked_cb(self, button):
         if not pathlib.Path(os.environ['HOME'] + '/.instantrc').exists():
             os.system('instantdotfiles')
-        os.system('urxvt -e "nvim" -c ":e ~/.instantrc" &')
+        os.system('st -e "nvim" -c ":e ~/.instantrc" &')
 
     def wallpaperbutton_clicked_cb(self, button):
         popover = builder.get_object('wallpopover')
