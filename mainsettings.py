@@ -27,9 +27,16 @@ class Handler:
         popover.popup()
 
     def networkbutton_clicked_cb(self, button):
-        os.system('pgrep nm-applet || nm-applet &')
         popover = builder.get_object('networkpopover')
         popover.popup()
+
+    def networkmanagerbutton_clicked_cb(self, button):
+        os.system('pgrep nm-applet || nm-applet &')
+        popover = builder.get_object('networkmanagerpopover')
+        popover.popup()
+
+    def gufwbutton_clicked_cb(self, button):
+        subprocess.Popen(["gufw"])
 
     def softwarebutton_clicked_cb(self, button):
         subprocess.Popen(["pamac-manager"])
@@ -65,7 +72,14 @@ class Handler:
     def quitbutton_clicked_cb(self, button):
         window.destroy()
     def powerbutton_clicked_cb(self, button):
+        popover = builder.get_object('powerpopover')
+        popover.popup()
+        
+    def xfcepowerbutton_clicked_cb(self, button):
         subprocess.Popen(['xfce4-power-manager-settings'])
+
+    def tlppowerbutton_clicked_cb(self, button):
+        subprocess.Popen(['tlpui'])
 
     def dotfilesbutton_clicked_cb(self, button):
         if not pathlib.Path(os.environ['HOME'] + '/.instantrc').exists():
