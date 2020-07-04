@@ -81,6 +81,10 @@ class Handler:
         os.system('instantwallpaper select &')
     def wallsetbutton_clicked_cb(self, button):
         os.system('instantwallpaper gui &')
+    def firewallbutton_clicked_cb(self, button):
+        os.system('gufw &')
+    def tlpbutton_clicked_cb(self, button):
+        os.system('tlpui &')
 
 builder = Gtk.Builder()
 
