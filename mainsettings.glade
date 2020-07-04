@@ -433,7 +433,7 @@
         <property name="homogeneous">True</property>
         <child>
           <object class="GtkButton" id="displaysave">
-            <property name="label" translatable="yes">make current display settings permanent</property>
+            <property name="label" translatable="yes">Make current display settings permanent</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -447,7 +447,7 @@
         </child>
         <child>
           <object class="GtkButton" id="displaychange">
-            <property name="label" translatable="yes">change display settings</property>
+            <property name="label" translatable="yes">Change display settings</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -462,7 +462,7 @@
       </object>
     </child>
   </object>
-  <object class="GtkPopover" id="networkpopover">
+  <object class="GtkPopover" id="networkmanagerpopover">
     <property name="can_focus">False</property>
     <property name="relative_to">networkbutton</property>
     <property name="position">bottom</property>
@@ -470,7 +470,46 @@
       <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="label" translatable="yes">network applet in the top right corner</property>
+        <property name="label" translatable="yes">Network applet in the top right corner</property>
+      </object>
+    </child>
+  </object>
+  <object class="GtkPopover" id="networkpopover">
+    <property name="can_focus">False</property>
+    <property name="relative_to">networkbutton</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkButton" id="networkmanagerbutton">
+            <property name="label" translatable="yes">NetworkManager</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="networkmanagerbutton_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="gufwbutton">
+            <property name="label" translatable="yes">Gufw</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="gufwbutton_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
       </object>
     </child>
   </object>
@@ -537,7 +576,7 @@
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkButton" id="xfcepowerbutton">
-            <property name="label" translatable="yes">xfce power settings</property>
+            <property name="label" translatable="yes">Xfce power settings</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -551,7 +590,7 @@
         </child>
         <child>
           <object class="GtkButton" id="tlppowerbutton">
-            <property name="label" translatable="yes">tlp power settings</property>
+            <property name="label" translatable="yes">Tlp power settings</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>

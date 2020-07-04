@@ -27,9 +27,16 @@ class Handler:
         popover.popup()
 
     def networkbutton_clicked_cb(self, button):
-        os.system('pgrep nm-applet || nm-applet &')
         popover = builder.get_object('networkpopover')
         popover.popup()
+
+    def networkmanagerbutton_clicked_cb(self, button):
+        os.system('pgrep nm-applet || nm-applet &')
+        popover = builder.get_object('networkmanagerpopover')
+        popover.popup()
+
+    def gufwbutton_clicked_cb(self, button):
+        subprocess.Popen(["gufw"])
 
     def softwarebutton_clicked_cb(self, button):
         subprocess.Popen(["pamac-manager"])
