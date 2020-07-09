@@ -75,6 +75,12 @@
     <property name="pixel_size">50</property>
     <property name="icon_name">bash</property>
   </object>
+  <object class="GtkImage" id="grub">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixel_size">50</property>
+    <property name="icon_name">grub-customizer</property>
+  </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -156,12 +162,6 @@
     <property name="can_focus">False</property>
     <property name="pixel_size">50</property>
     <property name="icon_name">xfce4-power-manager-settings</property>
-  </object>
-  <object class="GtkImage" id="grub">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixel_size">50</property>
-    <property name="icon_name">grub-customizer</property>
   </object>
   <object class="GtkImage" id="wallpaper">
     <property name="visible">True</property>
@@ -524,6 +524,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="margin_left">10</property>
+                <property name="margin_right">10</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="image">sound1</property>
@@ -543,6 +545,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="margin_left">10</property>
+                <property name="margin_right">10</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="image">tlp</property>
@@ -562,6 +566,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="margin_left">10</property>
+                <property name="margin_right">10</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="image">grub</property>
