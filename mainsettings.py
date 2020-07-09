@@ -87,6 +87,16 @@ class Handler:
         os.system('tlpui &')
     def grubbutton_clicked_cb(self, button):
         os.system('grub-customizer &')
+    def udiskswitch_state_set_cb(self, button, state):
+        if state:
+            os.system("iconf -i udiskie 1 &")
+        else:
+            os.system("iconf -i udiskie 0 &")
+    def appletswitch_state_set_cb(self, button, state):
+        if state:
+            os.system("iconf -i wifiapplet 1 &")
+        else:
+            os.system("iconf -i wifiapplet 0 &")
 
 builder = Gtk.Builder()
 

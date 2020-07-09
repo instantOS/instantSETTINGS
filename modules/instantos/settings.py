@@ -28,7 +28,6 @@ def getsetting(settingname):
 conky = not getsetting("noconky")
 logo = not getsetting("nologo")
 theming = not getsetting("notheming")
-wifi = getsetting("wifiapplet")
 desktop = getsetting("desktop")
 animations = not getsetting("noanimations")
 
@@ -79,13 +78,6 @@ def applysettings():
     applysetting(not theming, "notheming")
     applysetting(not animations, "noanimations")
     applysetting(not logo, "nologo")
-
-    if wifi:
-        os.system("iconf -i wifiapplet 1")
-        os.system("nm-applet &")
-    else:
-        os.system("pkill nm-applet &")
-        os.system("iconf -i wifiapplet 0")
 
     if desktop:
         os.system("iconf -i desktop 1")
