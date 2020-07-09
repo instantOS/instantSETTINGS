@@ -2,7 +2,20 @@
 <!-- Generated with glade 3.36.0 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkPopover">
+  <object class="GtkImage" id="appearance">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixel_size">50</property>
+    <property name="icon_name">gnome-color-manager</property>
+  </object>
+  <object class="GtkImage" id="bluetooth">
+    <property name="name">mouse</property>
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixel_size">50</property>
+    <property name="icon_name">blueman</property>
+  </object>
+  <object class="GtkPopover" id="diskpopover">
     <property name="can_focus">False</property>
     <child>
       <object class="GtkBox">
@@ -62,19 +75,6 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkImage" id="appearance">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixel_size">50</property>
-    <property name="icon_name">gnome-color-manager</property>
-  </object>
-  <object class="GtkImage" id="bluetooth">
-    <property name="name">mouse</property>
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixel_size">50</property>
-    <property name="icon_name">blueman</property>
   </object>
   <object class="GtkImage" id="disks">
     <property name="visible">True</property>

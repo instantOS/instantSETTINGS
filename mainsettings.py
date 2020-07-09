@@ -31,6 +31,10 @@ class Handler:
         popover = builder.get_object('networkpopover')
         popover.popup()
 
+    def diskbutton_clicked_cb(self, button):
+        popover = builder.get_object('diskpopover')
+        popover.popup()
+
     def softwarebutton_clicked_cb(self, button):
         subprocess.Popen(["pamac-manager"])
 
