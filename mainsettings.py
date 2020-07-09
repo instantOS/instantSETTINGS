@@ -56,7 +56,8 @@ class Handler:
     def displaysave_clicked_cb(self, button):
         print("saving display settings")
         subprocess.Popen(['autorandr', '--force', '--save', 'instantos'])
-
+    def gnomedisks_clicked_cb(self, button):
+        subprocess.Popen(['gnome-disks'])
     def printerbutton_clicked_cb(self, button):
         subprocess.Popen(['system-config-printer'])
     def bluethoothbutton_clicked_cb(self, button):
