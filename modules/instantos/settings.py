@@ -49,9 +49,6 @@ class Handler:
     def themeswitch_state_set_cb(self, button, state):
         global theming
         theming = state
-    def wifiswitch_state_set_cb(self, button, state):
-        global wifi
-        wifi = state
     def logoswitch_state_set_cb(self, button, state):
         global logo
         logo = state
@@ -72,7 +69,6 @@ def applysetting(boolean, iconf):
         os.system("iconf -i " + iconf + " 0")
 
 def applysettings():
-    print(wifi)
 
     applysetting(not conky, "noconky")
     applysetting(not theming, "notheming")
@@ -98,7 +94,6 @@ builder.add_from_file(os.path.dirname(
 builder.connect_signals(Handler())
 builder.get_object("desktopswitch").set_active(desktop)
 builder.get_object("conkyswitch").set_active(conky)
-builder.get_object("wifiswitch").set_active(wifi)
 builder.get_object("logoswitch").set_active(logo)
 builder.get_object("themeswitch").set_active(theming)
 builder.get_object("animationswitch").set_active(animations)
