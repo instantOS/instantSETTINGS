@@ -157,6 +157,12 @@
     <property name="pixel_size">50</property>
     <property name="icon_name">xfce4-power-manager-settings</property>
   </object>
+  <object class="GtkImage" id="grub">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixel_size">50</property>
+    <property name="icon_name">grub-customizer</property>
+  </object>
   <object class="GtkImage" id="wallpaper">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -546,6 +552,25 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="grubbutton">
+                <property name="label" translatable="yes">Grub</property>
+                <property name="name">soundbutton</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="margin_top">10</property>
+                <property name="margin_bottom">10</property>
+                <property name="image">grub</property>
+                <property name="image_position">top</property>
+                <property name="always_show_image">True</property>
+                <signal name="clicked" handler="grubbutton_clicked_cb" swapped="no"/>
+              </object>
+              <packing>
+                <property name="left_attach">2</property>
                 <property name="top_attach">0</property>
               </packing>
             </child>

@@ -85,6 +85,8 @@ class Handler:
         os.system('gufw &')
     def tlpbutton_clicked_cb(self, button):
         os.system('tlpui &')
+    def grubbutton_clicked_cb(self, button):
+        os.system('grub-customizer &')
 
 builder = Gtk.Builder()
 
