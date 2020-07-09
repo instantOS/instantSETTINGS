@@ -247,19 +247,20 @@
             <property name="can_focus">False</property>
             <property name="valign">end</property>
             <property name="margin_left">11</property>
-            <property name="margin_right">11</property>
+            <property name="margin_right">15</property>
             <property name="margin_top">12</property>
             <property name="margin_bottom">10</property>
             <property name="spacing">10</property>
             <property name="baseline_position">bottom</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="cancelbutton">
                 <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
+                <signal name="clicked" handler="cancelbutton_clicked_cb" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -268,12 +269,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="applybutton">
                 <property name="label">gtk-apply</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
+                <signal name="clicked" handler="applybutton_clicked_cb" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -282,12 +284,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="okbutton">
                 <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
+                <signal name="clicked" handler="okbutton_clicked_cb" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
