@@ -84,13 +84,6 @@
     <property name="pixel_size">50</property>
     <property name="icon_name">printer</property>
   </object>
-  <object class="GtkImage" id="quit">
-    <property name="name">mouse</property>
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixel_size">50</property>
-    <property name="icon_name">exit</property>
-  </object>
   <object class="GtkImage" id="settings">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -347,27 +340,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="quitbutton">
-                <property name="label" translatable="yes">Quit</property>
-                <property name="name">appearancebutton</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="margin_left">10</property>
-                <property name="margin_right">10</property>
-                <property name="margin_top">10</property>
-                <property name="margin_bottom">10</property>
-                <property name="image">quit</property>
-                <property name="image_position">top</property>
-                <property name="always_show_image">True</property>
-                <signal name="clicked" handler="quitbutton_clicked_cb" swapped="no"/>
-              </object>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">4</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkButton" id="bluethoothbutton">
                 <property name="label" translatable="yes">Bluetooth</property>
                 <property name="name">appearancebutton</property>
@@ -450,6 +422,9 @@
                 <property name="left_attach">1</property>
                 <property name="top_attach">4</property>
               </packing>
+            </child>
+            <child>
+              <placeholder/>
             </child>
           </object>
         </child>
@@ -549,10 +524,35 @@
           </packing>
         </child>
         <child>
-          <placeholder/>
+          <object class="GtkGrid">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="row_homogeneous">True</property>
+            <property name="column_homogeneous">True</property>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
         </child>
         <child type="tab">
           <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child type="tab">
+          <object class="GtkButton" id="quitbutton">
+            <property name="label" translatable="yes">button</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="relief">none</property>
+            <signal name="clicked" handler="quitbutton_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="position">3</property>
+            <property name="tab_fill">False</property>
+          </packing>
         </child>
       </object>
     </child>
