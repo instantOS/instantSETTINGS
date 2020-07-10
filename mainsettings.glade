@@ -542,7 +542,7 @@
         </child>
         <child type="tab">
           <object class="GtkButton" id="quitbutton">
-            <property name="label" translatable="yes">button</property>
+            <property name="label" translatable="yes">quit</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
