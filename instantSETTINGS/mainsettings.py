@@ -13,11 +13,6 @@ import subprocess
 import webbrowser
 import os
 
-# won't show icons otherwise
-settings = Gtk.Settings.get_default()
-settings.props.gtk_button_images = True
-
-
 class Handler:
     def mainwindow_destroy_cb(self, *args):
         Gtk.main_quit()
@@ -52,7 +47,7 @@ class Handler:
 
     def displaychange_clicked_cb(self, button):
         subprocess.Popen(['arandr'])
-        
+
     def displaysave_clicked_cb(self, button):
         print("saving display settings")
         subprocess.Popen(['autorandr', '--force', '--save', 'instantos'])
@@ -103,16 +98,17 @@ class Handler:
         else:
             os.system("iconf -i wifiapplet 0 &")
 
-builder = Gtk.Builder()
+def main():
+    # won't show icons otherwise
+    settings = Gtk.Settings.get_default()
+    settings.props.gtk_button_images = True
+    builder = Gtk.Builder()
 
-if pathlib.Path('./mainsettings.glade').exists():
-    builder.add_from_file("./mainsettings.glade")
-else:
     builder.add_from_file("/usr/share/instantsettings/mainsettings.glade")
 
-builder.connect_signals(Handler())
+    builder.connect_signals(Handler())
 
-window = builder.get_object('mainwindow')
-window.show_all()
+    window = builder.get_object('mainwindow')
+    window.show_all()
 
-Gtk.main()
+    Gtk.main()
