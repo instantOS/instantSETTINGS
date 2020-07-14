@@ -200,7 +200,7 @@ storagesettings() {
 	*disks)
 		toggleiconf udiskie "auto mount disks (udiskie)?"
 		if iconf -i udiskie; then
-			pgrep udiskie || udiskie
+			pgrep udiskie || udiskie -t &
 		else
 			pgrep udiskie && pkill udiskie
 		fi
