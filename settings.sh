@@ -108,10 +108,18 @@ networksettings() {
 }
 
 toggleiconf() {
-	if iconf -i "$1"; then
-		CONFSTATUS="enabled"
+	if [ -z "$3" ]; then
+		if iconf -i "$1"; then
+			CONFSTATUS="enabled"
+		else
+			CONFSTATUS="disabled"
+		fi
 	else
-		CONFSTATUS="disabled"
+		if iconf -i "$1"; then
+			CONFSTATUS="disabled"
+		else
+			CONFSTATUS="enabled"
+		fi
 	fi
 	CONFPROMPT=">>h $2
 > Currently $CONFSTATUS
@@ -121,13 +129,21 @@ toggleiconf() {
 	CHOICE=$(echo "$CONFPROMPT" | sidebar | grep -o '[^ ]*$')
 	case $CHOICE in
 	*Yes)
-		iconf -i "$1" 1
+		if [ -z "$3" ]; then
+			iconf -i "$1" 1
+		else
+			iconf -i "$1" 0
+		fi
 		;;
 	*No)
-		iconf -i "$1" 0
+		if [ -z "$3" ]; then
+			iconf -i "$1" 0
+		else
+			iconf -i "$1" 1
+		fi
 		;;
 	esac
-	LOOPSETTING="True"
+	instantossettings
 }
 
 instantossettings() {
@@ -135,12 +151,33 @@ instantossettings() {
 :b Edit Autostart script
 :b Theming
 :b Logo on wallpaper
+:b 𧻓Animations
 :b ﰪConky Widgets
 :b Desktop icons
-:b 𧻓Animations
 :b Back' | sidebar)"
 	case $CHOICE in
-
+	*Theming)
+		toggleiconf notheming "enable instantOS theming?" i
+		;;
+	*wallpaper)
+		toggleiconf noanimations "show logo on wallpaper?" i
+		;;
+	*Animations)
+		toggleiconf noanimations "enable animations?" i
+		;;
+	*Widgets)
+		toggleiconf noconky "show desktop widgets?" i
+		;;
+	*icons)
+		toggleiconf desktopicons "show desktop icons?"
+		if iconf -i desktopicons; then
+			iconf -i desktop 1
+			rox --pinboard Default &
+		else
+			iconf -i desktop 0
+			pgrep ROX && pkill ROX
+		fi
+		;;
 	*)
 		LOOPSETTING="True"
 		;;
