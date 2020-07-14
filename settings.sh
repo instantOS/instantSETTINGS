@@ -1,5 +1,9 @@
 #!/bin/bash
 
+sidebar() {
+	instantmenu -l 2000 -w 400 -i -h 55 -x 100000 -y 0 -bw 4 -H
+}
+
 asksetting() {
 	echo '>>h General settings
 :b 墳Sound
@@ -18,11 +22,8 @@ asksetting() {
 >>h Advanced settings
 :b Firewall
 :y TLP
-:r Close Settings' | instantmenu -l 2000 -w 400 -i -h 55 -x 100000 -y 0 -bw 4 -H
-}
-
-sidebar() {
-	instantmenu -l 2000 -w 400 -i -h 55 -x 100000 -y 0 -bw 4 -H
+:r Close Settings' |
+		instantmenu -l 2000 -w 400 -i -h 55 -x 100000 -y 0 -bw 4 -H -q "search"
 }
 
 displaysettings() {
@@ -106,6 +107,47 @@ networksettings() {
 
 }
 
+toggleiconf() {
+	if iconf -i "$1"; then
+		CONFSTATUS="enabled"
+	else
+		CONFSTATUS="disabled"
+	fi
+	CONFPROMPT=">>h $2
+> Currently $CONFSTATUS
+:g Yes
+:r No
+:b Back"
+	CHOICE=$(echo "$CONFPROMPT" | sidebar | grep -o '[^ ]*$')
+	case $CHOICE in
+	*Yes)
+		iconf -i "$1" 1
+		;;
+	*No)
+		iconf -i "$1" 0
+		;;
+	esac
+	LOOPSETTING="True"
+}
+
+instantossettings() {
+	CHOICE="$(echo '>>h instantOS settings
+:b Edit Autostart script
+:b Theming
+:b Logo on wallpaper
+:b ﰪConky Widgets
+:b Desktop icons
+:b 𧻓Animations
+:b Back' | sidebar)"
+	case $CHOICE in
+
+	*)
+		LOOPSETTING="True"
+		;;
+	esac
+
+}
+
 LOOPSETTING="true"
 while [ -n "$LOOPSETTING" ]; do
 	SETTING="$(asksetting)"
@@ -116,6 +158,9 @@ while [ -n "$LOOPSETTING" ]; do
 		;;
 	*Appearance)
 		lxappearance &
+		;;
+	*instantOS)
+		instantossettings
 		;;
 	*Software)
 		pamac-manager &
