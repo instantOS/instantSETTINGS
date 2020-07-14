@@ -156,6 +156,9 @@ instantossettings() {
 :b Desktop icons
 :b Back' | sidebar)"
 	case $CHOICE in
+	*script)
+		st -e "nvim" -c ":e ~/.instantautostart" &
+		;;
 	*Theming)
 		toggleiconf notheming "enable instantOS theming?" i
 		;;
@@ -183,6 +186,29 @@ instantossettings() {
 		;;
 	esac
 
+}
+
+storagesettings() {
+	CHOICE="$(echo '>>h Storage settings
+:b Open disk management
+:b 﫭Auto mount disks
+:b Back' | sidebar)"
+	case $CHOICE in
+	*management)
+		gnome-disks &
+		;;
+	*disks)
+		toggleiconf udiskie "auto mount disks (udiskie)?"
+		if iconf -i udiskie; then
+			pgrep udiskie || udiskie
+		else
+			pgrep udiskie && pkill udiskie
+		fi
+		;;
+	*)
+		LOOPSETTING="True"
+		;;
+	esac
 }
 
 LOOPSETTING="true"
@@ -227,6 +253,8 @@ while [ -n "$LOOPSETTING" ]; do
 	*Network)
 		networksettings
 		;;
-
+	*Storage)
+		storagesettings
+		;;
 	esac
 done
