@@ -256,5 +256,11 @@ while [ -n "$LOOPSETTING" ]; do
 	*Storage)
 		storagesettings
 		;;
+	*Firewall)
+		gufw &
+		;;
+	*TLP)
+		tlpui &
+		;;
 	esac
 done
