@@ -38,12 +38,36 @@ displaysettings() {
 	*Make*)
 		autorandr --force --save instantos
 		;;
-	*Back)
+	*)
 		LOOPSETTING="True"
 		;;
 	esac
 
 }
+
+wallpapersettings() {
+	CHOICE="$(echo '>>h Wallpaper settings
+:b Generate new wallpaper
+:b Set own wallpaper
+:b Browse wallpapers
+:b Back' | sidebar)"
+	case $CHOICE in
+	*Generate*)
+		instantwallpaper clear && instantwallpaper w
+		;;
+	*Browse*)
+		instantwallpaper select &
+		;;
+	*Set*)
+		instantwallpaper gui &
+		;;
+	*)
+		LOOPSETTING="True"
+		;;
+
+	esac
+}
+
 
 LOOPSETTING="true"
 while [ -n "$LOOPSETTING" ]; do
@@ -77,6 +101,9 @@ while [ -n "$LOOPSETTING" ]; do
 		;;
 	*Power)
 		xfce4-power-manager-settings &
+		;;
+	*Wallpaper)
+		wallpapersettings
 		;;
 	esac
 done
