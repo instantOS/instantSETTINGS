@@ -143,7 +143,6 @@ toggleiconf() {
 		fi
 		;;
 	esac
-	instantossettings
 }
 
 instantossettings() {
@@ -161,9 +160,11 @@ instantossettings() {
 		;;
 	*Theming)
 		toggleiconf notheming "enable instantOS theming?" i
+		instantossettings
 		;;
 	*wallpaper)
 		toggleiconf noanimations "show logo on wallpaper?" i
+		instantossettings
 		;;
 	*Animations)
 		if ! iconf -i noanimations; then
@@ -182,6 +183,7 @@ instantossettings() {
 		;;
 	*Widgets)
 		toggleiconf noconky "show desktop widgets?" i
+		instantossettings
 		;;
 	*icons)
 		toggleiconf desktopicons "show desktop icons?"
@@ -192,6 +194,7 @@ instantossettings() {
 			iconf -i desktop 0
 			pgrep ROX && pkill ROX
 		fi
+		instantossettings
 		;;
 	*)
 		LOOPSETTING="True"
@@ -216,6 +219,7 @@ storagesettings() {
 		else
 			pgrep udiskie && pkill udiskie
 		fi
+		storagesettings
 		;;
 	*)
 		LOOPSETTING="True"
