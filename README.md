@@ -11,4 +11,4 @@
 # instantSETTINGS
 
 --------
-## instantOS is still in early beta, contributions always welcome
+## instantOS is still in early beta, contributions are always welcome
