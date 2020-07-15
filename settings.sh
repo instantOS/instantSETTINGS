@@ -70,30 +70,15 @@ wallpapersettings() {
 }
 
 networksettings() {
-	if [ -n "$WIFIAPPLET" ] || iconf -i wifiapplet; then
-		WIFIAPPLET="true"
-	fi
-	if [ -n "$WIFIAPPLET" ]; then
-		CHOICE="$(echo '>>h Network settings
+
+	CHOICE="$(echo '>>h Network settings
 :b Start network applet
-:g Autostart network applet
+:g Autostart network applet
 :b Back' | sidebar)"
-	else
-		CHOICE="$(echo '>>h Network settings
-:b Start network applet
-:r Autostart network applet
-:b Back' | sidebar)"
-	fi
 
 	case "$CHOICE" in
 	*Autostart*)
-		if [ -n "$WIFIAPPLET" ]; then
-			unset WIFIAPPLET
-			iconf -i wifiapplet 0
-		else
-			WIFIAPPLET="true"
-			iconf -i wifiapplet 1
-		fi
+		toggleiconf wifiapplet "Show network applet on startup?"
 		networksettings
 		;;
 	*Start*)
