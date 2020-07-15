@@ -166,7 +166,19 @@ instantossettings() {
 		toggleiconf noanimations "show logo on wallpaper?" i
 		;;
 	*Animations)
+		if ! iconf -i noanimations; then
+			ANIMATED="true"
+		fi
 		toggleiconf noanimations "enable animations?" i
+		if [ -n "$ANIMATED" ]; then
+			if iconf -i noanimations; then
+				xdotool key super+alt+shift+s
+			fi
+		else
+			if ! iconf -i noanimations; then
+				xdotool key super+alt+shift+s
+			fi
+		fi
 		;;
 	*Widgets)
 		toggleiconf noconky "show desktop widgets?" i
