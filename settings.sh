@@ -28,8 +28,55 @@ asksetting() {
 }
 
 defaultapplicationsettings() {
-	echo '>>h coming soon
-OK' | sidebar
+	CHOICE="$(echo '>>h Default applications
+>>r this is not fully working yet
+:b Browser
+:b Terminal emulator
+:b File manager
+:b Back' | sidebar)"
+	case "$CHOICE" in
+	*manager)
+		selectfilemanager
+		;;
+	*Browser)
+		selectbrowser
+		;;
+	*)
+		LOOPSETTING="True"
+		;;
+	esac
+
+}
+
+selectfilemanager() {
+	CHOICE="$(echo '>>h Default File Manager
+:b Nautilus
+:b Thunar
+:b PCManFM
+:b Nemo
+:b Caja
+:b Back' | sidebar)"
+	case "$CHOICE" in
+	*)
+		defaultapplicationsettings
+		;;
+	esac
+
+}
+
+selectbrowser() {
+	CHOICE="$(echo '>>h Default Browser
+:y Firefox
+:b Chromium
+:y Brave
+:y Chrome
+:b Back' | sidebar)"
+	case "$CHOICE" in
+	*)
+		defaultapplicationsettings
+		;;
+	esac
+
 }
 
 displaysettings() {
