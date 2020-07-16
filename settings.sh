@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sidebar() {
-	instantmenu -l 2000 -w 400 -i -h 54 -x 100000 -y 0 -bw 4 -H
+	instantmenu -l 2000 -w 400 -i -h 54 -x 100000 -y 0 -bw 4 -H -q "${1:-search...}"
 }
 
 asksetting() {
@@ -16,6 +16,7 @@ asksetting() {
 :g Power
 :b Keyboard
 :b Mouse
+:b Default applications
 :b Language
 :b 朗Printing
 :y Wallpaper
@@ -24,6 +25,11 @@ asksetting() {
 :y Dotfiles
 :r Close Settings' |
 		instantmenu -l 2000 -w 400 -i -h 54 -x 100000 -y 0 -bw 4 -H -q "search"
+}
+
+defaultapplicationsettings() {
+	echo '>>h coming soon
+OK' | sidebar
 }
 
 displaysettings() {
@@ -201,7 +207,7 @@ toggleiconf() {
 :g Yes
 :r No
 :b Back"
-	CHOICE=$(echo "$CONFPROMPT" | sidebar | grep -o '[^ ]*$')
+	CHOICE=$(echo "$CONFPROMPT" | sidebar "choose answer" | grep -o '[^ ]*$')
 	case $CHOICE in
 	*Yes)
 		if [ -z "$3" ]; then
@@ -383,6 +389,9 @@ while [ -n "$LOOPSETTING" ]; do
 		;;
 	*Mouse)
 		mousesettings
+		;;
+	*applications)
+		defaultapplicationsettings
 		;;
 	esac
 done
