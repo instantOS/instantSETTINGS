@@ -5,7 +5,7 @@ sidebar() {
 }
 
 asksetting() {
-	echo '>>h General settings
+	echo '>>h Settings
 :b 墳Sound
 :b instantOS
 :b Display
@@ -15,14 +15,13 @@ asksetting() {
 :b Bluetooth
 :g Power
 :b Keyboard
+:b Mouse
 :b Language
 :b 朗Printing
 :y Wallpaper
 :r Storage
+:y Advanced
 :y Dotfiles
->>h Advanced settings
-:b Firewall
-:y TLP
 :r Close Settings' |
 		instantmenu -l 2000 -w 400 -i -h 54 -x 100000 -y 0 -bw 4 -H -q "search"
 }
@@ -45,6 +44,28 @@ displaysettings() {
 		;;
 	esac
 
+}
+
+advancedsettings() {
+	CHOICE="$(echo '>>h Advanced settings
+:b Firewall
+:y TLP
+:g Bootloader
+:b Back' | sidebar)"
+	case $CHOICE in
+	*Firewall)
+		gufw &
+		;;
+	*TLP)
+		tlpui &
+		;;
+	*Bootloader)
+		grub-customizer &
+		;;
+	*)
+		LOOPSETTING="True"
+		;;
+	esac
 }
 
 wallpapersettings() {
@@ -281,6 +302,34 @@ storagesettings() {
 	esac
 }
 
+mousesettings() {
+	CHOICE="$(echo '>>h Mouse settings
+:b Sensitivity
+:b Reverse scrolling
+:b Back' | sidebar)"
+	case $CHOICE in
+	*Sensitivity)
+		CURRENTSPEED="$(iconf mousespeed)"
+		PRESPEED=$(echo "($CURRENTSPEED + 1) * 50" | bc -l | grep -o '^[^.]*')
+		islide -s "$PRESPEED" -c "instantmouse m " -p "mouse sensitivity"
+		iconf mousespeed "$(instantmouse l)"
+		;;
+	*scrolling)
+		toggleiconf reversemouse "Reverse mouse scrolling?"
+		if iconf -i reversemouse; then
+			instantmouse r 1
+		else
+			instantmouse r 0
+		fi
+		mousesettings
+		;;
+	*)
+		LOOPSETTING="True"
+		;;
+
+	esac
+}
+
 LOOPSETTING="true"
 while [ -n "$LOOPSETTING" ]; do
 	SETTING="$(asksetting)"
@@ -329,11 +378,11 @@ while [ -n "$LOOPSETTING" ]; do
 	*Storage)
 		storagesettings
 		;;
-	*Firewall)
-		gufw &
+	*Advanced)
+		advancedsettings
 		;;
-	*TLP)
-		tlpui &
+	*Mouse)
+		mousesettings
 		;;
 	esac
 done
