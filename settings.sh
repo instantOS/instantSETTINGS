@@ -66,6 +66,7 @@ advancedsettings() {
 		tlpui &
 		;;
 	*Bootloader)
+		instantinstall grub-customizer
 		grub-customizer &
 		;;
 	*)
