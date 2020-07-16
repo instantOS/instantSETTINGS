@@ -143,14 +143,16 @@ languagesettings() {
 	*Language)
 		echo "changing language"
 		asklocale
-		instantsudo echo test
-		sudo INSTANTARCH="$INSTANTARCH" IROOT="$IROOT" PATH="$PATH" "$INSTANTARCH/lang/locale.sh"
+		instantsudo INSTANTARCH="$INSTANTARCH" IROOT="$IROOT" PATH="$PATH" "$INSTANTARCH/lang/locale.sh"
+		if echo "some settings are only applied after a reboot
+Reboot now?" | imenu -C; then
+			reboot
+		fi
 		;;
 	*Timezone)
 		askregion
 		echo "changing timezone"
-		instantsudo echo test
-		sudo INSTANTARCH="$INSTANTARCH" IROOT="$IROOT" PATH="$PATH" "$INSTANTARCH/lang/timezone.sh"
+		instantsudo INSTANTARCH="$INSTANTARCH" IROOT="$IROOT" PATH="$PATH" "$INSTANTARCH/lang/timezone.sh"
 		;;
 	*)
 		LOOPSETTING="True"
