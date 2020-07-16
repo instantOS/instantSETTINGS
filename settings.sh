@@ -15,6 +15,7 @@ asksetting() {
 :b Bluetooth
 :g Power
 :b Keyboard
+:b Language
 :b 朗Printing
 :y Wallpaper
 :r Storage
@@ -88,6 +89,72 @@ networksettings() {
 		LOOPSETTING="True"
 		;;
 
+	esac
+
+}
+
+# the language settings reuse instantARCH components
+fetchlanguage() {
+	if ! [ -e ~/.cache/instantARCH ]; then
+		if ! checkinternet; then
+			imenu -e "internet not found, couldn't fetch language list"
+			exit 1
+		fi
+		imenu -w "Preparing language settings"
+		cd ~/.cache
+		git clone --depth=1 https://github.com/instantOS/instantARCH
+		pkill imenu
+		pkill instantmenu
+	else
+		cd ~/.cache/instantARCH
+		if ! [ -e askutils.sh ]; then
+			cd ..
+			rm -rf instantARCH
+			if imenu -c "language cache invalid, reload?"; then
+				fetchlanguage
+			else
+				exit 1
+			fi
+		fi
+		git reset --hard
+		git pull &
+	fi
+	cd ~/.cache/instantARCH
+	mkdir bin
+	cat iroot.sh >bin/iroot
+	chmod +x ./bin/iroot
+	export PATH="$PATH:~/.cache/instantARCH/bin"
+	mkdir -p ~/.config/instantos/iroot
+	IROOT="$(realpath ~/.config/instantos/iroot)"
+	export IROOT
+	INSTANTARCH="$(realpath ~/.cache/instantARCH)"
+	export INSTANTARCH
+	source askutils.sh
+}
+
+languagesettings() {
+	fetchlanguage
+	CHOICE="$(echo '>>h Language settings
+:b Application Language
+:g Timezone
+:b Back' | sidebar)"
+
+	case "$CHOICE" in
+	*Language)
+		echo "changing language"
+		asklocale
+		instantsudo echo test
+		sudo INSTANTARCH="$INSTANTARCH" IROOT="$IROOT" PATH="$PATH" "$INSTANTARCH/lang/locale.sh"
+		;;
+	*Timezone)
+		askregion
+		echo "changing timezone"
+		instantsudo echo test
+		sudo INSTANTARCH="$INSTANTARCH" IROOT="$IROOT" PATH="$PATH" "$INSTANTARCH/lang/timezone.sh"
+		;;
+	*)
+		LOOPSETTING="True"
+		;;
 	esac
 
 }
@@ -250,6 +317,9 @@ while [ -n "$LOOPSETTING" ]; do
 		;;
 	*Wallpaper)
 		wallpapersettings
+		;;
+	*Language)
+		languagesettings
 		;;
 	*Network)
 		networksettings
