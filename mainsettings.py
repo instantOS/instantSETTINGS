@@ -45,7 +45,7 @@ class Handler:
         subprocess.Popen(["pavucontrol"])
 
     def keyboardbutton_clicked_cb(self, button):
-        subprocess.Popen(["/opt/instantos/menus/dm/tk.sh"])
+        subprocess.Popen(["/usr/share/instantassist/t/k.sh"])
 
     def appearancebutton_clicked_cb(self, button):
         subprocess.Popen(["lxappearance"])

@@ -361,6 +361,7 @@ mousesettings() {
 :b Sensitivity
 :b Reverse scrolling
 :b Back' | sidebar)"
+	instantmouse gen &
 	case $CHOICE in
 	*Sensitivity)
 		CURRENTSPEED="$(iconf mousespeed)"
@@ -405,7 +406,7 @@ while [ -n "$LOOPSETTING" ]; do
 		displaysettings
 		;;
 	*Keyboard)
-		/opt/instantos/menus/dm/tk.sh 123
+		/usr/share/instantassist/t/k.sh 123
 		;;
 	*Printing)
 		system-config-printer &
