@@ -1,7 +1,7 @@
 <div align="center">
     <h1>instantSETTINGS</h1>
     <p>simple settings app for instantOS</p>
-    <img width="300" height="300" src="https://raw.githubusercontent.com/instantOS/instantLOGO/master/png/settings.png">
+    <img width="300" height="300" src="https://media.githubusercontent.com/media/instantOS/instantLOGO/master/png/settings.png">
 </div>
 
 <p align="left">

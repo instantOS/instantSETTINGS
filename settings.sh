@@ -282,6 +282,7 @@ instantossettings() {
 :b 𧻓Animations
 :b ﰪConky Widgets
 :b Desktop icons
+:b Status bar
 :b Back' | sidebar)"
 	case $CHOICE in
 	*script)
@@ -289,6 +290,15 @@ instantossettings() {
 		;;
 	*Theming)
 		toggleiconf notheming "enable instantOS theming?" i
+		instantossettings
+		;;
+	*bar)
+		toggleiconf nostatus "enable default status text?" i
+		if iconf -i nostatus; then
+			[ -e ~/.instantsilent ] || touch ~/.instantsilent
+		else
+			[ -e ~/.instantsilent ] && rm ~/.instantsilent
+		fi &
 		instantossettings
 		;;
 	*wallpaper)
