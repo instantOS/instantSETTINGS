@@ -366,6 +366,57 @@ storagesettings() {
 	esac
 }
 
+bluetoothsettings() {
+
+	# check for bluetooth hardware
+	if ! {
+		iconf -i hasbluetooth || lsusb | grep -iq 'bluetooth'
+	}; then
+		if echo 'System does not appear to have bluetooth support
+Try regardless?' | imenu -C; then
+			iconf -i hasbluetooth 1
+		else
+			return
+		fi
+	fi
+
+	if ! systemctl is-active --quiet bluetooth; then
+		if imenu -c "enable bluetooth?"; then
+			instantsudo "systemctl enable bluetooth"
+			instantsudo "systemctl start bluetooth"
+		else
+			return
+		fi
+	fi
+
+	CHOICE="$(echo '>>h Bluetooth settings
+:b Set up new device
+:b Bluetooth applet
+:b Back' | sidebar)"
+
+	case "$CHOICE" in
+	applet*)
+		toggleiconf bluetoothapplet "enable bluetooth applet?"
+
+		if iconf -i bluetoothapplet; then
+			blueman-applet &
+		else
+			pgrep blueman-applet && pkill blueman-applet &
+		fi
+
+		bluetoothsettings
+		;;
+	device*)
+		blueman-assistant &
+		;;
+	*)
+		LOOPSETTING="True"
+		;;
+
+	esac
+
+}
+
 mousesettings() {
 	CHOICE="$(echo '>>h Mouse settings
 :b Sensitivity
@@ -422,7 +473,7 @@ while [ -n "$LOOPSETTING" ]; do
 		system-config-printer &
 		;;
 	*Bluetooth)
-		blueman-assistant &
+		bluetoothsettings
 		;;
 	*Dotfiles)
 		[ -e ~/.instantrc ] || instantdotfiles
