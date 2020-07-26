@@ -473,7 +473,7 @@ while [ -n "$LOOPSETTING" ]; do
 		displaysettings
 		;;
 	*Keyboard)
-		/usr/share/instantassist/t/k.sh 123
+		/usr/share/instantassist/assists/t/k.sh 123
 		;;
 	*Printing)
 		system-config-printer &
