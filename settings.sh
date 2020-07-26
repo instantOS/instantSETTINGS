@@ -155,6 +155,12 @@ networksettings() {
 	case "$CHOICE" in
 	*Autostart*)
 		toggleiconf wifiapplet "Show network applet on startup?"
+		if iconf -i wifiapplet; then
+			pgrep nm-applet || nm-applet
+		else
+			pgrep nm-applet && pkill nm-applet
+		fi
+
 		networksettings
 		;;
 	*Start*)
