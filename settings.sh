@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sidebar() {
-	instantmenu -l 2000 -w 400 -i -h 54 -x 100000 -y 0 -bw 4 -H -q "${1:-search...}"
+	instantmenu -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "${1:-search...}"
 }
 
 asksetting() {
@@ -24,7 +24,7 @@ asksetting() {
 :y Advanced
 :y Dotfiles
 :r Close Settings' |
-		instantmenu -l 2000 -w 400 -i -h 54 -x 100000 -y 0 -bw 4 -H -q "search"
+		instantmenu -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search"
 }
 
 defaultapplicationsettings() {
