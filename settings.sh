@@ -289,6 +289,7 @@ instantossettings() {
 :b ﰪConky Widgets
 :b Desktop icons
 :b Status bar
+:b Dad joke on lock screen
 :b Back' | sidebar)"
 	case $CHOICE in
 	*script)
@@ -340,6 +341,9 @@ instantossettings() {
 			pgrep ROX && pkill ROX
 		fi
 		instantossettings
+		;;
+	*screen)
+		toggleiconf dadjoke "show dad joke on lock screen?"
 		;;
 	*)
 		LOOPSETTING="True"
