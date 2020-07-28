@@ -127,6 +127,7 @@ wallpapersettings() {
 :b Generate new wallpaper
 :b Set own wallpaper
 :b Browse wallpapers
+:b Custom wallpaper with logo
 :b Back' | sidebar)"
 	case $CHOICE in
 	*Generate*)
@@ -137,6 +138,9 @@ wallpapersettings() {
 		;;
 	*Set*)
 		instantwallpaper gui &
+		;;
+	*logo)
+		instantwallpaper logo
 		;;
 	*)
 		LOOPSETTING="True"
