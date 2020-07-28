@@ -308,7 +308,7 @@ instantossettings() {
 		instantossettings
 		;;
 	*wallpaper)
-		toggleiconf noanimations "show logo on wallpaper?" i
+		toggleiconf nologo "show logo on wallpaper?" i
 		instantossettings
 		;;
 	*Animations)
