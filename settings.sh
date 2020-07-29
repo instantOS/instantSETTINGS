@@ -31,8 +31,10 @@ defaultapplicationsettings() {
 	CHOICE="$(echo '>>h Default applications
 >>r this is not fully working yet
 :b Browser
+:b 龍System monitor
 :b Terminal emulator
 :b File manager
+:b Application launcher
 :b Back' | sidebar)"
 	case "$CHOICE" in
 	*manager)
@@ -41,6 +43,12 @@ defaultapplicationsettings() {
 	*Browser)
 		selectbrowser
 		;;
+	*emulator)
+		selectterminal
+		;;
+	*monitor)
+		selectsystemmonitor
+		;;
 	*)
 		LOOPSETTING="True"
 		;;
@@ -48,34 +56,66 @@ defaultapplicationsettings() {
 
 }
 
-selectfilemanager() {
-	CHOICE="$(echo '>>h Default File Manager
-:b Nautilus
-:b Thunar
-:b PCManFM
-:b Nemo
-:b Caja
-:b Back' | sidebar)"
+# generic default app selector
+selectapp() {
+
+	# usage: echo list | selectapp heading iconf-name
+	LIST=">>h Default $1
+$(cat /dev/stdin)
+:b Custom
+:b Back"
+	CHOICE="$(echo "$LIST" | sidebar | sed 's/^....//g')"
+	echo "choice"
 	case "$CHOICE" in
-	*)
+	Custom)
+		echo "setting custom application"
+		CUSTOMCHOICE="$(imenu -i "enter default $1")"
+		if ! command -v "$CUSTOMCHOICE"; then
+			if ! imenu -c "$CUSTOMCHOICE not found, still set as default $1?"; then
+				defaultapplicationsettings
+				return
+			fi
+		fi
+		iconf "$2" "$CUSTOMCHOICE"
+		;;
+	Back)
 		defaultapplicationsettings
+		;;
+	*)
+		LOWERCHOICE="$(echo "$CHOICE" | tr '[:upper:]' '[:lower:]')"
+		iconf "$2" "$LOWERCHOICE"
 		;;
 	esac
 
 }
 
+selectsystemmonitor() {
+	echo ':b 龍mate-system-monitor
+:b 龍st -e htop' | selectapp "terminal emulator" "terminal"
+}
+
+selectfilemanager() {
+
+	echo ':b Nautilus
+:b Thunar
+:b PCManFM
+:b Nemo
+:b Caja' | selectapp "file manager" "filemanager"
+
+}
+
+selectterminal() {
+	echo ':b st
+:b xterm
+:b urxvt' | selectapp "terminal emulator" "terminal"
+}
+
 selectbrowser() {
-	CHOICE="$(echo '>>h Default Browser
-:y Firefox
+
+	echo ':y Firefox
 :b Chromium
 :y Brave
-:y Chrome
-:b Back' | sidebar)"
-	case "$CHOICE" in
-	*)
-		defaultapplicationsettings
-		;;
-	esac
+:y Chrome' | selectapp "web browser" "browser"
 
 }
 
