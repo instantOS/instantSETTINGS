@@ -105,6 +105,8 @@ selectsystemmonitor() {
 	echo ':b 龍mate-system-monitor
 :b 龍st -e htop
 :b 龍st -e ytop' | selectapp "system monitor" "systemmonitor"
+	instantinstall "$(iconf systemmonitor | grep -o '[^ ]*$')"
+
 }
 
 selectfilemanager() {
@@ -114,6 +116,7 @@ selectfilemanager() {
 :b PCManFM
 :b Nemo
 :b Caja' | selectapp "file manager" "filemanager"
+	instantinstall "$(iconf filemanager | grep -o '[^ ]*$')"
 
 }
 
@@ -128,8 +131,8 @@ selectbrowser() {
 	echo ':y Firefox
 :b Chromium
 :y Brave
-:y Chrome' | selectapp "web browser" "browser"
-
+:y Google-chrome-stable' | selectapp "web browser" "browser"
+	instantinstall "$(iconf browser)"
 }
 
 displaysettings() {
