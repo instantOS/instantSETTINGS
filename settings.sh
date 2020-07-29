@@ -47,7 +47,11 @@ defaultapplicationsettings() {
 		selectterminal
 		;;
 	*monitor)
+
 		selectsystemmonitor
+		;;
+	*launcher)
+		selectappmenu
 		;;
 	*)
 		LOOPSETTING="True"
@@ -89,9 +93,18 @@ $(cat /dev/stdin)
 
 }
 
+selectappmenu() {
+	echo ':b appmenu
+:b instantmenu_smartrun
+:b instantmenu_run
+:b rofi -show run
+:r none' | selectapp "application launcher" "appmenu"
+}
+
 selectsystemmonitor() {
 	echo ':b 龍mate-system-monitor
-:b 龍st -e htop' | selectapp "terminal emulator" "terminal"
+:b 龍st -e htop
+:b 龍st -e ytop' | selectapp "system monitor" "systemmonitor"
 }
 
 selectfilemanager() {
