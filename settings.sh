@@ -73,6 +73,9 @@ $(cat /dev/stdin)
 	CHOICE="$(echo "$LIST" | sidebar | sed 's/^....//g')"
 	echo "choice"
 	case "$CHOICE" in
+	none)
+		iconf -d "$2"
+		;;
 	Custom)
 		echo "setting custom application"
 		CUSTOMCHOICE="$(imenu -i "enter default $1")"
