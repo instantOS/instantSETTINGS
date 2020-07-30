@@ -57,7 +57,9 @@ defaultapplicationsettings() {
 		LOOPSETTING="True"
 		;;
 	esac
-
+	if [ -z "$LOOPSETTING" ]; then
+		instantutils default
+	fi
 }
 
 # generic default app selector
