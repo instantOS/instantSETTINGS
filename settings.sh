@@ -144,11 +144,15 @@ displaysettings() {
 	CHOICE="$(echo '>>h Display Settings
 :b Change display settings
 :g Make current settings permanent
+:y Change screen brightness
 :b Back' | sidebar)"
 
 	case $CHOICE in
-	*Change*)
+	*settings)
 		arandr &
+		;;
+	*brightness)
+		/usr/share/instantassist/assists/b.sh
 		;;
 	*Make*)
 		autorandr --force --save instantos
