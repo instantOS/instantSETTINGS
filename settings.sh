@@ -145,6 +145,7 @@ displaysettings() {
 :b Change display settings
 :g Make current settings permanent
 :y Change screen brightness
+:b External screen
 :b Back' | sidebar)"
 
 	case $CHOICE in
@@ -156,6 +157,9 @@ displaysettings() {
 		;;
 	*Make*)
 		autorandr --force --save instantos
+		;;
+	*screen)
+		instantdisper
 		;;
 	*)
 		LOOPSETTING="True"
