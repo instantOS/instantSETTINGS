@@ -358,6 +358,7 @@ instantossettings() {
 :b ﰪConky Widgets
 :b Desktop icons
 :b Status bar
+:b Alttab menu
 :b Dad joke on lock screen
 :b Back' | sidebar)"
 	case $CHOICE in
@@ -413,6 +414,10 @@ instantossettings() {
 		;;
 	*screen)
 		toggleiconf dadjoke "show dad joke on lock screen?"
+		;;
+	*menu)
+		toggleiconf alttab "use graphical alttab menu?"
+		imenu -m "alttab settings will be applied on next login"
 		;;
 	*)
 		LOOPSETTING="True"
