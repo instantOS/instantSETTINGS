@@ -145,6 +145,7 @@ displaysettings() {
 :b Change display settings
 :g Make current settings permanent
 :y Change screen brightness
+:b Autodetect monitor docking
 :b External screen
 :b Back' | sidebar)"
 
@@ -161,11 +162,13 @@ displaysettings() {
 	*screen)
 		instantdisper
 		;;
+	*docking)
+		toggleiconf autoswitch "auto detect new monitors being plugged in?"
+		;;
 	*)
 		LOOPSETTING="True"
 		;;
 	esac
-
 }
 
 advancedsettings() {
