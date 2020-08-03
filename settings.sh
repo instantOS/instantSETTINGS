@@ -145,7 +145,7 @@ displaysettings() {
 :b Change display settings
 :g Make current settings permanent
 :y Change screen brightness
-:b Autodetect monitor docking
+:b Autodetect monitor docking
 :b External screen
 :b HiDPI
 :b Back' | sidebar)"
