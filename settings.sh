@@ -147,6 +147,7 @@ displaysettings() {
 :y Change screen brightness
 :b Autodetect monitor docking
 :b External screen
+:b HiDPI
 :b Back' | sidebar)"
 
 	case $CHOICE in
@@ -164,6 +165,23 @@ displaysettings() {
 		;;
 	*docking)
 		toggleiconf autoswitch "auto detect new monitors being plugged in?"
+		;;
+	*HiDPI)
+		if imenu -c "enable HiDPI"; then
+			DPI=$(imenu -i 'enter dpi (default is 96)')
+			[ -z "$DPI" ] && return
+			if ! [ "$DPI" -eq "$DPI" ] || [ "$DPI" -gt 500 ] || [ "$DPI" -lt "20" ]; then
+				imenu -m "please enter a number between 20 and 500 (default is 96)"
+				return
+			fi
+			iconf dpi "$DPI"
+		else
+			iconf -d dpi
+		fi
+
+		instantdpi
+		xrdb ~/.Xresources
+
 		;;
 	*)
 		LOOPSETTING="True"
