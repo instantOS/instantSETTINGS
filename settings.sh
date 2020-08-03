@@ -537,6 +537,46 @@ mousesettings() {
 	esac
 }
 
+appearancesettings() {
+	CHOICE="$(echo '>>h Appearance settings
+:b Application appearance
+:b Enable compositing
+:b Blur
+:b Back' | sidebar)"
+
+	case $CHOICE in
+	*appearance)
+		lxappearance
+		;;
+	*compositing)
+		if ! iconf -i nocompositing; then
+			toggleiconf nocompositing "enable compositing?" i
+		else
+			toggleiconf nocompositing "enable compositing?" i
+			if ! iconf -i nocompositing; then
+				iconf -i potato 0
+			fi
+		fi
+		if iconf -i nocompositing; then
+			pgrep picom && pkill picom
+		else
+			pgrep picom || ipicom
+		fi
+		;;
+	*Blur)
+		toggleiconf blur "enable blur?"
+		if pgrep picom; then
+			pkill picom
+			sleep 0.3
+			ipicom &
+		fi
+		;;
+	*)
+		LOOPSETTING="True"
+		;;
+	esac
+}
+
 LOOPSETTING="true"
 while [ -n "$LOOPSETTING" ]; do
 	SETTING="$(asksetting)"
@@ -546,7 +586,7 @@ while [ -n "$LOOPSETTING" ]; do
 		pavucontrol &
 		;;
 	*Appearance)
-		lxappearance &
+		appearancesettings
 		;;
 	*instantOS)
 		instantossettings
