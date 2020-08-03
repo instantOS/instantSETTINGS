@@ -361,6 +361,7 @@ instantossettings() {
 :b Edit Autostart script
 :b Theming
 :b Logo on wallpaper
+:y Potato
 :b 𧻓Animations
 :b ﰪConky Widgets
 :b Desktop icons
@@ -388,6 +389,9 @@ instantossettings() {
 	*wallpaper)
 		toggleiconf nologo "show logo on wallpaper?" i
 		instantossettings
+		;;
+	*Potato)
+		toggleiconf potato "do you consider this pc a potato?"
 		;;
 	*Animations)
 		if ! iconf -i noanimations; then
