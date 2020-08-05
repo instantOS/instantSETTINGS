@@ -567,6 +567,7 @@ appearancesettings() {
 :b Application appearance
 :b Enable compositing
 :b Blur
+:b Autotheming
 :b Back' | sidebar)"
 
 	case $CHOICE in
@@ -587,6 +588,10 @@ appearancesettings() {
 		else
 			pgrep picom || ipicom
 		fi
+		;;
+	*Autotheming)
+		toggleiconf notheming "enable instantOS theming? (disable for custom gtk themes)?" i
+		instantossettings
 		;;
 	*Blur)
 		toggleiconf blur "enable blur?"
