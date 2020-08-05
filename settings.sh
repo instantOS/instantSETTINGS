@@ -165,6 +165,7 @@ displaysettings() {
 		;;
 	*docking)
 		toggleiconf autoswitch "auto detect new monitors being plugged in?"
+		displaysettings
 		;;
 	*HiDPI)
 		if imenu -c "enable HiDPI"; then
@@ -411,6 +412,7 @@ instantossettings() {
 		;;
 	*Potato)
 		toggleiconf potato "do you consider this pc a potato?"
+		instantossettings
 		;;
 	*Animations)
 		if ! iconf -i noanimations; then
@@ -426,6 +428,7 @@ instantossettings() {
 				xdotool key super+alt+shift+s
 			fi
 		fi
+		instantossettings
 		;;
 	*Widgets)
 		toggleiconf noconky "show desktop widgets?" i
@@ -446,10 +449,12 @@ instantossettings() {
 		;;
 	*screen)
 		toggleiconf dadjoke "show dad joke on lock screen?"
+		instantossettings
 		;;
 	*menu)
 		toggleiconf alttab "use graphical alttab menu?"
 		imenu -m "alttab settings will be applied on next login"
+		instantossettings
 		;;
 	*)
 		LOOPSETTING="True"
@@ -588,10 +593,11 @@ appearancesettings() {
 		else
 			pgrep picom || ipicom
 		fi
+		appearancesettings
 		;;
 	*Autotheming)
 		toggleiconf notheming "enable instantOS theming? (disable for custom gtk themes)?" i
-		instantossettings
+		appearancesettings
 		;;
 	*Blur)
 		toggleiconf blur "enable blur?"
@@ -600,6 +606,7 @@ appearancesettings() {
 			sleep 0.3
 			ipicom &
 		fi
+		appearancesettings
 		;;
 	*)
 		LOOPSETTING="True"
