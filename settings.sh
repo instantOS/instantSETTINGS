@@ -399,6 +399,7 @@ instantossettings() {
 		toggleiconf nostatus "enable default status text?" i
 		if iconf -i nostatus; then
 			[ -e ~/.instantsilent ] || touch ~/.instantsilent
+			xsetroot -name '^f11^ xsetroot -name "yourtext"'
 		else
 			[ -e ~/.instantsilent ] && rm ~/.instantsilent
 		fi &
@@ -438,6 +439,8 @@ instantossettings() {
 		else
 			iconf -i desktop 0
 			pgrep ROX && pkill ROX
+			sleep 0.5
+			instantwallpaper
 		fi
 		instantossettings
 		;;
