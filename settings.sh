@@ -385,6 +385,7 @@ instantossettings() {
 :b ﰪConky Widgets
 :b Desktop icons
 :b Status bar
+:b Clipboard manager
 :b Alttab menu
 :b Dad joke on lock screen
 :b Back' | sidebar)"
@@ -409,6 +410,15 @@ instantossettings() {
 	*wallpaper)
 		toggleiconf nologo "show logo on wallpaper?" i
 		instantossettings
+		;;
+	*manager)
+		toggleiconf clipmanager "Enable clipboard manager"
+		if ! iconf -i clipmanager; then
+			pgrep -f clipmenud && pkill -f clipmenud
+		else
+			instantinstall clipmenu
+			pgrep -f clipmenud || clipmenud &
+		fi
 		;;
 	*Potato)
 		toggleiconf potato "do you consider this pc a potato?"
