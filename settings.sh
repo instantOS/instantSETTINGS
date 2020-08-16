@@ -23,8 +23,8 @@ asksetting() {
 :b Mouse
 :b Default applications
 :b Language
+:g Time and date
 :b 朗Printing
-:y Wallpaper
 :r Storage
 :y Advanced
 :y Dotfiles
@@ -243,16 +243,16 @@ wallpapersettings() {
     *Browse*)
         instantwallpaper select &
         ;;
-    *Set*)
+    *wallpaper)
         instantwallpaper gui &
         ;;
     *logo)
         instantwallpaper logo
         ;;
     *)
-        LOOPSETTING="True"
+        appearancesettings
+        return
         ;;
-
     esac
 }
 
@@ -322,6 +322,64 @@ fetchlanguage() {
     INSTANTARCH="$(realpath ~/.cache/instantARCH)"
     export INSTANTARCH
     source askutils.sh
+}
+
+choosenumber() {
+    NUMCHOICE="$({
+        echo "$1"
+        seq 1 "$2" | tac
+    } | sidebar "Change $3")"
+    [ -n "$NUMCHOICE" ] && [ "$NUMCHOICE" -eq "$NUMCHOICE" ] && echo "$NUMCHOICE"
+}
+
+timesettings() {
+    echo "changing time/date"
+    YEAR="$(date +%Y)"
+    MONTH="$(date +%m)"
+    DAY="$(date +%d)"
+    HOUR="$(date +%H)"
+    MINUTE="$(date +%M)"
+    while :; do
+        DATECHOICE="$(echo ">>h Change date
+Year $YEAR
+Month $MONTH
+Day $DAY
+Hour $HOUR
+Minute $MINUTE
+:g Apply
+:b Back" | sidebar)"
+        echo "datechoice $DATECHOICE"
+        case "$DATECHOICE" in
+        Day*)
+            NEWDAY="$(choosenumber "$DAY" 31 "day")"
+            DAY="${NEWDAY:-"$DAY"}"
+            ;;
+        Year*)
+            NEWYEAR="$(choosenumber "$YEAR" 2100 "year")"
+            YEAR="${NEWYEAR:-"$YEAR"}"
+            ;;
+        Hour*)
+            NEWHOUR="$(choosenumber "$HOUR" 24 "hour")"
+            HOUR="${NEWHOUR:-"$HOUR"}"
+            ;;
+        Minute*)
+            NEWMINUTE="$(choosenumber "$MINUTE" 60 "minute")"
+            MINUTE="${NEWMINUTE:-"$MINUTE"}"
+            ;;
+        Month*)
+            NEWMONTH="$(choosenumber "$MONTH" 12 "month")"
+            MONTH="${NEWMONTH:-"$MONTH"}"
+            ;;
+        *Apply)
+            echo "changing date to $YEAR-$MONTH-$DAY $HOUR:$MINUTE:$(date +%S)"
+            instantsudo timedatectl set-time "$YEAR-$MONTH-$DAY $HOUR:$MINUTE:$(date +%S)"
+            ;;
+        *)
+            LOOPSETTING="True"
+            return
+            ;;
+        esac
+    done
 }
 
 languagesettings() {
@@ -596,6 +654,7 @@ mousesettings() {
 appearancesettings() {
     CHOICE="$(echo '>>h Appearance settings
 :b Application appearance
+:y Wallpaper
 :b Enable compositing
 :b Blur
 :b Autotheming
@@ -604,6 +663,9 @@ appearancesettings() {
     case $CHOICE in
     *appearance)
         lxappearance
+        ;;
+    *Wallpaper)
+        wallpapersettings
         ;;
     *compositing)
         if ! iconf -i nocompositing; then
@@ -676,9 +738,6 @@ while [ -n "$LOOPSETTING" ]; do
     *Power)
         xfce4-power-manager-settings &
         ;;
-    *Wallpaper)
-        wallpapersettings
-        ;;
     *Language)
         languagesettings
         ;;
@@ -693,6 +752,9 @@ while [ -n "$LOOPSETTING" ]; do
         ;;
     *Mouse)
         mousesettings
+        ;;
+    *date)
+        timesettings
         ;;
     *applications)
         defaultapplicationsettings
