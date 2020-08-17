@@ -726,6 +726,18 @@ while [ -n "$LOOPSETTING" ]; do
         /usr/share/instantassist/assists/t/k.sh 123
         ;;
     *Printing)
+        instantinstall cups system-config-printer || exit
+        if ! systemctl is-active --quiet org.cups.cupsd.service; then
+            if imenu -c "enable printer support?"; then
+                enableservices() {
+                    systemctl enable org.cups.cupsd.service
+                    systemctl start org.cups.cupsd.service
+                }
+                instantsudo bash -c "$(declare -f enableservices); enableservices"
+            else
+                exit
+            fi
+        fi
         system-config-printer &
         ;;
     *Bluetooth)
