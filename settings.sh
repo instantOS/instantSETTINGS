@@ -235,6 +235,7 @@ wallpapersettings() {
 :b Set own wallpaper
 :b Browse wallpapers
 :b Custom wallpaper with logo
+:b Logo
 :b Back' | sidebar)"
     case $CHOICE in
     *Generate*)
@@ -245,6 +246,10 @@ wallpapersettings() {
         ;;
     *wallpaper)
         instantwallpaper gui &
+        ;;
+    *Logo)
+        toggleiconf nologo "show logo on wallpaper?" i
+        wallpapersettings
         ;;
     *logo)
         instantwallpaper logo
@@ -453,7 +458,6 @@ instantossettings() {
     CHOICE="$(echo '>>h instantOS settings
 :b Edit Autostart script
 :b Theming
-:b Logo on wallpaper
 :y Potato
 :b 𧻓Animations
 :b ﰪConky Widgets
@@ -479,10 +483,6 @@ instantossettings() {
         else
             [ -e ~/.instantsilent ] && rm ~/.instantsilent
         fi &
-        instantossettings
-        ;;
-    *wallpaper)
-        toggleiconf nologo "show logo on wallpaper?" i
         instantossettings
         ;;
     *manager)
@@ -663,9 +663,6 @@ appearancesettings() {
     case $CHOICE in
     *appearance)
         lxappearance
-        ;;
-    *Wallpaper)
-        wallpapersettings
         ;;
     *compositing)
         if ! iconf -i nocompositing; then
