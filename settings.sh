@@ -466,6 +466,8 @@ instantossettings() {
 :b Clipboard manager
 :b Alttab menu
 :b Dad joke on lock screen
+:g Neovim preconfig
+:r instantOS development tools
 :b Back' | sidebar)"
     case $CHOICE in
     *script)
@@ -493,10 +495,42 @@ instantossettings() {
             instantinstall clipmenu
             pgrep -f clipmenud || clipmenud &
         fi
+        instantossettings
         ;;
     *Potato)
         toggleiconf potato "do you consider this pc a potato?"
         instantossettings
+        ;;
+    *tools)
+        imenu -c "install instantOS development tools?" || exit
+        checkinternet || {
+            imenu -e "internet is required"
+            exit 1
+        }
+        st -e bash -c "curl -s https://raw.githubusercontent.com/instantOS/instantTOOLS/master/netinstall.sh | bash"
+        ;;
+    *preconfig)
+        if ! echo "install the instantOS development neovim dots?
+This will override any neovim configurations done previously" | iconf -C; then
+            echo "installing nvim build"
+            exit
+        fi
+        iconf neovimconfig 1
+        iconf -i neovimconfig 1
+        instantinstall nvim-qt nodejs npm
+        mkdir -p ~/.cache/instantosneovim
+        cd ~/.cache/instantosneovim || exit 1
+        checkinternet || {
+            imenu -e "internet is required"
+            exit 1
+        }
+
+        notify-send "downloading config"
+        git clone --depth=1 https://github.com/paperbenni/init.vim
+
+        cd init.vim || exit 1
+        chmod +x ./*.sh
+        st -e bash -c "./install.sh"
         ;;
     *Animations)
         if ! iconf -i noanimations; then
