@@ -690,6 +690,7 @@ appearancesettings() {
 :b Application appearance
 :y Wallpaper
 :b Enable compositing
+:b 並V-Sync
 :b Blur
 :b Autotheming
 :b Back' | sidebar)"
@@ -718,6 +719,15 @@ appearancesettings() {
         toggleiconf notheming "enable instantOS theming? (disable for custom gtk themes)?" i
         appearancesettings
         ;;
+    *V-Sync)
+        toggleiconf vsync "enable compositor V-Sync?"
+        if pgrep picom; then
+            pkill picom
+            sleep 0.3
+            ipicom &
+        fi
+        appearancesettings
+	;;
     *Blur)
         toggleiconf blur "enable blur?"
         if pgrep picom; then
