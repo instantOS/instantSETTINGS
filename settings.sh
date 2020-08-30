@@ -32,6 +32,61 @@ asksetting() {
         instantmenu -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search"
 }
 
+soundsettings() {
+
+    CHOICE="$(echo '>>h Sound settings
+:b ﰝSystem audio
+:y Notification sound
+:b Back' | sidebar)"
+    case "$CHOICE" in
+    *audio)
+        pavucontrol &
+        exit
+        ;;
+    *sound)
+        notificationsettings
+        ;;
+    *)
+        LOOPSETTING="True"
+        ;;
+esac
+}
+
+notificationsettings() {
+    CHOICE="$(echo '>>h Notification sound settings
+:b Custom
+:y 碑Reset
+:r Mute
+:b Back' | sidebar)"
+    case $CHOICE in
+    *Custom)
+        SOUNDPATH="$(zenity --file-selection)"
+        if [ -z "$SOUNDPATH" ]
+        then
+            notificationsettings
+            return
+        fi
+        if ! mpv "$SOUNDPATH"
+        then
+            if ! echo "file $SOUNDPATH does not appear to be an audio file, use regardless ?" | imenu -C
+            then
+                exit
+            fi
+        fi
+        iconf -i nonotify 0
+        cp "$SOUNDPATH" ~/instantos/notifications/customsound
+        ;;
+    *Reset)
+        iconf -i nonotify 0
+        rm ~/instantos/notifications/customsound
+        ;;
+    *Mute)
+        toggleiconf nonotify "mute notification alert sounds"
+        ;;
+    esac
+
+}
+
 defaultapplicationsettings() {
     CHOICE="$(echo '>>h Default applications
 >>r this is not fully working yet
@@ -739,7 +794,7 @@ while [ -n "$LOOPSETTING" ]; do
     unset LOOPSETTING
     case "$SETTING" in
     *Sound)
-        pavucontrol &
+        soundsettings
         ;;
     *Appearance)
         appearancesettings
