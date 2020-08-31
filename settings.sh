@@ -782,6 +782,9 @@ appearancesettings() {
         fi
         appearancesettings
         ;;
+    *Wallpaper)
+        wallpapersettings
+        ;;
     *)
         LOOPSETTING="True"
         ;;
