@@ -816,7 +816,7 @@ while [ -n "$LOOPSETTING" ]; do
         instantossettings
         ;;
     *Software)
-        pamac-manager &
+        instantpacman &
         ;;
     *Display)
         displaysettings
