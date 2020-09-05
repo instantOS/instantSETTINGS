@@ -261,6 +261,7 @@ networksettings() {
     CHOICE="$(echo '>>h Network settings
 :b Start network applet
 :g Autostart network applet
+:b IP info
 :b Back' | sidebar)"
 
     case "$CHOICE" in
@@ -276,6 +277,46 @@ networksettings() {
         ;;
     *Start*)
         pgrep nm-applet || nm-applet &
+        ;;
+    *info)
+        getlocalip() {
+            INTERFACE=$(ip addr | awk '/state UP/ {print $2}' | sed 's/.$//')
+            if [ "$(echo "$INTERFACE" | wc -l)" -gt 1 ]; then
+                echoerr "error: more than one network interface found"
+                return 1
+            fi
+            ip addr | grep -A2 "$INTERFACE" | grep -o 'inet .*/' | grep -o '[0-9\.]*'
+        }
+        if getlocalip
+        then
+            LOCALIP="$(getlocalip)"
+        fi
+
+        if checkinternet
+        then
+            PUBLICIP="$(curl ifconfig.me)" 
+        fi
+
+        if [ -z "${PUBLICIP}${LOCALIP}" ]
+        then
+            imenu -e "error getting network information"
+            exit 
+        fi
+
+        CHOICE="$(echo "public ip: ${PUBLICIP:-not found}
+local ip: ${PUBLICIP:-not found}
+OK" | imenu -l "Network info")"
+
+        if grep -q 'not found' <<< "$CHOICE" || ! grep -q 'ip' <<< "$CHOICE"
+        then
+            exit
+        fi
+
+        echo "$CHOICE" | grep -o '[^:]*$' | grep -o '[^ ]*' | head -1 | xclip -selection c
+        notify-send "copied ip to clipboard"
+        
+        exit
+
         ;;
     *)
         LOOPSETTING="True"
