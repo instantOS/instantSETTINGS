@@ -23,13 +23,68 @@ asksetting() {
 :b Mouse
 :b Default applications
 :b Language
+:g Time and date
 :b 朗Printing
-:y Wallpaper
 :r Storage
 :y Advanced
 :y Dotfiles
 :r Close Settings' |
         instantmenu -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search"
+}
+
+soundsettings() {
+
+    CHOICE="$(echo '>>h Sound settings
+:b ﰝSystem audio
+:y Notification sound
+:b Back' | sidebar)"
+    case "$CHOICE" in
+    *audio)
+        pavucontrol &
+        exit
+        ;;
+    *sound)
+        notificationsettings
+        ;;
+    *)
+        LOOPSETTING="True"
+        ;;
+esac
+}
+
+notificationsettings() {
+    CHOICE="$(echo '>>h Notification sound settings
+:b Custom
+:y 碑Reset
+:r Mute
+:b Back' | sidebar)"
+    case $CHOICE in
+    *Custom)
+        SOUNDPATH="$(zenity --file-selection)"
+        if [ -z "$SOUNDPATH" ]
+        then
+            notificationsettings
+            return
+        fi
+        if ! mpv "$SOUNDPATH"
+        then
+            if ! echo "file $SOUNDPATH does not appear to be an audio file, use regardless ?" | imenu -C
+            then
+                exit
+            fi
+        fi
+        iconf -i nonotify 0
+        cp "$SOUNDPATH" ~/instantos/notifications/customsound
+        ;;
+    *Reset)
+        iconf -i nonotify 0
+        rm ~/instantos/notifications/customsound
+        ;;
+    *Mute)
+        toggleiconf nonotify "mute notification alert sounds"
+        ;;
+    esac
+
 }
 
 defaultapplicationsettings() {
@@ -235,6 +290,7 @@ wallpapersettings() {
 :b Set own wallpaper
 :b Browse wallpapers
 :b Custom wallpaper with logo
+:b Logo
 :b Back' | sidebar)"
     case $CHOICE in
     *Generate*)
@@ -243,16 +299,20 @@ wallpapersettings() {
     *Browse*)
         instantwallpaper select &
         ;;
-    *Set*)
+    *wallpaper)
         instantwallpaper gui &
+        ;;
+    *Logo)
+        toggleiconf nologo "show logo on wallpaper?" i
+        wallpapersettings
         ;;
     *logo)
         instantwallpaper logo
         ;;
     *)
-        LOOPSETTING="True"
+        appearancesettings
+        return
         ;;
-
     esac
 }
 
@@ -365,6 +425,64 @@ fetchlanguage() {
     source askutils.sh
 }
 
+choosenumber() {
+    NUMCHOICE="$({
+        echo "$1"
+        seq 1 "$2" | tac
+    } | sidebar "Change $3")"
+    [ -n "$NUMCHOICE" ] && [ "$NUMCHOICE" -eq "$NUMCHOICE" ] && echo "$NUMCHOICE"
+}
+
+timesettings() {
+    echo "changing time/date"
+    YEAR="$(date +%Y)"
+    MONTH="$(date +%m)"
+    DAY="$(date +%d)"
+    HOUR="$(date +%H)"
+    MINUTE="$(date +%M)"
+    while :; do
+        DATECHOICE="$(echo ">>h Change date
+Year $YEAR
+Month $MONTH
+Day $DAY
+Hour $HOUR
+Minute $MINUTE
+:g Apply
+:b Back" | sidebar)"
+        echo "datechoice $DATECHOICE"
+        case "$DATECHOICE" in
+        Day*)
+            NEWDAY="$(choosenumber "$DAY" 31 "day")"
+            DAY="${NEWDAY:-"$DAY"}"
+            ;;
+        Year*)
+            NEWYEAR="$(choosenumber "$YEAR" 2100 "year")"
+            YEAR="${NEWYEAR:-"$YEAR"}"
+            ;;
+        Hour*)
+            NEWHOUR="$(choosenumber "$HOUR" 24 "hour")"
+            HOUR="${NEWHOUR:-"$HOUR"}"
+            ;;
+        Minute*)
+            NEWMINUTE="$(choosenumber "$MINUTE" 60 "minute")"
+            MINUTE="${NEWMINUTE:-"$MINUTE"}"
+            ;;
+        Month*)
+            NEWMONTH="$(choosenumber "$MONTH" 12 "month")"
+            MONTH="${NEWMONTH:-"$MONTH"}"
+            ;;
+        *Apply)
+            echo "changing date to $YEAR-$MONTH-$DAY $HOUR:$MINUTE:$(date +%S)"
+            instantsudo timedatectl set-time "$YEAR-$MONTH-$DAY $HOUR:$MINUTE:$(date +%S)"
+            ;;
+        *)
+            LOOPSETTING="True"
+            return
+            ;;
+        esac
+    done
+}
+
 languagesettings() {
     fetchlanguage
     CHOICE="$(echo '>>h Language settings
@@ -436,7 +554,6 @@ instantossettings() {
     CHOICE="$(echo '>>h instantOS settings
 :b Edit Autostart script
 :b Theming
-:b Logo on wallpaper
 :y Potato
 :b 𧻓Animations
 :b ﰪConky Widgets
@@ -445,6 +562,8 @@ instantossettings() {
 :b Clipboard manager
 :b Alttab menu
 :b Dad joke on lock screen
+:g Neovim preconfig
+:r instantOS development tools
 :b Back' | sidebar)"
     case $CHOICE in
     *script)
@@ -464,10 +583,6 @@ instantossettings() {
         fi &
         instantossettings
         ;;
-    *wallpaper)
-        toggleiconf nologo "show logo on wallpaper?" i
-        instantossettings
-        ;;
     *manager)
         toggleiconf clipmanager "Enable clipboard manager"
         if ! iconf -i clipmanager; then
@@ -476,10 +591,42 @@ instantossettings() {
             instantinstall clipmenu
             pgrep -f clipmenud || clipmenud &
         fi
+        instantossettings
         ;;
     *Potato)
         toggleiconf potato "do you consider this pc a potato?"
         instantossettings
+        ;;
+    *tools)
+        imenu -c "install instantOS development tools?" || exit
+        checkinternet || {
+            imenu -e "internet is required"
+            exit 1
+        }
+        st -e bash -c "curl -s https://raw.githubusercontent.com/instantOS/instantTOOLS/master/netinstall.sh | bash"
+        ;;
+    *preconfig)
+        if ! echo "install the instantOS development neovim dots?
+This will override any neovim configurations done previously" | iconf -C; then
+            echo "installing nvim build"
+            exit
+        fi
+        iconf neovimconfig 1
+        iconf -i neovimconfig 1
+        instantinstall nvim-qt nodejs npm
+        mkdir -p ~/.cache/instantosneovim
+        cd ~/.cache/instantosneovim || exit 1
+        checkinternet || {
+            imenu -e "internet is required"
+            exit 1
+        }
+
+        notify-send "downloading config"
+        git clone --depth=1 https://github.com/paperbenni/init.vim
+
+        cd init.vim || exit 1
+        chmod +x ./*.sh
+        st -e bash -c "./install.sh"
         ;;
     *Animations)
         if ! iconf -i noanimations; then
@@ -637,7 +784,9 @@ mousesettings() {
 appearancesettings() {
     CHOICE="$(echo '>>h Appearance settings
 :b Application appearance
+:y Wallpaper
 :b Enable compositing
+:b 並V-Sync
 :b Blur
 :b Autotheming
 :b Back' | sidebar)"
@@ -666,6 +815,15 @@ appearancesettings() {
         toggleiconf notheming "enable instantOS theming? (disable for custom gtk themes)?" i
         appearancesettings
         ;;
+    *V-Sync)
+        toggleiconf vsync "enable compositor V-Sync?"
+        if pgrep picom; then
+            pkill picom
+            sleep 0.3
+            ipicom &
+        fi
+        appearancesettings
+	;;
     *Blur)
         toggleiconf blur "enable blur?"
         if pgrep picom; then
@@ -674,6 +832,9 @@ appearancesettings() {
             ipicom &
         fi
         appearancesettings
+        ;;
+    *Wallpaper)
+        wallpapersettings
         ;;
     *)
         LOOPSETTING="True"
@@ -687,7 +848,7 @@ while [ -n "$LOOPSETTING" ]; do
     unset LOOPSETTING
     case "$SETTING" in
     *Sound)
-        pavucontrol &
+        soundsettings
         ;;
     *Appearance)
         appearancesettings
@@ -696,7 +857,7 @@ while [ -n "$LOOPSETTING" ]; do
         instantossettings
         ;;
     *Software)
-        pamac-manager &
+        instantpacman &
         ;;
     *Display)
         displaysettings
@@ -705,6 +866,18 @@ while [ -n "$LOOPSETTING" ]; do
         /usr/share/instantassist/assists/t/k.sh 123
         ;;
     *Printing)
+        instantinstall cups system-config-printer || exit
+        if ! systemctl is-active --quiet org.cups.cupsd.service; then
+            if imenu -c "enable printer support?"; then
+                enableservices() {
+                    systemctl enable org.cups.cupsd.service
+                    systemctl start org.cups.cupsd.service
+                }
+                instantsudo bash -c "$(declare -f enableservices); enableservices"
+            else
+                exit
+            fi
+        fi
         system-config-printer &
         ;;
     *Bluetooth)
@@ -716,9 +889,6 @@ while [ -n "$LOOPSETTING" ]; do
         ;;
     *Power)
         xfce4-power-manager-settings &
-        ;;
-    *Wallpaper)
-        wallpapersettings
         ;;
     *Language)
         languagesettings
@@ -734,6 +904,9 @@ while [ -n "$LOOPSETTING" ]; do
         ;;
     *Mouse)
         mousesettings
+        ;;
+    *date)
+        timesettings
         ;;
     *applications)
         defaultapplicationsettings
