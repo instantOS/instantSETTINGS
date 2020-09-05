@@ -364,7 +364,7 @@ networksettings() {
         fi
 
         CHOICE="$(echo "public ip: ${PUBLICIP:-not found}
-local ip: ${PUBLICIP:-not found}
+local ip: ${LOCALIP:-not found}
 OK" | imenu -l "Network info")"
 
         if grep -q 'not found' <<< "$CHOICE" || ! grep -q 'ip' <<< "$CHOICE"
