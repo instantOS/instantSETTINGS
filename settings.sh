@@ -730,7 +730,7 @@ Try regardless?' | imenu -C; then
 :b Back' | sidebar)"
 
     case "$CHOICE" in
-    applet*)
+    *applet)
         toggleiconf bluetoothapplet "enable bluetooth applet?"
 
         if iconf -i bluetoothapplet; then
@@ -741,7 +741,7 @@ Try regardless?' | imenu -C; then
 
         bluetoothsettings
         ;;
-    device*)
+    *device)
         blueman-assistant &
         ;;
     *)
