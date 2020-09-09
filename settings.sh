@@ -228,7 +228,9 @@ displaysettings() {
     *brightness)
         /usr/share/instantassist/assists/b.sh
         ;;
-    *Make*)
+    *permanent)
+        notify-send "saving current monitor settings"
+        instantinstall autorandr
         autorandr --force --save instantos
         ;;
     *screen)
