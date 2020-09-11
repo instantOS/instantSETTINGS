@@ -569,7 +569,20 @@ instantossettings() {
 :b Back' | sidebar)"
     case $CHOICE in
     *script)
-        st -e "nvim" -c ":e ~/.instantautostart" &
+        if ! [ -e ~/.config/instantos/autostart.sh ]
+        then
+            mkdir -p ~/.config/instantos
+            if [ -e ~/.instantautostart ]
+            then
+                cat ~/.instantautostart > ~/.config/instantos/autostart.sh
+            else
+                echo "# instantOS autostart script
+# This script gets executed when $(whoami) logs in
+# Add & (a literal) ampersand to the end of a line to make it run in the background" > \
+                ~/.config/instantos/autostart.sh
+            fi
+        fi
+        st -e "nvim" -c ":e ~/.config/instantos/autostart.sh" &
         ;;
     *Theming)
         toggleiconf notheming "enable instantOS theming?" i
