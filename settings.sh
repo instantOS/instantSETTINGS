@@ -291,6 +291,7 @@ wallpapersettings() {
 :b Browse wallpapers
 :b Custom wallpaper with logo
 :b Logo
+:b Repair wallpaper
 :b Back' | sidebar)"
     case $CHOICE in
     *Generate*)
@@ -298,6 +299,12 @@ wallpapersettings() {
         ;;
     *Browse*)
         instantwallpaper select &
+        ;;
+    *Repair*)
+        rm ~/instantos/wallpapers/*.png
+        rm ~/instantos/wallpapers/default
+        instantmonitor
+        instantwallpaper
         ;;
     *wallpaper)
         instantwallpaper gui &
