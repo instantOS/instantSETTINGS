@@ -271,9 +271,11 @@ advancedsettings() {
 :b Back' | sidebar)"
     case $CHOICE in
     *Firewall)
+        instantinstall gufw
         gufw &
         ;;
     *TLP)
+        instantinstall tlpui
         tlpui &
         ;;
     *Bootloader)
