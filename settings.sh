@@ -89,7 +89,6 @@ notificationsettings() {
 
 defaultapplicationsettings() {
     CHOICE="$(echo '>>h Default applications
->>r this is not fully working yet
 :b Browser
 :b 龍System monitor
 :b Terminal emulator
@@ -889,7 +888,7 @@ while [ -n "$LOOPSETTING" ]; do
         /usr/share/instantassist/assists/t/k.sh 123
         ;;
     *Printing)
-        instantinstall cups system-config-printer || exit
+        instantinstall cups system-config-printer ghostscript || exit
         if ! systemctl is-active --quiet org.cups.cupsd.service; then
             if imenu -c "enable printer support?"; then
                 enableservices() {
