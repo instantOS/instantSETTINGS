@@ -741,8 +741,7 @@ Try regardless?' | imenu -C; then
 
     if ! systemctl is-active --quiet bluetooth; then
         if imenu -c "enable bluetooth?"; then
-            instantsudo systemctl enable bluetooth
-            instantsudo systemctl start bluetooth
+            instantsudo /usr/share/instantsettings/enablebluetooth.sh
         else
             return
         fi
