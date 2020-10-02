@@ -1,2 +1,4 @@
-Chrome:google-chrome-stable:google-chrome
-Brave:brave:brave-bin
+y Firefox:firefox
+y Brave:brave:brave-bin
+b Chromium:chromium
+y Chrome:google-chrome-stable:google-chrome

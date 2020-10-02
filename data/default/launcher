@@ -1,4 +1,4 @@
-appmenu:appmenu:instantutils,rofi
-instantMENU:instantmenu_smartrun:instantmenu
-dmenu:dmenu_run:dmenu
-rofi:rofi -show run:rofi-git
+b appmenu:appmenu:instantutils,rofi
+b instantMENU:instantmenu_smartrun:instantmenu
+b dmenu:dmenu_run:dmenu
+b rofi:rofi -show run:rofi-git

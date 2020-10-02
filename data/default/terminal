@@ -1,0 +1,6 @@
+b st:st:st-instantos
+b Urxvt:urxvt:rxvt-unicode
+b Xterm:xterm
+y alacritty
+b kitty
+y Gnome terminal:gnome-terminal

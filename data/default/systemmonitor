@@ -1,3 +1,5 @@
-Mate-system-monitor:mate-system-monitor
-ytop:instantutils open terminnal -e ytop:ytop-bin,instantutils
-htop:instantutils open terminal -e htop:htop,instantutils
+b 龍Mate-system-monitor:mate-system-monitor
+b 龍ytop:instantutils open terminnal -e ytop:ytop-bin,instantutils
+b 龍htop:instantutils open terminal -e htop:htop,instantutils
+y 龍Gnome system monitor:gnome-system-monitor
+b 龍ksysguard:ksysguard
