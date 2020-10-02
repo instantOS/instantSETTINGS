@@ -1,3 +1,3 @@
-st -e ytop:ytop-bin
-st -e htop:htop
-
+Mate-system-monitor:mate-system-monitor
+ytop:instantutils open terminnal -e ytop:ytop-bin,instantutils
+htop:instantutils open terminal -e htop:htop,instantutils

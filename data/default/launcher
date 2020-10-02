@@ -1,0 +1,4 @@
+appmenu:appmenu:instantutils,rofi
+instantMENU:instantmenu_smartrun:instantmenu
+dmenu:dmenu_run:dmenu
+rofi:rofi -show run:rofi-git
