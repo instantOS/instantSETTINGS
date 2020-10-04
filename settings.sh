@@ -6,7 +6,21 @@ die() {
 }
 
 sidebar() {
-    instantmenu -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "${1:-search...}"
+    eval "$(xdotool getmouselocation --shell)"
+
+    for i in $(xrandr | pcregrep -o3 '(\d+)x(\d+)\+(\d+)\+(\d+)' | sort); do
+        if (( X > i )); then
+            MONITORSTART=$i
+        fi
+    done
+
+    SIDEBARWIDTH=400
+
+    SCREENWIDTH=$(xrandr | pcregrep -o1 "(\d+)x(\d+)\+$MONITORSTART\+(\d+)")
+
+    HORIZONTALOFFSET=$(( SCREENWIDTH - SIDEBARWIDTH - 8 ))
+
+    instantmenu -l 2000 -w -$SIDEBARWIDTH -i -h -1 -x $HORIZONTALOFFSET -y -1 -bw 4 -H -q "${1:-search...}"
 }
 
 asksetting() {
@@ -28,8 +42,7 @@ asksetting() {
 :r Storage
 :y Advanced
 :y Dotfiles
-:r Close Settings' |
-        instantmenu -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search"
+:r Close Settings' | sidebar
 }
 
 soundsettings() {
