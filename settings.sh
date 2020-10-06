@@ -181,25 +181,35 @@ selectfilemanager() {
 
 selectdefault() {
     LIST=">>h Default ${2:-$1}
-    $(grep -o '^[^:]*' /usr/share/instantsetting/data/default/"$1" | sed 's/^/:/g')
+$(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:/g')
 :b Custom
 :b Back"
-    CHOICE="$(echo "$LIST" | sidebar)"
-
-    if [ -n "$CHOICE" ]; then
+    APPCHOICE="$(echo "$LIST" | sidebar | sed 's/^://g')"
+    CHOICE="$(grep "$APPCHOICE" /usr/share/instantsettings/data/default/"$1")"
+    if [ -z "$CHOICE" ]; then
         return 1
     fi
+
+    case "$CHOICE" in
+    *Custom)
+        CUSTOMAPP="$(imenu -i "default $1")"
+        [ -z "$CUSTOMAPP" ] && return 1
+        iconf "$1" "$CUSTOMAPP"
+        ;;
+    *Back)
+        return 0
+        ;;
+    esac
 
     if ! grep -q ':' <<<"$CHOICE"; then
         instantinstall "$(sed 's/^....//g')"
         return
     fi
-    
-    SETCOMMAND="$(sed 's/^[^:]*//g' <<< "$CHOICE" | grep -o '^[^:]*')"
+    echo "choice: $CHOICE"
+    SETCOMMAND="$(sed 's/^[^:]*://g' <<<"$CHOICE" | grep -o '^[^:]*')"
     echo "echo setting command to $SETCOMMAND"
-    if grep -q '.*:.*:' <<< "$CHOICE"
-    then
-        INSTALLCOMMAND="$(grep -o '[^:]*$' <<< "$CHOICE")"
+    if grep -q '.*:.*:' <<<"$CHOICE"; then
+        INSTALLCOMMAND="$(grep -o '[^:]*$' <<<"$CHOICE")"
     else
         INSTALLCOMMAND="$SETCOMMAND"
     fi
