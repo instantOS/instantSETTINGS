@@ -161,11 +161,7 @@ selectappmenu() {
 }
 
 selectsystemmonitor() {
-    echo ':b 龍mate-system-monitor
-:b 龍st -e htop
-:b 龍st -e ytop' | selectapp "system monitor" "systemmonitor"
-    instantinstall "$(iconf systemmonitor | grep -o '[^ ]*$')"
-
+    selectdefault "systemmonitor" "System Monitor"
 }
 
 selectfilemanager() {
@@ -211,16 +207,17 @@ $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:
         INSTALLCOMMAND="$SETCOMMAND"
     fi
 
-    if ! grep -q ',' "$INSTALLCOMMAND"; then
+    if ! grep -q ',' <<< "$INSTALLCOMMAND"; then
         if command -v "$SETCOMMAND"; then
             return
         fi
         instantinstall "$INSTALLCOMMAND"
     else
         echo "multiple dependencies detected"
-        INSTALLLIST="$(sed 's/,/ /g' <<< "$INSTALLCOMMAND")"
+        INSTALLLIST="$(sed 's/\,/ /g' <<< "$INSTALLCOMMAND")"
         for i in $(echo $INSTALLLIST)
         do
+            echo "multi installing"
             instantinstall "$i"
         done
     fi
@@ -237,11 +234,7 @@ selectbrowser() {
 }
 
 selecteditor() {
-    echo ':y Gedit
-:g Vim
-:y nvim-qt
-:y Pluma' | selectapp "text editor" "editor"
-    instantinstall "$(iconf editor)"
+    selectdefault editor "Text editor"
 }
 
 displaysettings() {
