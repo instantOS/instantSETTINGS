@@ -1,5 +1,5 @@
-Neovim-Qt:nvim-qt:neovim,neovim-qt
-Gedit:gedit
-Pluma:pluma
-Visual-studio-code:code
-Vim:gvim
+g Neovim-Qt:nvim-qt:neovim,neovim-qt
+y Gedit:gedit
+r Pluma:pluma
+b Visual-studio-code:code
+g Vim:gvim

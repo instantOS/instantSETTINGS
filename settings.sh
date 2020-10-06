@@ -49,7 +49,7 @@ soundsettings() {
     *)
         LOOPSETTING="True"
         ;;
-esac
+    esac
 }
 
 notificationsettings() {
@@ -61,15 +61,12 @@ notificationsettings() {
     case $CHOICE in
     *Custom)
         SOUNDPATH="$(zenity --file-selection)"
-        if [ -z "$SOUNDPATH" ]
-        then
+        if [ -z "$SOUNDPATH" ]; then
             notificationsettings
             return
         fi
-        if ! mpv "$SOUNDPATH"
-        then
-            if ! echo "file $SOUNDPATH does not appear to be an audio file, use regardless ?" | imenu -C
-            then
+        if ! mpv "$SOUNDPATH"; then
+            if ! echo "file $SOUNDPATH does not appear to be an audio file, use regardless ?" | imenu -C; then
                 exit
             fi
         fi
@@ -184,6 +181,34 @@ selectfilemanager() {
 :b Nemo
 :b Caja' | selectapp "file manager" "filemanager"
     instantinstall "$(iconf filemanager | grep -o '[^ ]*$')"
+
+}
+
+selectdefault() {
+    LIST=">>h Default $2
+    $(grep -o '^[^:]*' /usr/share/instantsetting/data/default/"$1" | sed 's/^/:/g')
+:b Custom
+:b Back"
+    CHOICE="$(echo "$LIST" | sidebar)"
+
+    if [ -n "$CHOICE" ]; then
+        return 1
+    fi
+
+    if ! grep -q ':' <<<"$CHOICE"; then
+        instantinstall "$(sed 's/^....//g')"
+        return
+    fi
+    
+    SETCOMMAND="$(sed 's/^[^:]*//g' <<< "$CHOICE" | grep -o '^[^:]*')"
+    echo "echo setting command to $SETCOMMAND"
+    if grep -q '.*:.*:' <<< "$CHOICE"
+    then
+        INSTALLCOMMAND="$(grep -o '[^:]*$' <<< "$CHOICE")"
+    else
+        INSTALLCOMMAND="$SETCOMMAND"
+    fi
+    instantinstall "$INSTALLCOMMAND"
 
 }
 
@@ -357,34 +382,30 @@ networksettings() {
             fi
             ip addr | grep -A2 "$INTERFACE" | grep -o 'inet .*/' | grep -o '[0-9\.]*'
         }
-        if getlocalip
-        then
+        if getlocalip; then
             LOCALIP="$(getlocalip)"
         fi
 
-        if checkinternet
-        then
-            PUBLICIP="$(curl ifconfig.me)" 
+        if checkinternet; then
+            PUBLICIP="$(curl ifconfig.me)"
         fi
 
-        if [ -z "${PUBLICIP}${LOCALIP}" ]
-        then
+        if [ -z "${PUBLICIP}${LOCALIP}" ]; then
             imenu -e "error getting network information"
-            exit 
+            exit
         fi
 
         CHOICE="$(echo "public ip: ${PUBLICIP:-not found}
 local ip: ${LOCALIP:-not found}
 OK" | imenu -l "Network info")"
 
-        if grep -q 'not found' <<< "$CHOICE" || ! grep -q 'ip' <<< "$CHOICE"
-        then
+        if grep -q 'not found' <<<"$CHOICE" || ! grep -q 'ip' <<<"$CHOICE"; then
             exit
         fi
 
         echo "$CHOICE" | grep -o '[^:]*$' | grep -o '[^ ]*' | head -1 | xclip -selection c
         notify-send "copied ip to clipboard"
-        
+
         exit
 
         ;;
@@ -577,17 +598,15 @@ instantossettings() {
 :b Back' | sidebar)"
     case $CHOICE in
     *script)
-        if ! [ -e ~/.config/instantos/autostart.sh ]
-        then
+        if ! [ -e ~/.config/instantos/autostart.sh ]; then
             mkdir -p ~/.config/instantos
-            if [ -e ~/.instantautostart ]
-            then
-                cat ~/.instantautostart > ~/.config/instantos/autostart.sh
+            if [ -e ~/.instantautostart ]; then
+                cat ~/.instantautostart >~/.config/instantos/autostart.sh
             else
                 echo "# instantOS autostart script
 # This script gets executed when $(whoami) logs in
 # Add & (a literal) ampersand to the end of a line to make it run in the background" > \
-                ~/.config/instantos/autostart.sh
+                    ~/.config/instantos/autostart.sh
             fi
         fi
         st -e "nvim" -c ":e ~/.config/instantos/autostart.sh" &
@@ -696,6 +715,7 @@ This will override any neovim configurations done previously" | iconf -C; then
     *menu)
         toggleiconf alttab "use graphical alttab menu?"
         imenu -m "alttab settings will be applied on next login"
+        instantinstall alttab
         instantossettings
         ;;
     *)
@@ -850,7 +870,7 @@ appearancesettings() {
             ipicom &
         fi
         appearancesettings
-	;;
+        ;;
     *Blur)
         toggleiconf blur "enable blur?"
         if pgrep picom; then
