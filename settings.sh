@@ -1,13 +1,8 @@
 #!/bin/bash
 
-die() {
-    imenu -m "error: $1"
-    exit 1
-}
+# graphical settings menu for instantOS
 
-sidebar() {
-    instantmenu -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "${1:-search...}"
-}
+source /usr/share/instantsettings/utils/functions.sh
 
 asksetting() {
     echo '>>h Settings
@@ -185,7 +180,7 @@ selectfilemanager() {
 }
 
 selectdefault() {
-    LIST=">>h Default $2
+    LIST=">>h Default ${2:-$1}
     $(grep -o '^[^:]*' /usr/share/instantsetting/data/default/"$1" | sed 's/^/:/g')
 :b Custom
 :b Back"
