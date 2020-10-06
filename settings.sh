@@ -87,6 +87,7 @@ defaultapplicationsettings() {
 :b File manager
 :b Application launcher
 :y Text editor
+:r Lock screen
 :b Back' | sidebar)"
     case "$CHOICE" in
     *manager)
@@ -106,6 +107,9 @@ defaultapplicationsettings() {
         ;;
     *editor)
         selecteditor
+        ;;
+    *screen)
+        selectlockscreen
         ;;
     *)
         LOOPSETTING="True"
@@ -183,6 +187,7 @@ $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:
         iconf "$1" "$CUSTOMAPP"
         ;;
     *Back)
+        defaultapplicationsettings
         return 0
         ;;
     esac
@@ -235,6 +240,10 @@ selectbrowser() {
 
 selecteditor() {
     selectdefault editor "Text editor"
+}
+
+selectlockscreen() {
+    selectdefault lockscreen "Lock Screen"
 }
 
 displaysettings() {
