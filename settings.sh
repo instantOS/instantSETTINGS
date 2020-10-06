@@ -169,14 +169,7 @@ selectsystemmonitor() {
 }
 
 selectfilemanager() {
-
-    echo ':b Nautilus
-:b Thunar
-:b PCManFM
-:b Nemo
-:b Caja' | selectapp "file manager" "filemanager"
-    instantinstall "$(iconf filemanager | grep -o '[^ ]*$')"
-
+    selectdefault filemanager "File Manager"
 }
 
 selectdefault() {
@@ -184,13 +177,10 @@ selectdefault() {
 $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:/g')
 :b Custom
 :b Back"
-    APPCHOICE="$(echo "$LIST" | sidebar | sed 's/^://g')"
-    CHOICE="$(grep "$APPCHOICE" /usr/share/instantsettings/data/default/"$1")"
-    if [ -z "$CHOICE" ]; then
-        return 1
-    fi
 
-    case "$CHOICE" in
+    APPCHOICE="$(echo "$LIST" | sidebar | sed 's/^://g')"
+
+    case "$APPCHOICE" in
     *Custom)
         CUSTOMAPP="$(imenu -i "default $1")"
         [ -z "$CUSTOMAPP" ] && return 1
@@ -201,35 +191,49 @@ $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:
         ;;
     esac
 
+    CHOICE="$(grep "$APPCHOICE" /usr/share/instantsettings/data/default/"$1")"
+    if [ -z "$CHOICE" ]; then
+        return 1
+    fi
+
     if ! grep -q ':' <<<"$CHOICE"; then
         instantinstall "$(sed 's/^....//g')"
         return
     fi
     echo "choice: $CHOICE"
     SETCOMMAND="$(sed 's/^[^:]*://g' <<<"$CHOICE" | grep -o '^[^:]*')"
+    iconf "$1" "$SETCOMMAND"
     echo "echo setting command to $SETCOMMAND"
+
     if grep -q '.*:.*:' <<<"$CHOICE"; then
         INSTALLCOMMAND="$(grep -o '[^:]*$' <<<"$CHOICE")"
     else
         INSTALLCOMMAND="$SETCOMMAND"
     fi
-    instantinstall "$INSTALLCOMMAND"
+
+    if ! grep -q ',' "$INSTALLCOMMAND"; then
+        if command -v "$SETCOMMAND"; then
+            return
+        fi
+        instantinstall "$INSTALLCOMMAND"
+    else
+        echo "multiple dependencies detected"
+        INSTALLLIST="$(sed 's/,/ /g' <<< "$INSTALLCOMMAND")"
+        for i in $(echo $INSTALLLIST)
+        do
+            instantinstall "$i"
+        done
+    fi
+
 
 }
 
 selectterminal() {
-    echo ':b st
-:b xterm
-:b urxvt' | selectapp "terminal emulator" "terminal"
+    selectdefault "terminal" "Terminal emulator"
 }
 
 selectbrowser() {
-
-    echo ':y Firefox
-:b Chromium
-:y Brave
-:y Google-chrome-stable' | selectapp "web browser" "browser"
-    instantinstall "$(iconf browser)"
+    selectdefault browser "Web Browser"
 }
 
 selecteditor() {
