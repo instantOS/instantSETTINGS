@@ -212,21 +212,19 @@ $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:
         INSTALLCOMMAND="$SETCOMMAND"
     fi
 
-    if ! grep -q ',' <<< "$INSTALLCOMMAND"; then
+    if ! grep -q ',' <<<"$INSTALLCOMMAND"; then
         if command -v "$SETCOMMAND"; then
             return
         fi
         instantinstall "$INSTALLCOMMAND"
     else
         echo "multiple dependencies detected"
-        INSTALLLIST="$(sed 's/\,/ /g' <<< "$INSTALLCOMMAND")"
-        for i in $(echo $INSTALLLIST)
-        do
+        INSTALLLIST="$(sed 's/\,/ /g' <<<"$INSTALLCOMMAND")"
+        for i in $(echo $INSTALLLIST); do
             echo "multi installing"
             instantinstall "$i"
         done
     fi
-
 
 }
 
@@ -331,10 +329,27 @@ wallpapersettings() {
 :b Custom wallpaper with logo
 :b Logo
 :b Repair wallpaper
+:b Export current wallpaper
 :b Back' | sidebar)"
     case $CHOICE in
     *Generate*)
         instantwallpaper clear && instantwallpaper w
+        ;;
+    *Export*)
+        if [ -e ~/instantos/wallpapers/instantwallpaper.png ]; then
+            SAVEPATH="$(zenity --file-selection --save --confirm-overwrite)"
+            if [ -n "$SAVEPATH" ]; then
+                cp ~/instantos/wallpapers/instantwallpaper.png "$SAVEPATH"
+                exit
+            else
+                wallpapersettings
+                return
+            fi
+        else
+            imenu -m "no instantwallpaper set"
+            wallpapersettings
+            return
+        fi
         ;;
     *Browse*)
         instantwallpaper select &
