@@ -702,19 +702,14 @@ This will override any neovim configurations done previously" | iconf -C; then
         st -e bash -c "./install.sh"
         ;;
     *Animations)
-        if ! iconf -i noanimations; then
-            ANIMATED="true"
-        fi
         toggleiconf noanimations "enable animations?" i
-        if [ -n "$ANIMATED" ]; then
-            if iconf -i noanimations; then
-                xdotool key super+alt+shift+s
-            fi
+
+        if iconf -i noanimations; then
+            instantwmctrl animated 0
         else
-            if ! iconf -i noanimations; then
-                xdotool key super+alt+shift+s
-            fi
+            instantwmctrl animated 1
         fi
+
         instantossettings
         ;;
     *Widgets)
@@ -741,8 +736,7 @@ This will override any neovim configurations done previously" | iconf -C; then
     *menu)
         toggleiconf alttab "use graphical alttab menu?"
 
-        if iconf -i alttab
-        then
+        if iconf -i alttab; then
             instantwmctrl alttab 1
             sleep 0.5
             instantutils alttab
