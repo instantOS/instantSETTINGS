@@ -740,7 +740,18 @@ This will override any neovim configurations done previously" | iconf -C; then
         ;;
     *menu)
         toggleiconf alttab "use graphical alttab menu?"
-        imenu -m "alttab settings will be applied on next login"
+
+        if iconf -i alttab
+        then
+            instantwmctrl alttab 1
+            sleep 0.5
+            instantutils alttab
+        else
+            pkill alttab
+            sleep 0.5
+            instantwmctrl alttab 0
+        fi
+
         instantinstall alttab
         instantossettings
         ;;
