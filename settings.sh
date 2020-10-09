@@ -615,6 +615,7 @@ instantossettings() {
 :b 𧻓Animations
 :b ﰪConky Widgets
 :b Desktop icons
+:b ﰪDefault layout
 :b Status bar
 :b Clipboard manager
 :b Alttab menu
@@ -669,6 +670,31 @@ instantossettings() {
 > help much on faster machines
 >>h --------"
         instantossettings
+        ;;
+    *layout)
+
+        CHOICE="$(echo '>>h Default layout
+:b ﱖtile
+:b ﱖgrid
+:b ﱖfloat
+:b ﱖmonocle
+:b ﱖtcl
+:b ﱖdeck
+:b ﱖoverviewlayout
+:b ﱖbstack
+:b ﱖbstackhoriz
+:b Back' | sidebar)"
+
+        if grep -q 'Back' <<<"$CHOICE"; then
+            instantossettings
+            return
+        fi
+
+        # check if layout is valid
+        if [ -n "$CHOICE" ] && grep -q ':b ﱖ' <<<"$CHOICE"; then
+            LAYOTCHOICE="$(sed 's/^....//g' <<<"$CHOICE")"
+            iconf defaultlayout "$LAYOTCHOICE"
+        fi
         ;;
     *tools)
         imenu -c "install instantOS development tools?" || exit
