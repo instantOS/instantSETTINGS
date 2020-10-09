@@ -157,11 +157,7 @@ $(cat /dev/stdin)
 }
 
 selectappmenu() {
-    echo ':b appmenu
-:b instantmenu_smartrun
-:b instantmenu_run
-:b rofi -show run
-:r none' | selectapp "application launcher" "appmenu"
+    selectdefault "appmenu" "Application launcher"
 }
 
 selectsystemmonitor() {

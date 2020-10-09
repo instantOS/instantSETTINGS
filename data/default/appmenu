@@ -2,4 +2,4 @@ b appmenu:appmenu:instantutils,rofi
 b instantMENU:instantmenu_smartrun:instantmenu
 b dmenu:dmenu_run:dmenu
 b rofi:rofi -show run:rofi-git
-b panther:panther:panther-launcher-git
+b panther:panther_launcher:panther-launcher-git
