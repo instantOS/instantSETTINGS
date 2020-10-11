@@ -632,7 +632,7 @@ instantossettings() {
                     ~/.config/instantos/autostart.sh
             fi
         fi
-        st -e "nvim" -c ":e ~/.config/instantos/autostart.sh" &
+        instantutils open editor ~/.config/instantos/autostart.sh &
         ;;
     *Theming)
         toggleiconf notheming "enable instantOS theming?" i
