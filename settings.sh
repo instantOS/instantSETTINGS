@@ -785,10 +785,11 @@ storagesettings() {
 :b Back' | sidebar)"
     case $CHOICE in
     *management)
-        instantinstall nautilus-gnome-disks
+        instantinstall gnome-disk-utility
         gnome-disks &
         ;;
     *disks)
+        instantinstall udiskie
         toggleiconf udiskie "auto mount disks (udiskie)?"
         if iconf -i udiskie; then
             pgrep udiskie || udiskie -t &
