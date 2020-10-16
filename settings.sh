@@ -785,6 +785,7 @@ storagesettings() {
 :b Back' | sidebar)"
     case $CHOICE in
     *management)
+        instantinstall nautilus-gnome-disks
         gnome-disks &
         ;;
     *disks)
