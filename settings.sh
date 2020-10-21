@@ -987,7 +987,7 @@ while [ -n "$LOOPSETTING" ]; do
         ;;
     *Dotfiles)
         [ -e ~/.instantrc ] || instantdotfiles
-        st -e "nvim" -c ":e ~/.instantrc" &
+        instantutils open editor ~/.instantrc
         ;;
     *Power)
         xfce4-power-manager-settings &
