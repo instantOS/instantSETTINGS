@@ -3,3 +3,4 @@ b instantMENU:instantmenu_smartrun:instantmenu
 b dmenu:dmenu_run:dmenu
 b rofi:rofi -show run:rofi-git
 b panther:panther_launcher:panther-launcher-git
+g xfce4-appfinder:xfce4-appfinder
