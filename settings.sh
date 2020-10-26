@@ -396,14 +396,16 @@ networksettings() {
         pgrep nm-applet || nm-applet &
         ;;
     *info)
+
         getlocalip() {
-            INTERFACE=$(ip addr | awk '/state UP/ {print $2}' | sed 's/.$//')
-            if [ "$(echo "$INTERFACE" | wc -l)" -gt 1 ]; then
-                echoerr "error: more than one network interface found"
-                return 1
+            TEMPIP="$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')"
+            if grep -q '192' <<<"$TEMPIP"; then
+                echo "$TEMPIP" | grep '192' | tail -1
+            else
+                echo "$TEMPIP" | tail -1
             fi
-            ip addr | grep -A2 "$INTERFACE" | grep -o 'inet .*/' | grep -o '[0-9\.]*'
         }
+
         if getlocalip; then
             LOCALIP="$(getlocalip)"
         fi
