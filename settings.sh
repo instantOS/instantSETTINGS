@@ -704,13 +704,13 @@ instantossettings() {
         ;;
     *preconfig)
         if ! echo "install the instantOS development neovim dots?
-This will override any neovim configurations done previously" | iconf -C; then
+This will override any neovim configurations done previously" | imenu -C; then
             echo "installing nvim build"
             exit
         fi
         iconf neovimconfig 1
         iconf -i neovimconfig 1
-        instantinstall nvim-qt nodejs npm
+        instantinstall neovim-qt nodejs npm python-pip
         mkdir -p ~/.cache/instantosneovim
         cd ~/.cache/instantosneovim || exit 1
         checkinternet || {
