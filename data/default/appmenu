@@ -1,4 +1,5 @@
 b appmenu:appmenu:instantutils,rofi
+b jgmenu:jgmenu_run:jgmenu
 b instantMENU:instantmenu_smartrun:instantmenu
 b dmenu:dmenu_run:dmenu
 b rofi:rofi -show run:rofi-git
