@@ -701,6 +701,9 @@ instantossettings() {
                 echo "disabling auto login"
             fi
             instantsudo sed -i '/^autologin-user/d' /etc/lightdm/lightdm.conf
+            if grep -q '^autologin-user' /etc/lightdm/lightdm.conf; then
+                iconf -i noautologin 0
+            fi
         fi
 
         ;;
