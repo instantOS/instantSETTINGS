@@ -618,6 +618,7 @@ instantossettings() {
 :b Clipboard manager
 :b Alttab menu
 :b Dad joke on lock screen
+:b Autologin
 :g Neovim preconfig
 :r instantOS development tools
 :b Back' | sidebar)"
@@ -668,6 +669,40 @@ instantossettings() {
 > help much on faster machines
 >>h --------"
         instantossettings
+        ;;
+    *Autologin)
+
+        if iconf -i noautologin; then
+            LOGINCHANGE="true"
+        fi
+
+        toggleiconf noautologin "Do you want to automatically log in on boot?" i
+        if [ -n "$LOGINCHANGE" ]; then
+            if ! iconf -i noautologin; then
+                LOGINUSER="$(imenu -i "automatically log in as" "username" "$(whoami)")"
+                if [ -z "$LOGINUSER" ]; then
+                    exit
+                fi
+
+                if ! id "$LOGINUSER"; then
+                    imenu -e "user $LOGINUSER does not exist"
+                    iconf -i noautologin 1
+                    exit 1
+                fi
+
+                if grep -q '^autologin-user' /etc/lightdm/lightdm.conf; then
+                    instantsudo sed -i "s/^autologin-user=.*/autologin-user=$LOGINUSER/g" /etc/lightdm/lightdm.conf
+                else
+                    instantsudo sed -i "s/^\[Seat:\*\]/[Seat:*]\nautologin-user=$LOGINUSER/g" /etc/lightdm/lightdm.conf
+                fi
+            fi
+        else
+            if iconf -i noautologin; then
+                echo "disabling auto login"
+            fi
+            instantsudo sed -i '/^autologin-user/d' /etc/lightdm/lightdm.conf
+        fi
+
         ;;
     *layout)
 
