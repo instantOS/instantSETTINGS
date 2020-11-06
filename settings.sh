@@ -799,13 +799,13 @@ This will override any neovim configurations done previously" | imenu -C; then
         toggleiconf alttab "use graphical alttab menu?"
 
         if iconf -i alttab; then
-            instantwmctrl alttab 1
+            instantwmctrl alttab 3
             sleep 0.5
             instantutils alttab
         else
             pkill alttab
             sleep 0.5
-            instantwmctrl alttab 0
+            instantwmctrl alttab 1
         fi
 
         instantinstall alttab
