@@ -767,9 +767,9 @@ This will override any neovim configurations done previously" | imenu -C; then
         toggleiconf noanimations "enable animations?" i
 
         if iconf -i noanimations; then
-            instantwmctrl animated 0
-        else
             instantwmctrl animated 1
+        else
+            instantwmctrl animated 3
         fi
 
         instantossettings
