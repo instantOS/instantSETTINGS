@@ -248,6 +248,7 @@ displaysettings() {
 :b Autodetect monitor docking
 :b External screen
 :b HiDPI
+:b Keep screen on when locked
 :b Back' | sidebar)"
 
     case $CHOICE in
@@ -284,7 +285,10 @@ displaysettings() {
 
         instantdpi
         xrdb ~/.Xresources
-
+        ;;
+    *locked)
+        toggleiconf nolocktimeout "keep monitor on when the screen is locked?"
+        displaysettings
         ;;
     *)
         LOOPSETTING="True"
