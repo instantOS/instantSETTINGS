@@ -383,6 +383,7 @@ networksettings() {
 :b Start network applet
 :g Autostart network applet
 :b IP info
+:b 龍Test internet speed
 :b Back' | sidebar)"
 
     case "$CHOICE" in
@@ -436,6 +437,9 @@ OK" | imenu -l "Network info")"
 
         exit
 
+        ;;
+    *speed)
+        instantspeedtest
         ;;
     *)
         LOOPSETTING="True"
