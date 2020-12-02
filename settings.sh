@@ -2,8 +2,8 @@
 
 # graphical settings menu for instantOS
 
-#source /usr/share/instantsettings/utils/functions.sh
-source ./utils/functions.sh
+source /usr/share/instantsettings/utils/functions.sh
+#source ./utils/functions.sh
 
 asksetting() {
     menu '>>h Settings'
@@ -394,6 +394,7 @@ networksettings() {
     menu ':b Start network applet'
     menu ':g Autostart network applet'
     menu ':b IP info'
+    menu ':b 龍Test internet speed'
     menu ':b Back'
 
     CHOICE="$(meta networksettings menu | sidebar)"
@@ -448,6 +449,9 @@ OK" | imenu -l "Network info")"
 
         exit
 
+        ;;
+    *speed)
+        instantspeedtest
         ;;
     *)
         LOOPSETTING="True"
@@ -1007,23 +1011,6 @@ appearancesettings() {
     esac
 }
 
-#allsettings() {
-#    declare -A allentries
-#    for funcname in $(menufunctions); do
-#        OLDIFS="$IFS"
-#        IFS=$'\n'
-#        for entry in $(menuentries "$funcname"); do
-#            allentries["$entry"]="$funcname"
-#        done
-#        IFS="$OLDIFS"
-#    done
-#    CHOICE=$(for k in "${!allentries[@]}"; do echo "$k"; done | sidebar)
-#    [ -z "$CHOICE" ] && return
-#    export SIDEBARSEARCH="${CHOICE:4}"
-#    "${allentries["$CHOICE"]}"
-#    unset SIDEBARSEARCH
-#}
-
 LOOPSETTING="true"
 while [ -n "$LOOPSETTING" ]; do
     SETTING="$(asksetting)"
@@ -1098,4 +1085,3 @@ while [ -n "$LOOPSETTING" ]; do
         ;;
     esac
 done
-
