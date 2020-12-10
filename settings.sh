@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # graphical settings menu for instantOS
 
@@ -339,6 +339,7 @@ wallpapersettings() {
     menu ':b Custom wallpaper with logo'
     menu ':b Logo'
     menu ':b Repair wallpaper'
+    menu ':b Colored wallpaper'
     menu ':b Export current wallpaper'
     menu ':b Back'
 
@@ -365,6 +366,43 @@ wallpapersettings() {
         ;;
     *Browse*)
         instantwallpaper select &
+        ;;
+    *Colored*)
+        CHOICE="$(
+            echo '>>h Colored wallpaper
+> Use solid colors as wallpaper
+:b Use colored wallpaper
+:b Foreground color
+:b Background color
+:b Back' | sidebar
+        )"
+        case "$CHOICE" in
+        *wallpaper)
+            toggleiconf coloredwallpaper "use solid colors as wallpaper?"
+            if iconf -i coloredwallpaper; then
+                [ -e ~/instantos/wallpapers/color/customcolor.png ] || instantwallpaper color "$(iconf fgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
+                instantwallpaper set ~/instantos/wallpapers/color/customcolor.png
+            else
+                instantwallpaper ww
+            fi
+            ;;
+        *Foreground*)
+            FGCOLOR="$(zenity --color-selection)"
+            [ -n "$FGCOLOR" ] && iconf fgcolor "$FGCOLOR"
+            instantwallpaper color "$(iconf fgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
+            ;;
+        *Background*)
+            BGCOLOR="$(zenity --color-selection)"
+            [ -n "$BGCOLOR" ] && iconf bgcolor "$BGCOLOR"
+            instantwallpaper color "$(iconf fgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
+            ;;
+        *)
+            echo "going back"
+            ;;
+        esac
+
+        wallpapersettings
+        return
         ;;
     *Repair*)
         rm ~/instantos/wallpapers/*.png
@@ -919,12 +957,10 @@ Try regardless?' | imenu -C; then
 }
 
 mousesettings() {
-    menu '>>h Mouse settings'
-    menu ':b Sensitivity'
-    menu ':b Reverse scrolling'
-    menu ':b Back'
-
-    CHOICE="$(meta mousesettings menu | sidebar)"
+    CHOICE="$(echo '>>h Mouse settings
+:b Sensitivity
+:b Reverse scrolling
+:b Back' | sidebar)"
     instantmouse gen &
     case $CHOICE in
     *Sensitivity)
