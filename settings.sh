@@ -328,6 +328,7 @@ wallpapersettings() {
 :b Browse wallpapers
 :b Custom wallpaper with logo
 :b Logo
+:b Colored wallpaper
 :b Repair wallpaper
 :b Export current wallpaper
 :b Back' | sidebar)"
@@ -353,6 +354,43 @@ wallpapersettings() {
         ;;
     *Browse*)
         instantwallpaper select &
+        ;;
+    *Colored*)
+        CHOICE="$(
+            echo '>>h Colored wallpaper
+> Use solid colors as wallpaper
+:b Use colored wallpaper
+:b Foreground color
+:b Background color
+:b Back' | sidebar
+        )"
+        case "$CHOICE" in
+        *wallpaper)
+            toggleiconf coloredwallpaper "use solid colors as wallpaper?"
+            if iconf -i coloredwallpaper; then
+                [ -e ~/instantos/wallpapers/color/customcolor.png ] || instantwallpaper color "$(iconf fgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
+                instantwallpaper set ~/instantos/wallpapers/color/customcolor.png
+            else
+                instantwallpaper ww
+            fi
+            ;;
+        *Foreground*)
+            FGCOLOR="$(zenity --color-selection)"
+            [ -n "$FGCOLOR" ] && iconf fgcolor "$FGCOLOR"
+            instantwallpaper color "$(iconf fgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
+            ;;
+        *Background*)
+            BGCOLOR="$(zenity --color-selection)"
+            [ -n "$BGCOLOR" ] && iconf bgcolor "$BGCOLOR"
+            instantwallpaper color "$(iconf fgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
+            ;;
+        *)
+            echo "going back"
+            ;;
+        esac
+
+        wallpapersettings
+        return
         ;;
     *Repair*)
         rm ~/instantos/wallpapers/*.png
