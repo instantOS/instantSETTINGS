@@ -2,10 +2,12 @@
 
 # graphical settings menu for instantOS
 
-source /usr/share/instantsettings/utils/functions.sh
+#source /usr/share/instantsettings/utils/functions.sh
+source ./utils/functions.sh
 
 asksetting() {
     menu '>>h Settings'
+    menu ':y SEARCH ALL' #  
     menu ':b 墳Sound'
     menu ':b instantOS'
     menu ':b Display'
@@ -25,7 +27,7 @@ asksetting() {
     menu ':y Dotfiles'
     menu ':r Close Settings'
     meta asksetting menu |
-        instantmenu -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search"
+        instantmenu -ps 1 -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search"
 }
 
 soundsettings() {
@@ -83,7 +85,7 @@ notificationsettings() {
 }
 
 defaultapplicationsettings() {
-    menu '>h Default applications'
+    menu '>>h Default applications'
     menu ':b Browser'
     menu ':b 龍System monitor'
     menu ':b Terminal emulator'
@@ -620,22 +622,22 @@ toggleiconf() {
 }
 
 instantossettings() {
-    menut '>h instantOS settings'
-    menut ':b Edit Autostart script'
-    menut ':b Theming'
-    menut ':y Potato'
-    menut ':b 𧻓Animations'
-    menut ':b ﰪConky Widgets'
-    menut ':b Desktop icons'
-    menut ':b ﰪDefault layout'
-    menut ':b Status bar'
-    menut ':b Clipboard manager'
-    menut ':b Alttab menu'
-    menut ':b Dad joke on lock screen'
-    menut ':b Autologin'
-    menut ':g Neovim preconfig'
-    menut ':r instantOS development tools'
-    menut ':b Back'
+    menu '>>h instantOS settings'
+    menu ':b Edit Autostart script'
+    menu ':b Theming'
+    menu ':y Potato'
+    menu ':b 𧻓Animations'
+    menu ':b ﰪConky Widgets'
+    menu ':b Desktop icons'
+    menu ':b ﰪDefault layout'
+    menu ':b Status bar'
+    menu ':b Clipboard manager'
+    menu ':b Alttab menu'
+    menu ':b Dad joke on lock screen'
+    menu ':b Autologin'
+    menu ':g Neovim preconfig'
+    menu ':r instantOS development tools'
+    menu ':b Back'
 
     CHOICE="$(meta instantossettings menu | sidebar)"
     case $CHOICE in
@@ -1005,11 +1007,31 @@ appearancesettings() {
     esac
 }
 
+#allsettings() {
+#    declare -A allentries
+#    for funcname in $(menufunctions); do
+#        OLDIFS="$IFS"
+#        IFS=$'\n'
+#        for entry in $(menuentries "$funcname"); do
+#            allentries["$entry"]="$funcname"
+#        done
+#        IFS="$OLDIFS"
+#    done
+#    CHOICE=$(for k in "${!allentries[@]}"; do echo "$k"; done | sidebar)
+#    [ -z "$CHOICE" ] && return
+#    export SIDEBARSEARCH="${CHOICE:4}"
+#    "${allentries["$CHOICE"]}"
+#    unset SIDEBARSEARCH
+#}
+
 LOOPSETTING="true"
 while [ -n "$LOOPSETTING" ]; do
     SETTING="$(asksetting)"
     unset LOOPSETTING
     case "$SETTING" in
+    *ALL)
+        allsettings
+        ;;
     *Sound)
         soundsettings
         ;;
@@ -1076,3 +1098,4 @@ while [ -n "$LOOPSETTING" ]; do
         ;;
     esac
 done
+
