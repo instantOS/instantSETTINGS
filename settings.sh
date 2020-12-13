@@ -1053,7 +1053,7 @@ while [ -n "$LOOPSETTING" ]; do
     unset LOOPSETTING
     case "$SETTING" in
     *ALL)
-        allsettings
+        searchall
         ;;
     *Sound)
         soundsettings

@@ -52,20 +52,23 @@ list_func_names () {
   esac
 }
 
-allsettings() {
-    declare -A allentries
+searchall() {
+    declare -A allsettings
     for funcname in $(list_func_names); do
         OLDIFS="$IFS"
         IFS=$'\n'
         for entry in $(menuentries "$funcname"); do
-            allentries["$entry"]="$funcname"
+            allsettings["$entry"]="$funcname"
         done
         IFS="$OLDIFS"
     done
-    CHOICE=$(for k in "${!allentries[@]}"; do echo "$k"; done | sidebar)
+    #declare -p allsettings > /tmp/allsettings  # we could cash it like this
+    # and then load it with:
+    #decalre -A allsettings; source --  /tmp/allsettings
+    CHOICE=$(for k in "${!allsettings[@]}"; do echo "$k"; done | sidebar)
     [ -z "$CHOICE" ] && return
     export SIDEBARSEARCH="${CHOICE:4}"
-    "${allentries["$CHOICE"]}"
+    "${allsettings["$CHOICE"]}"
     unset SIDEBARSEARCH
 }
 
