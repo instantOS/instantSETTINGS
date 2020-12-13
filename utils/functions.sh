@@ -3,7 +3,8 @@
 sidebar() {
     querystring="${1:-search...}"
     shift;
-    instantmenu -it "$SIDEBARSEARCH" -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "$querystring"
+    sbs="$SIDEBARSEARCH"; SIDEBARSEARCH=
+    instantmenu -it "$sbs" -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "$querystring" "$@"
 }
 
 die() {
@@ -28,14 +29,6 @@ meta () {
         sed -n "/$keyword / s/['\";]*$//;s/^[ 	]*$keyword ['\"]*\([^([].*\)*$/\1/p"
 }
 
-menuentries () {
-    typeset funcname=$1
-    # Filter out a few things
-    meta "$funcname" menu |
-        grep -vE "^(>>h|>h)" |
-            grep -vE "(Apply|Back|Custom|Yes|No|Close|Close Settings|Edit|Reset|ALL)$"
-}
-
 _shell () {
   typeset this=$(ps -o comm -p $$ | tail -1 | awk '{print $NF}' | sed 's/^-*//')
   echo "${this##*/}"
@@ -50,25 +43,5 @@ list_func_names () {
       typeset +f | sed 's/().*$//'
       ;;
   esac
-}
-
-searchall() {
-    declare -A allsettings
-    for funcname in $(list_func_names); do
-        OLDIFS="$IFS"
-        IFS=$'\n'
-        for entry in $(menuentries "$funcname"); do
-            allsettings["$entry"]="$funcname"
-        done
-        IFS="$OLDIFS"
-    done
-    #declare -p allsettings > /tmp/allsettings  # we could cash it like this
-    # and then load it with:
-    #decalre -A allsettings; source --  /tmp/allsettings
-    CHOICE=$(for k in "${!allsettings[@]}"; do echo "$k"; done | sidebar)
-    [ -z "$CHOICE" ] && return
-    export SIDEBARSEARCH="${CHOICE:4}"
-    "${allsettings["$CHOICE"]}"
-    unset SIDEBARSEARCH
 }
 

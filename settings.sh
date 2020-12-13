@@ -1,13 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # graphical settings menu for instantOS
 
 source /usr/share/instantsettings/utils/functions.sh
-#source ./utils/functions.sh
+[ -r ./utils/functions.sh ] && source ./utils/functions.sh
 
 asksetting() {
     menu '>>h Settings'
-    menu ':y SEARCH ALL' #  
+    menu ':y SEARCH ALL' #  
     menu ':b 墳Sound'
     menu ':b instantOS'
     menu ':b Display'
@@ -28,6 +28,40 @@ asksetting() {
     menu ':r Close Settings'
     meta asksetting menu |
         instantmenu -ps 1 -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search"
+}
+
+# Variables for global settings search
+declare -A allsettings
+export SIDEBARSEARCH=
+export CFG_CACHE="$XDG_CACHE_HOME/instantos/allsettings.bash"
+[ -r "$CFG_CACHE" ] && source -- "$CFG_CACHE"
+
+filter_entries () {
+    typeset funcname=$1
+    # Filter out a few things
+    meta "$funcname" menu |
+        grep -vE "^(>>h|>h)" |
+            grep -vE "(Apply|Back|Custom|Yes|No|Close|Close Settings|permanent|Edit|Reset|ALL)$"
+}
+
+searchall() {
+    if [ ${#allsettings[*]} -eq 0 ]; then
+        for funcname in $(list_func_names); do
+            OLDIFS="$IFS"
+            IFS=$'\n'
+            for entry in $(filter_entries "$funcname"); do
+                allsettings["$entry"]="$funcname"
+            done
+            IFS="$OLDIFS"
+        done
+        declare -p allsettings > "$CFG_CACHE"
+    fi
+    echo '${#allsettings[*]}:' "${#allsettings[*]}"
+    CHOICE=$(for k in "${!allsettings[@]}"; do echo "$k"; done | sidebar)
+    [ -z "$CHOICE" ] && return
+    SIDEBARSEARCH="${CHOICE:4}"
+    "${allsettings["$CHOICE"]}" -ps 1
+    SIDEBARSEARCH=
 }
 
 soundsettings() {
@@ -957,10 +991,12 @@ Try regardless?' | imenu -C; then
 }
 
 mousesettings() {
-    CHOICE="$(echo '>>h Mouse settings
-:b Sensitivity
-:b Reverse scrolling
-:b Back' | sidebar)"
+    menu '>>h Mouse settings'
+    menu ':b Sensitivity'
+    menu ':b Reverse scrolling'
+    menu ':b Back'
+
+    CHOICE="$(meta mousesettings menu | sidebar)"
     instantmouse gen &
     case $CHOICE in
     *Sensitivity)
