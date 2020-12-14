@@ -1,38 +1,75 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # graphical settings menu for instantOS
 
 source /usr/share/instantsettings/utils/functions.sh
+[ -r ./utils/functions.sh ] && source ./utils/functions.sh
 
 asksetting() {
-    echo '>>h Settings
-:b 墳Sound
-:b instantOS
-:b Display
-:g Network
-:b Install Software
-:y Appearance
-:b Bluetooth
-:g Power
-:b Keyboard
-:b Mouse
-:b Default applications
-:b Language
-:g Time and date
-:b 朗Printing
-:r Storage
-:y Advanced
-:y Dotfiles
-:r Close Settings' |
-        instantmenu -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search"
+    menu '>>h Settings'
+    menu ':y SEARCH ALL' #  
+    menu ':b 墳Sound'
+    menu ':b instantOS'
+    menu ':b Display'
+    menu ':g Network'
+    menu ':b Install Software'
+    menu ':y Appearance'
+    menu ':b Bluetooth'
+    menu ':g Power'
+    menu ':b Keyboard'
+    menu ':b Mouse'
+    menu ':b Default applications'
+    menu ':b Language'
+    menu ':g Time and date'
+    menu ':b 朗Printing'
+    menu ':r Storage'
+    menu ':y Advanced'
+    menu ':y Dotfiles'
+    menu ':r Close Settings'
+    meta asksetting menu |
+        instantmenu -ps 1 -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search"
+}
+
+# Variables for global settings search
+declare -A allsettings
+export SIDEBARSEARCH=
+export CFG_CACHE="$XDG_CACHE_HOME/instantos/allsettings.bash"
+[ -r "$CFG_CACHE" ] && source -- "$CFG_CACHE"
+
+filter_entries () {
+    typeset funcname=$1
+    # Filter out a few things
+    meta "$funcname" menu |
+        grep -vE "^(>>h|>h)" |
+            grep -vE "(Apply|Back|Custom|Yes|No|Close|Close Settings|permanent|Edit|Reset|ALL)$"
+}
+
+searchall() {
+    if [ ${#allsettings[*]} -eq 0 ]; then
+        for funcname in $(list_func_names); do
+            OLDIFS="$IFS"
+            IFS=$'\n'
+            for entry in $(filter_entries "$funcname"); do
+                allsettings["$entry"]="$funcname"
+            done
+            IFS="$OLDIFS"
+        done
+        declare -p allsettings > "$CFG_CACHE"
+    fi
+    CHOICE=$(for k in "${!allsettings[@]}"; do echo "$k"; done | sidebar)
+    [ -z "$CHOICE" ] && return
+    SIDEBARSEARCH="${CHOICE:4}"
+    "${allsettings["$CHOICE"]}" -ps 1
+    SIDEBARSEARCH=
 }
 
 soundsettings() {
+    menu '>>h Sound settings'
+    menu ':b ﰝSystem audio'
+    menu ':y Notification sound'
+    menu ':b Back'
 
-    CHOICE="$(echo '>>h Sound settings
-:b ﰝSystem audio
-:y Notification sound
-:b Back' | sidebar)"
+    CHOICE="$(meta soundsettings menu | sidebar)"
     case "$CHOICE" in
     *audio)
         pavucontrol &
@@ -48,11 +85,12 @@ soundsettings() {
 }
 
 notificationsettings() {
-    CHOICE="$(echo '>>h Notification sound settings
-:b Custom
-:y 碑Reset
-:r Mute
-:b Back' | sidebar)"
+    menu '>>h Notification sound settings'
+    menu ':b Custom'
+    menu ':y 碑Reset'
+    menu ':r Mute'
+
+    CHOICE="$(meta notificationsettings menu | sidebar)"
     case $CHOICE in
     *Custom)
         SOUNDPATH="$(zenity --file-selection)"
@@ -80,15 +118,17 @@ notificationsettings() {
 }
 
 defaultapplicationsettings() {
-    CHOICE="$(echo '>>h Default applications
-:b Browser
-:b 龍System monitor
-:b Terminal emulator
-:b File manager
-:b Application launcher
-:y Text editor
-:r Lock screen
-:b Back' | sidebar)"
+    menu '>>h Default applications'
+    menu ':b Browser'
+    menu ':b 龍System monitor'
+    menu ':b Terminal emulator'
+    menu ':b File manager'
+    menu ':b Application launcher'
+    menu ':y Text editor'
+    menu ':r Lock screen'
+    menu ':b Back'
+
+    CHOICE="$(meta defaultapplicationsettings menu | sidebar)"
     case "$CHOICE" in
     *manager)
         selectfilemanager
@@ -241,16 +281,17 @@ selectlockscreen() {
 }
 
 displaysettings() {
-    CHOICE="$(echo '>>h Display Settings
-:b Change display settings
-:g Make current settings permanent
-:y Change screen brightness
-:b Autodetect monitor docking
-:b External screen
-:b HiDPI
-:b Keep screen on when locked
-:b Back' | sidebar)"
+    menu '>>h Display Settings'
+    menu ':b Change display settings'
+    menu ':g Make current settings permanent'
+    menu ':y Change screen brightness'
+    menu ':b Autodetect monitor docking'
+    menu ':b External screen'
+    menu ':b HiDPI'
+    menu ':b Keep screen on when locked'
+    menu ':b Back'
 
+    CHOICE="$(meta displaysettings menu | sidebar)"
     case $CHOICE in
     *settings)
         arandr &
@@ -297,11 +338,13 @@ displaysettings() {
 }
 
 advancedsettings() {
-    CHOICE="$(echo '>>h Advanced settings
-:b Firewall
-:y TLP
-:g Bootloader
-:b Back' | sidebar)"
+    menu '>>h Advanced settings'
+    menu ':b Firewall'
+    menu ':y TLP'
+    menu ':g Bootloader'
+    menu ':b Back'
+
+    CHOICE="$(meta advancedsettings menu | sidebar)"
     case $CHOICE in
     *Firewall)
         instantinstall gufw
@@ -322,16 +365,18 @@ advancedsettings() {
 }
 
 wallpapersettings() {
-    CHOICE="$(echo '>>h Wallpaper settings
-:b Generate new wallpaper
-:b Set own wallpaper
-:b Browse wallpapers
-:b Custom wallpaper with logo
-:b Logo
-:b Colored wallpaper
-:b Repair wallpaper
-:b Export current wallpaper
-:b Back' | sidebar)"
+    menu '>>h Wallpaper settings'
+    menu ':b Generate new wallpaper'
+    menu ':b Set own wallpaper'
+    menu ':b Browse wallpapers'
+    menu ':b Custom wallpaper with logo'
+    menu ':b Logo'
+    menu ':b Repair wallpaper'
+    menu ':b Colored wallpaper'
+    menu ':b Export current wallpaper'
+    menu ':b Back'
+
+    CHOICE="$(meta wallpapersettings menu | sidebar)"
     case $CHOICE in
     *Generate*)
         instantwallpaper clear && instantwallpaper w
@@ -416,14 +461,14 @@ wallpapersettings() {
 }
 
 networksettings() {
+    menu '>>h Network settings'
+    menu ':b Start network applet'
+    menu ':g Autostart network applet'
+    menu ':b IP info'
+    menu ':b 龍Test internet speed'
+    menu ':b Back'
 
-    CHOICE="$(echo '>>h Network settings
-:b Start network applet
-:g Autostart network applet
-:b IP info
-:b 龍Test internet speed
-:b Back' | sidebar)"
-
+    CHOICE="$(meta networksettings menu | sidebar)"
     case "$CHOICE" in
     *Autostart*)
         toggleiconf wifiapplet "Show network applet on startup?"
@@ -484,7 +529,6 @@ OK" | imenu -l "Network info")"
         ;;
 
     esac
-
 }
 
 # the language settings reuse instantARCH components
@@ -585,12 +629,13 @@ Minute $MINUTE
 }
 
 languagesettings() {
-    fetchlanguage
-    CHOICE="$(echo '>>h Language settings
-:b Application Language
-:g Timezone
-:b Back' | sidebar)"
+    menu '>>h Language settings'
+    menu ':b Application Language'
+    menu ':g Timezone'
+    menu ':b Back'
 
+    fetchlanguage
+    CHOICE="$(meta languagesettings menu | sidebar)"
     case "$CHOICE" in
     *Language)
         echo "changing language"
@@ -652,22 +697,24 @@ toggleiconf() {
 }
 
 instantossettings() {
-    CHOICE="$(echo '>>h instantOS settings
-:b Edit Autostart script
-:b Theming
-:y Potato
-:b 𧻓Animations
-:b ﰪConky Widgets
-:b Desktop icons
-:b ﰪDefault layout
-:b Status bar
-:b Clipboard manager
-:b Alttab menu
-:b Dad joke on lock screen
-:b Autologin
-:g Neovim preconfig
-:r instantOS development tools
-:b Back' | sidebar)"
+    menu '>>h instantOS settings'
+    menu ':b Edit Autostart script'
+    menu ':b Theming'
+    menu ':y Potato'
+    menu ':b 𧻓Animations'
+    menu ':b ﰪConky Widgets'
+    menu ':b Desktop icons'
+    menu ':b ﰪDefault layout'
+    menu ':b Status bar'
+    menu ':b Clipboard manager'
+    menu ':b Alttab menu'
+    menu ':b Dad joke on lock screen'
+    menu ':b Autologin'
+    menu ':g Neovim preconfig'
+    menu ':r instantOS development tools'
+    menu ':b Back'
+
+    CHOICE="$(meta instantossettings menu | sidebar)"
     case $CHOICE in
     *script)
         if ! [ -e ~/.config/instantos/autostart.sh ]; then
@@ -865,10 +912,12 @@ This will override any neovim configurations done previously" | imenu -C; then
 }
 
 storagesettings() {
-    CHOICE="$(echo '>>h Storage settings
-:b Open disk management
-:b 﫭Auto mount disks
-:b Back' | sidebar)"
+    menu '>>h Storage settings'
+    menu ':b Open disk management'
+    menu ':b 﫭Auto mount disks'
+    menu ':b Back'
+
+    CHOICE="$(meta storagesettings menu | sidebar)"
     case $CHOICE in
     *management)
         instantinstall gnome-disk-utility
@@ -891,6 +940,10 @@ storagesettings() {
 }
 
 bluetoothsettings() {
+    menu '>>h Bluetooth settings'
+    menu ':b Set up new device'
+    menu ':b Bluetooth applet'
+    menu ':b Back'
 
     # check for bluetooth hardware
     if ! (
@@ -912,11 +965,7 @@ Try regardless?' | imenu -C; then
         fi
     fi
 
-    CHOICE="$(echo '>>h Bluetooth settings
-:b Set up new device
-:b Bluetooth applet
-:b Back' | sidebar)"
-
+    CHOICE="$(meta bluethoothsettings menu | sidebar)"
     case "$CHOICE" in
     *applet)
         toggleiconf bluetoothapplet "enable bluetooth applet?"
@@ -941,10 +990,12 @@ Try regardless?' | imenu -C; then
 }
 
 mousesettings() {
-    CHOICE="$(echo '>>h Mouse settings
-:b Sensitivity
-:b Reverse scrolling
-:b Back' | sidebar)"
+    menu '>>h Mouse settings'
+    menu ':b Sensitivity'
+    menu ':b Reverse scrolling'
+    menu ':b Back'
+
+    CHOICE="$(meta mousesettings menu | sidebar)"
     instantmouse gen &
     case $CHOICE in
     *Sensitivity)
@@ -970,15 +1021,16 @@ mousesettings() {
 }
 
 appearancesettings() {
-    CHOICE="$(echo '>>h Appearance settings
-:b Application appearance
-:y Wallpaper
-:b Enable compositing
-:b 並V-Sync
-:b Blur
-:b Autotheming
-:b Back' | sidebar)"
+    menu '>>h Appearance settings'
+    menu ':b Application appearance'
+    menu ':y Wallpaper'
+    menu ':b Enable compositing'
+    menu ':b 並V-Sync'
+    menu ':b Blur'
+    menu ':b Autotheming'
+    menu ':b Back'
 
+    CHOICE="$(meta appearancesettings menu | sidebar)"
     case $CHOICE in
     *appearance)
         lxappearance
@@ -1035,6 +1087,9 @@ while [ -n "$LOOPSETTING" ]; do
     SETTING="$(asksetting)"
     unset LOOPSETTING
     case "$SETTING" in
+    *ALL)
+        searchall
+        ;;
     *Sound)
         soundsettings
         ;;
