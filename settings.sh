@@ -56,7 +56,6 @@ searchall() {
         done
         declare -p allsettings > "$CFG_CACHE"
     fi
-    echo '${#allsettings[*]}:' "${#allsettings[*]}"
     CHOICE=$(for k in "${!allsettings[@]}"; do echo "$k"; done | sidebar)
     [ -z "$CHOICE" ] && return
     SIDEBARSEARCH="${CHOICE:4}"
