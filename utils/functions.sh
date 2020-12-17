@@ -36,13 +36,11 @@ _shell () {
 }
 
 list_func_names () {
-  case "$(_shell)" in
-    sh|bash)
-      typeset -F | awk '{print $3}'
-      ;;
-    *)
-      typeset +f | sed 's/().*$//'
-      ;;
-  esac
+  typeset shell="$(_shell)"
+  if [ "$shell" = "bash" ] || [ "$shell" = "sh" ] || echo "$SHELL" | grep -q "bash$"; then
+    typeset -F | awk '{print $3}'
+  else
+    typeset +f | sed 's/().*$//'
+  fi
 }
 
