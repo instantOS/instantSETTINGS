@@ -33,11 +33,11 @@ asksetting() {
 # Variables for global settings search
 declare -A allsettings
 export SIDEBARSEARCH=
-export CFG_CACHE="$XDG_CACHE_HOME/instantos/allsettings.bash"
+export CFG_CACHE="${XDG_CACHE_HOME:-~/.cache}/instantos/allsettings.bash"
 [ -r "$CFG_CACHE" ] && source -- "$CFG_CACHE"
 
 filter_entries () {
-    typeset funcname=$1
+    typeset funcname="$1"
     # Filter out a few things
     meta "$funcname" menu |
         grep -vE "^(>>h|>h)" |
@@ -54,7 +54,7 @@ searchall() {
             done
             IFS="$OLDIFS"
         done
-        declare -p allsettings > "$CFG_CACHE"
+        declare -p allsettings > "$CFG_CACHE" 2>/dev/null
     fi
     CHOICE=$(for k in "${!allsettings[@]}"; do echo "$k"; done | sidebar)
     [ -z "$CHOICE" ] && return

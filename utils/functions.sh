@@ -17,16 +17,17 @@ die() {
 for f in about menu; do eval "$f() { :; }"; done; unset f  # "register" keywords
 
 meta () {
-    typeset funcname=$1
-    typeset keyword=$2
+    typeset funcname="$1"
+    typeset keyword="$2"
 
-    if [ -z "$keyword" ]; then
+    if [ -z "$funcname" ] || [ -z "$keyword" ]; then
         printf '%s\n' 'missing parameter(s)'
         return
     fi
 
     typeset -f -- "$funcname" |
-        sed -n "/$keyword / s/['\";]*$//;s/^[ 	]*$keyword ['\"]*\([^([].*\)*$/\1/p"
+        sed -n "/$keyword / s/['\";]*$//;s/^[ 	]*$keyword ['\"]*\([^([].*\)*$/\1/p" ||
+        echo "name: $funcname; kw: $keyword" 1>&2
 }
 
 _shell () {
