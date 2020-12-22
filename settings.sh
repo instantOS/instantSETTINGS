@@ -1093,6 +1093,30 @@ appearancesettings() {
     esac
 }
 
+keyboardsettings() {
+
+    menu '>>h Keyboard settings'
+    menu ':b Keyboard layout'
+    menu ':b Keyboard variant'
+    menu ':b Back'
+
+    CHOICE="$(meta keyboardsettings menu | sidebar)"
+    case "$CHOICE" in
+    *layout)
+        /usr/share/instantassist/assists/t/k.sh 123
+        ;;
+    *variant)
+        CURLAYOUT="$(setxkbmap -query | grep layout | grep -o '..$')"
+        VARIANTCHOICE="$(localectl list-x11-keymap-variants "$CURLAYOUT" | imenu -l "select keyboard variant for $CURLAYOUT")"
+        iconf keyvariant "$VARIANTCHOICE"
+        ;;
+    *)
+        LOOPSETTING="True"
+        ;;
+    esac
+
+}
+
 LOOPSETTING="true"
 while [ -n "$LOOPSETTING" ]; do
     SETTING="$(asksetting)"
@@ -1117,7 +1141,7 @@ while [ -n "$LOOPSETTING" ]; do
         displaysettings
         ;;
     *Keyboard)
-        /usr/share/instantassist/assists/t/k.sh 123
+        keyboardsettings
         ;;
     *Printing)
         instantinstall cups system-config-printer ghostscript || exit
