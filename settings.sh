@@ -36,12 +36,12 @@ export SIDEBARSEARCH=
 export CFG_CACHE="${XDG_CACHE_HOME:-~/.cache}/instantos/allsettings.bash"
 [ -r "$CFG_CACHE" ] && source -- "$CFG_CACHE"
 
-filter_entries () {
+filter_entries() {
     typeset funcname="$1"
     # Filter out a few things
     meta "$funcname" menu |
         grep -vE "^(>>h|>h)" |
-            grep -vE "(Apply|Back|Custom|Yes|No|Close|Close Settings|permanent|Edit|Reset|ALL)$"
+        grep -vE "(Apply|Back|Custom|Yes|No|Close|Close Settings|permanent|Edit|Reset|ALL)$"
 }
 
 searchall() {
@@ -54,7 +54,7 @@ searchall() {
             done
             IFS="$OLDIFS"
         done
-        declare -p allsettings > "$CFG_CACHE" 2>/dev/null
+        declare -p allsettings >"$CFG_CACHE" 2>/dev/null
     fi
     CHOICE=$(for k in "${!allsettings[@]}"; do echo "$k"; done | sidebar)
     [ -z "$CHOICE" ] && return
@@ -587,6 +587,7 @@ timesettings() {
     MINUTE="$(date +%M)"
     while :; do
         DATECHOICE="$(echo ">>h Change date
+Auto detect
 Year $YEAR
 Month $MONTH
 Day $DAY
@@ -596,6 +597,13 @@ Minute $MINUTE
 :b Back" | sidebar)"
         echo "datechoice $DATECHOICE"
         case "$DATECHOICE" in
+        *detect)
+            if imenu -c 'auto detect time?'; then
+                instantsudo systemctl enable --now systemd-timesyncd
+            else
+                instantsudo systemctl disable --now systemd-timesyncd
+            fi
+            ;;
         Day*)
             NEWDAY="$(choosenumber "$DAY" 31 "day")"
             DAY="${NEWDAY:-"$DAY"}"
@@ -618,6 +626,9 @@ Minute $MINUTE
             ;;
         *Apply)
             echo "changing date to $YEAR-$MONTH-$DAY $HOUR:$MINUTE:$(date +%S)"
+            if systemctl is-enabled systemd-timesyncd; then
+                instantsudo systemctl disable --now systemd-timesyncd
+            fi
             instantsudo timedatectl set-time "$YEAR-$MONTH-$DAY $HOUR:$MINUTE:$(date +%S)"
             ;;
         *)
