@@ -852,7 +852,7 @@ This will override any neovim configurations done previously" | imenu -C; then
         fi
         iconf neovimconfig 1
         iconf -i neovimconfig 1
-        instantinstall neovim-qt nodejs npm python-pip
+        instantinstall neovim-git neovim-qt nodejs npm python-pip
         mkdir -p ~/.cache/instantosneovim
         cd ~/.cache/instantosneovim || exit 1
         checkinternet || {
