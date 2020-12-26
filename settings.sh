@@ -360,6 +360,7 @@ advancedsettings() {
         grub-customizer &
         ;;
     *Pacman*cache*autoclean)
+        instantinstall pacman-contrib
         if imenu -c 'Enable weekly autoclean pacman cache?'; then
                 instantsudo bash -c 'sed -e "s;paccache -r;paccache -rk3 -ruk1;g" /usr/lib/systemd/system/paccache.service | tee /usr/lib/systemd/system/instantpaccache.service; cp /usr/lib/systemd/system/paccache.timer /usr/lib/systemd/system/instantpaccache.timer; systemctl daemon-reload; systemctl enable --now instantpaccache.timer'
         else
