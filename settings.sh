@@ -5,6 +5,17 @@
 source /usr/share/instantsettings/utils/functions.sh
 [ -r ./utils/functions.sh ] && source ./utils/functions.sh
 
+# access specific settings page from external script
+if [ "$1" = "-s" ] && [ -z "$SCRIPTSETTINGS" ]; then
+    if [ -z "$2" ]; then
+        echo "usage: instantsettings -s settingspage"
+    fi
+    export SCRIPTSETTINGS="true"
+    source /usr/bin/instantsettings
+    eval "$2"
+    exit
+fi
+
 asksetting() {
     menu '>>h Settings'
     menu ':y SEARCH ALL' #  
@@ -1127,6 +1138,10 @@ keyboardsettings() {
 }
 
 LOOPSETTING="true"
+if [ -n "$SCRIPTSETTINGS" ]; then
+    echo "running in scripted mode"
+    unset LOOPSETTING
+fi
 while [ -n "$LOOPSETTING" ]; do
     SETTING="$(asksetting)"
     unset LOOPSETTING
