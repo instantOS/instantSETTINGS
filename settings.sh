@@ -429,6 +429,11 @@ wallpapersettings() {
 :b Background color
 :b Back' | sidebar
         )"
+        askcolor() {
+            RETCOLOR="$(zenity --color-selection)"
+            [ -z "$RETCOLOR" ] && return 1
+            printf "#%02x%02x%02x\n" $(grep -o '[0-9,]*' <<<"$RETCOLOR" | sed 's/,/ /g')
+        }
         case "$CHOICE" in
         *wallpaper)
             toggleiconf coloredwallpaper "use solid colors as wallpaper?"
@@ -440,12 +445,12 @@ wallpapersettings() {
             fi
             ;;
         *Foreground*)
-            FGCOLOR="$(zenity --color-selection)"
+            FGCOLOR="$(askcolor)"
             [ -n "$FGCOLOR" ] && iconf fgcolor "$FGCOLOR"
             instantwallpaper color "$(iconf fgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
             ;;
         *Background*)
-            BGCOLOR="$(zenity --color-selection)"
+            BGCOLOR="$(askcolor)"
             [ -n "$BGCOLOR" ] && iconf bgcolor "$BGCOLOR"
             instantwallpaper color "$(iconf fgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
             ;;
