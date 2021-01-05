@@ -464,8 +464,13 @@ coloredwallsettings() {
     refreshwall() {
         if iconf -i coloredwallpaper; then
             echo "refreshing colored wallpaper"
-            instantwallpaper color "$(iconf bgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
-            instantwallpaper set ~/instantos/wallpapers/color/customcolor.png
+            notify-send 'generating colored wallpaper'
+            {
+                instantwallpaper color "$(iconf bgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
+                instantwallpaper set ~/instantos/wallpapers/color/customcolor.png
+            } &
+        else
+            imenu -m 'Colored wallpaper is currently disabled. Your settings will not take effect until you enable it'
         fi
     }
     case "$CHOICE" in
