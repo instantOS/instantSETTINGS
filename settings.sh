@@ -441,18 +441,21 @@ wallpapersettings() {
                 [ -e ~/instantos/wallpapers/color/customcolor.png ] || instantwallpaper color "$(iconf fgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
                 instantwallpaper set ~/instantos/wallpapers/color/customcolor.png
             else
+                instantwallpaper clear
                 instantwallpaper ww
             fi
             ;;
         *Foreground*)
             FGCOLOR="$(askcolor)"
             [ -n "$FGCOLOR" ] && iconf fgcolor "$FGCOLOR"
-            instantwallpaper color "$(iconf fgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
+            instantwallpaper color "$(iconf bgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
+            instantwallpaper set ~/instantos/wallpapers/color/customcolor.png
             ;;
         *Background*)
             BGCOLOR="$(askcolor)"
             [ -n "$BGCOLOR" ] && iconf bgcolor "$BGCOLOR"
-            instantwallpaper color "$(iconf fgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
+            instantwallpaper color "$(iconf bgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
+            instantwallpaper set ~/instantos/wallpapers/color/customcolor.png
             ;;
         *)
             echo "going back"
