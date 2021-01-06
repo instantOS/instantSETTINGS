@@ -1,11 +1,54 @@
 #!/usr/bin/env bash
+getsidebarwidth()
+{
+    CURRENTSETTING="$(iconf settingswinpos)"
+    SIDEBARWIDTH=400
+    case $CURRENTSETTING in
+        *center)
+            SIDEBARWIDTH=800
+            ;;
+        *)
+            ;;
+    esac
+    echo "$SIDEBARWIDTH"
+}
+
+getwinpos()
+{
+    CURRENTSETTING="$(iconf settingswinpos)"
+
+    HORIZONTALOFFSET=0
+    case $CURRENTSETTING in
+        *left)
+            HORIZONTALOFFSET=0
+            ;;
+        *center)
+            eval "$(xdotool getmouselocation --shell)"
+
+            for i in $(xrandr | pcregrep -o3 '(\d+)x(\d+)\+(\d+)\+(\d+)' | sort); do
+                if (( X > i )); then
+                     MONITORSTART=$i
+                fi
+            done
+
+            SCREENWIDTH=$(xrandr | pcregrep -o1 "(\d+)x(\d+)\+$MONITORSTART\+(\d+)")
+
+            HORIZONTALOFFSET=$(( (SCREENWIDTH - $(getsidebarwidth))/2 ))
+            ;;
+        *)
+            HORIZONTALOFFSET=100000
+            ;;
+    esac
+
+    echo "$HORIZONTALOFFSET"
+}
 
 sidebar() {
     querystring="${1:-search...}"
     shift
     sbs="$SIDEBARSEARCH"
     SIDEBARSEARCH=
-    instantmenu -it "$sbs" -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "$querystring" "$@"
+    instantmenu -it "$sbs" -l 2000 -w -$(getsidebarwidth) -i -h -1 -x $(getwinpos) -y -1 -bw 4 -H -q "$querystring" "$@"
 }
 
 die() {

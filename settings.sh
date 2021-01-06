@@ -38,7 +38,7 @@ asksetting() {
     menu ':y Dotfiles'
     menu ':r Close Settings'
     meta asksetting menu |
-        instantmenu -ps 1 -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search"
+        instantmenu -ps 1 -l 2000 -w -$(getsidebarwidth) -i -h -1 -x $(getwinpos) -y -1 -bw 4 -H -q "search"
 }
 
 # Variables for global settings search
@@ -300,6 +300,7 @@ displaysettings() {
     menu ':b External screen'
     menu ':b HiDPI'
     menu ':b Keep screen on when locked'
+    menu ':b Settings window positioning'
 
     CHOICE="$({
         meta displaysettings menu
@@ -350,6 +351,10 @@ displaysettings() {
         instantinstall nvidia-settings || exit 1
         nvidia-settings
         exit
+        ;;
+    *positioning)
+        settingspositioning
+        displaysettings
         ;;
     *)
         LOOPSETTING="True"
@@ -1192,6 +1197,31 @@ keyboardsettings() {
         CURLAYOUT="$(setxkbmap -query | grep layout | grep -o '..$')"
         VARIANTCHOICE="$(localectl list-x11-keymap-variants "$CURLAYOUT" | imenu -l "select keyboard variant for $CURLAYOUT")"
         iconf keyvariant "$VARIANTCHOICE"
+        ;;
+    *)
+        LOOPSETTING="True"
+        ;;
+    esac
+
+}
+
+settingspositioning() {
+    menu 'Settings window positioning'
+    menu 'Left'
+    menu 'Center'
+    menu 'Right'
+    menu ':b Back'
+
+    CHOICE="$(meta settingspositioning menu | sidebar)"
+    case $CHOICE in
+    *Left)
+        iconf settingswinpos "left"
+        ;;
+    *Center)
+        iconf settingswinpos "center"
+        ;;
+    *Right)
+        iconf settingswinpos "right"
         ;;
     *)
         LOOPSETTING="True"
