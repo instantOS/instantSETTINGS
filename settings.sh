@@ -354,6 +354,7 @@ advancedsettings() {
     menu ':y TLP'
     menu ':g Bootloader'
     menu ':b Pacman cache autoclean'
+    menu ':b 力Systemd'
     menu ':b Back'
 
     CHOICE="$(meta advancedsettings menu | sidebar)"
@@ -377,6 +378,16 @@ advancedsettings() {
         else
             instantsudo systemctl disable --now instantpaccache.timer
         fi
+        ;;
+    *Systemd)
+        instantinstall cockpit chromium
+        if ! systemctl is-enabled cockpit.socket; then
+            instantsudo systemctl enable --now cockpit.service || exit 1
+            sleep 4
+            imenu -m "sign in with $(whoami) in the next window"
+        fi
+        chromium --app="http://localhost:9090" &
+        exit
         ;;
     *)
         LOOPSETTING="True"
