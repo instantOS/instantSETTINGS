@@ -382,7 +382,7 @@ advancedsettings() {
     *Systemd)
         instantinstall cockpit chromium
         if ! systemctl is-enabled cockpit.socket; then
-            instantsudo systemctl enable --now cockpit.service || exit 1
+            instantsudo systemctl enable --now cockpit.socket || exit 1
             sleep 4
             imenu -m "sign in with $(whoami) in the next window"
         fi
