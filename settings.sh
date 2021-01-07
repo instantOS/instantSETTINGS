@@ -38,7 +38,7 @@ asksetting() {
     menu ':y Dotfiles'
     menu ':r Close Settings'
     meta asksetting menu |
-        instantmenu -ps 1 -l 2000 -w -$(getsidebarwidth) -i -h -1 -x $(getwinpos) -y -1 -bw 4 -H -q "search"
+        instantmenu -ps 1 -l 2000 -w -$SIDEBAR_WIDTH -i -h -1 -x $SIDEBAR_POS -y -1 -bw 4 -H -q "search"
 }
 
 # Variables for global settings search
@@ -1216,12 +1216,15 @@ settingspositioning() {
     case $CHOICE in
     *Left)
         iconf settingswinpos "left"
+        recalculatesidebar
         ;;
     *Center)
         iconf settingswinpos "center"
+        recalculatesidebar
         ;;
     *Right)
         iconf settingswinpos "right"
+        recalculatesidebar
         ;;
     *)
         LOOPSETTING="True"
