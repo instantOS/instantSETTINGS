@@ -768,6 +768,7 @@ toggleiconf() {
 instantossettings() {
     menu '>>h instantOS settings'
     menu ':b Edit Autostart script'
+    menu ':b Edit Session Environment'
     menu ':b Theming'
     menu ':y Potato'
     menu ':b 𧻓Animations'
@@ -785,7 +786,7 @@ instantossettings() {
 
     CHOICE="$(meta instantossettings menu | sidebar)"
     case $CHOICE in
-    *script)
+    *Autostart*)
         if ! [ -e ~/.config/instantos/autostart.sh ]; then
             mkdir -p ~/.config/instantos
             if [ -e ~/.instantautostart ]; then
@@ -798,6 +799,15 @@ instantossettings() {
             fi
         fi
         instantutils open editor ~/.config/instantos/autostart.sh &
+        ;;
+    *Environment)
+        if ! [ -e ~/.instantsession ]; then
+            echo "# instantOS Session Environment Script
+# This script gets sourced when $(whoami) logs in
+# Add environment variables that should be available to all processes executed from your desktop session." > \
+                ~/.instantsession
+        fi
+        instantutils open editor ~/.instantsession &
         ;;
     *Theming)
         toggleiconf notheming "enable instantOS theming?" i
