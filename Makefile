@@ -2,14 +2,17 @@ export PREFIX := /usr/
 
 SUBDIRS := utils/ data/default/
 
-.PHONY: all $(SUBDIRS)
-all: install $(SUBDIRS)
+.PHONY: all
+all:
+	$(info Usage: make install [PREFIX=/usr/])
 
+.PHONY: $(SUBDIRS)
 $(SUBDIRS):
-	$(MAKE) -C $@
+	$(MAKE) install -C $@
 
 .PHONY: install
-install: settings.sh instantsettings.desktop instantcontrolcenter.desktop
+install: settings.sh instantsettings.desktop instantcontrolcenter.desktop $(SUBDIRS)
+	$(info "PREFIX: $(PREFIX)")
 	mkdir -p $(DESTDIR)$(PREFIX)share/instantsettings $(DESTDIR)$(PREFIX)share/applications/
 	install -Dm 755 settings.sh $(DESTDIR)$(PREFIX)bin/instantsettings
 	install -m 644 instantsettings.desktop $(DESTDIR)$(PREFIX)share/applications/
@@ -21,3 +24,4 @@ uninstall:
 	rm -f $(DESTDIR)$(PREFIX)bin/instantsettings
 	rm -f $(DESTDIR)$(PREFIX)share/applications/instantsettings.desktop
 	rm -f $(DESTDIR)$(PREFIX)share/applications/instantcontrolcenter.desktop
+
