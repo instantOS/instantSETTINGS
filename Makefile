@@ -5,6 +5,7 @@ SUBDIRS := utils/ data/default/
 .PHONY: all
 all:
 	$(info Usage: make install [PREFIX=/usr/])
+	true
 
 .PHONY: $(SUBDIRS)
 $(SUBDIRS):
@@ -12,7 +13,7 @@ $(SUBDIRS):
 
 .PHONY: install
 install: settings.sh instantsettings.desktop instantcontrolcenter.desktop $(SUBDIRS)
-	$(info "PREFIX: $(PREFIX)")
+	$(info "INFO: install PREFIX: $(PREFIX)")
 	mkdir -p $(DESTDIR)$(PREFIX)share/instantsettings $(DESTDIR)$(PREFIX)share/applications/
 	install -Dm 755 settings.sh $(DESTDIR)$(PREFIX)bin/instantsettings
 	install -m 644 instantsettings.desktop $(DESTDIR)$(PREFIX)share/applications/

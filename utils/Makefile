@@ -1,6 +1,7 @@
 .PHONY: all
 all:
 	$(info make install [PREFIX=/usr/])
+	true
 
 .PHONY: install
 install: enablebluetooth.sh functions.sh
