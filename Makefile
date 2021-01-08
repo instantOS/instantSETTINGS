@@ -10,7 +10,7 @@ $(SUBDIRS):
 
 .PHONY: install
 install: settings.sh instantsettings.desktop instantcontrolcenter.desktop
-	mkdir -p $(DESTDIR)$(PREFIX)share/instantsettings
+	mkdir -p $(DESTDIR)$(PREFIX)share/instantsettings $(DESTDIR)$(PREFIX)share/applications/
 	install -Dm 755 settings.sh $(DESTDIR)$(PREFIX)bin/instantsettings
 	install -m 644 instantsettings.desktop $(DESTDIR)$(PREFIX)share/applications/
 	install -m 644 instantcontrolcenter.desktop $(DESTDIR)$(PREFIX)share/applications/
