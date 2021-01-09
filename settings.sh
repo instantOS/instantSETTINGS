@@ -300,9 +300,13 @@ displaysettings() {
     menu ':b External screen'
     menu ':b HiDPI'
     menu ':b Keep screen on when locked'
-    menu ':b Back'
 
-    CHOICE="$(meta displaysettings menu | sidebar)"
+    CHOICE="$({
+        meta displaysettings menu
+        [ -e /usr/bin/nvidia-smi ] &&
+            echo ':g 來Nvidia'
+        echo ':b Back'
+    } | sidebar)"
     case $CHOICE in
     *settings)
         arandr &
@@ -341,6 +345,11 @@ displaysettings() {
     *locked)
         toggleiconf nolocktimeout "keep monitor on when the screen is locked?"
         displaysettings
+        ;;
+    *Nvidia)
+        instantinstall nvidia-settings || exit 1
+        nvidia-settings
+        exit
         ;;
     *)
         LOOPSETTING="True"
