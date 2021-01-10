@@ -364,6 +364,7 @@ advancedsettings() {
     menu ':g Bootloader'
     menu ':b Pacman cache autoclean'
     menu ':b 力Systemd'
+    menu ':b Lightdm'
     menu ':b Back'
 
     CHOICE="$(meta advancedsettings menu | sidebar)"
@@ -396,6 +397,11 @@ advancedsettings() {
             imenu -m "sign in with $(whoami) in the next window"
         fi
         chromium --app="http://localhost:9090" &
+        exit
+        ;;
+    *Lightdm)
+        instantintall lightdm-gtk-greeter-settings || exit 1
+        pkexec lightdm-gtk-greeter-settings
         exit
         ;;
     *)
