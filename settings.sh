@@ -400,7 +400,7 @@ advancedsettings() {
         exit
         ;;
     *Lightdm)
-        instantintall lightdm-gtk-greeter-settings || exit 1
+        instantinstall lightdm-gtk-greeter-settings || exit 1
         pkexec lightdm-gtk-greeter-settings
         exit
         ;;
