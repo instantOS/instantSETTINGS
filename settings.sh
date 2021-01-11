@@ -298,6 +298,7 @@ displaysettings() {
     menu ':y Change screen brightness'
     menu ':b Autodetect monitor docking'
     menu ':b External screen'
+    menu ':b Screensaver configuration'
     menu ':b HiDPI'
     menu ':b Keep screen on when locked'
 
@@ -350,6 +351,10 @@ displaysettings() {
         instantinstall nvidia-settings || exit 1
         nvidia-settings
         exit
+        ;;
+    *configuration)
+        instantinstall xscreensaver || exit 1
+        screensaversettings
         ;;
     *)
         LOOPSETTING="True"
@@ -1173,6 +1178,31 @@ appearancesettings() {
     *)
         LOOPSETTING="True"
         ;;
+    esac
+}
+
+screensaversettings() {
+    CSTATUS=$(systemctl --user is-enabled xscreensaver.service)
+    CHOICE="$(echo ">>h Screensaver configuration
+>currently: $CSTATUS
+:b Enable and configure
+:b Enable
+:b Disable
+:b Back" | sidebar)"
+    case "$CHOICE" in
+        *configure)
+            systemctl --user enable --now xscreensaver.service
+            xscreensaver-demo
+            ;;
+        *Enable)
+            systemctl --user enable --now xscreensaver.service
+            ;;
+        *Disable)
+            systemctl --user disable --now xscreensaver.service
+            ;;
+        *)
+            LOOPSETTING="True"
+            ;;
     esac
 }
 
