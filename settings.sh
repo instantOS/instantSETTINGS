@@ -1181,6 +1181,7 @@ keyboardsettings() {
     menu '>>h Keyboard settings'
     menu ':b Keyboard layout'
     menu ':b Keyboard variant'
+    menu ':b Layout switcher'
     menu ':b Back'
 
     CHOICE="$(meta keyboardsettings menu | sidebar)"
@@ -1203,6 +1204,19 @@ keyboardsettings() {
             echo "enabling keyboard $VARIANTCHOICE"
             iconf keyvariant "$VARIANTCHOICE"
             setxkbmap -layout "$CURLAYOUT" -variant "$VARIANTCHOICE"
+        fi
+        ;;
+    *switcher)
+        LAYOUTFILE="$HOME/.config/instantos/keylayoutlist"
+        if ! [ -e "$LAYOUTFILE" ]; then
+            mkdir -p ~/.config/instantos
+            setxkbmap -query | grep layout | grep -o '..$' >"$LAYOUTFILE"
+        fi
+        LAYOUTLIST="$(imenu -E 'keyboard layout list' 'localectl list-x11-keymap-layouts | imenu -l' <"$LAYOUTFILE")"
+        if [ -z "$LAYOUTLIST" ]; then
+            rm ~/.config/instantos/layouts
+        else
+            echo "$LAYOUTLIST" >"$LAYOUTFILE"
         fi
         ;;
     *)
