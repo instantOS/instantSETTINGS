@@ -1190,8 +1190,20 @@ keyboardsettings() {
         ;;
     *variant)
         CURLAYOUT="$(setxkbmap -query | grep layout | grep -o '..$')"
-        VARIANTCHOICE="$(localectl list-x11-keymap-variants "$CURLAYOUT" | imenu -l "select keyboard variant for $CURLAYOUT")"
-        iconf keyvariant "$VARIANTCHOICE"
+        VARIANTCHOICE="$({
+            echo "standard (default)"
+            localectl list-x11-keymap-variants "$CURLAYOUT"
+        } | imenu -l "select keyboard variant for $CURLAYOUT")"
+
+        if grep -q "default" <<<"$VARIANTCHOICE"; then
+            echo 'resetting keyboard variant'
+            iconf -d keyvariant
+            setxkbmap -layout "$CURLAYOUT"
+        else
+            echo "enabling keyboard $VARIANTCHOICE"
+            iconf keyvariant "$VARIANTCHOICE"
+            setxkbmap -layout "$CURLAYOUT" -variant "$VARIANTCHOICE"
+        fi
         ;;
     *)
         LOOPSETTING="True"
