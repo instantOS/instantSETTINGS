@@ -78,7 +78,10 @@ searchall() {
         declare -p allsettings >"$CFG_CACHE" 2>/dev/null
     fi
     CHOICE=$(for k in "${!allsettings[@]}"; do echo "$k"; done | sidebar)
-    [ -z "$CHOICE" ] && return
+    if [ -z "$CHOICE" ]; then
+        LOOPSETTING=true
+        return
+    fi
     SIDEBARSEARCH="${CHOICE:4}"
 
     # clean up breadcrumbs
