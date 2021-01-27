@@ -37,8 +37,14 @@ asksetting() {
     menu ':y Advanced'
     menu ':y Dotfiles'
     menu ':r Close Settings'
-    meta asksetting menu |
-        instantmenu -ps 1 -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search"
+    if [ -z "$SIDEBARSEARCH" ]; then
+        meta asksetting menu |
+            instantmenu -ps 1 -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search"
+    else
+        meta asksetting menu |
+            instantmenu -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search" -it "$SIDEBARSEARCH" -pm
+        export SIDEBARSEARCH=
+    fi
 }
 
 # Variables for global settings search
@@ -50,9 +56,13 @@ export CFG_CACHE="${XDG_CACHE_HOME:-~/.cache}/instantos/allsettings.bash"
 filter_entries() {
     typeset funcname="$1"
     # Filter out a few things
+    FUNCTIONTITLE="$(
+        meta "$funcname" menu | grep '>>h ' | sed 's/^....//g'
+    )"
     meta "$funcname" menu |
         grep -vE "^(>>h|>h)" |
-        grep -vE "(Apply|Back|Custom|Yes|No|Close|Close Settings|permanent|Edit|Reset|ALL)$"
+        grep -vE "(Apply|Back|Custom|Yes|No|Close|Close Settings|permanent|Edit|Reset|ALL)$" |
+        sed 's/^\(....\)\(.*\)/\1'"$FUNCTIONTITLE"'       \2/g'
 }
 
 searchall() {
@@ -70,7 +80,18 @@ searchall() {
     CHOICE=$(for k in "${!allsettings[@]}"; do echo "$k"; done | sidebar)
     [ -z "$CHOICE" ] && return
     SIDEBARSEARCH="${CHOICE:4}"
-    "${allsettings["$CHOICE"]}" -ps 1
+
+    # clean up breadcrumbs
+    if grep -q "" <<<"$SIDEBARSEARCH"; then
+        SIDEBARSEARCH="$(sed 's/^.*[ ]*//g' <<<"$SIDEBARSEARCH")"
+    fi
+
+    echo "choice ${allsettings["$CHOICE"]}"
+    if [ "${allsettings["$CHOICE"]}" = "asksetting" ]; then
+        LOOPSETTING=true
+        return
+    fi
+    "${allsettings["$CHOICE"]}"
     SIDEBARSEARCH=
 }
 

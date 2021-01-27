@@ -5,7 +5,7 @@ sidebar() {
     shift
     sbs="$SIDEBARSEARCH"
     SIDEBARSEARCH=
-    instantmenu -it "$sbs" -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "$querystring" "$@"
+    instantmenu -it "$sbs" -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "$querystring" "$@" -pm
 }
 
 die() {
