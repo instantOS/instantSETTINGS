@@ -1,7 +1,7 @@
 b st:st:st-instantos
 b Urxvt:urxvt:rxvt-unicode
 b Xterm:xterm
-y alacritty
-b kitty
-b lxterminal
+y alacritty:alacritty
+b kitty:kitty
+b lxterminal:lxterminal
 y Gnome terminal:gnome-terminal
