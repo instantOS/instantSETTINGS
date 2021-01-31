@@ -3,4 +3,5 @@ b Urxvt:urxvt:rxvt-unicode
 b Xterm:xterm
 y alacritty
 b kitty
+b lxterminal
 y Gnome terminal:gnome-terminal

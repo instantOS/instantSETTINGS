@@ -250,6 +250,10 @@ $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:
 :b Back"
 
     APPCHOICE="$(echo "$LIST" | sidebar | sed 's/^://g')"
+    if [ -z "$APPCHOICE" ]; then
+        defaultapplicationsettings
+        return 0
+    fi
 
     case "$APPCHOICE" in
     *Custom)
