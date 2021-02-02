@@ -16,6 +16,11 @@ if [ "$1" = "-s" ] && [ -z "$SCRIPTSETTINGS" ]; then
     exit
 fi
 
+if iconf settingsposition; then
+    SIDEBARPOS="$(iconf settingsposition)"
+    export SIDEBARPOS
+fi
+
 asksetting() {
     menu '>>h Settings'
     menu ':y SEARCH ALL' #  
@@ -37,14 +42,8 @@ asksetting() {
     menu ':y Advanced'
     menu ':y Dotfiles'
     menu ':r Close Settings'
-    if [ -z "$SIDEBARSEARCH" ]; then
-        meta asksetting menu |
-            instantmenu -ps 1 -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search"
-    else
-        meta asksetting menu |
-            instantmenu -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "search" -it "$SIDEBARSEARCH" -pm
-        export SIDEBARSEARCH=
-    fi
+    SIDEBARSEARCH="${SIDEBARSEARCH:-SEARCH ALL}"
+    meta asksetting menu | sidebar "Search categories"
 }
 
 # Variables for global settings search
@@ -825,6 +824,7 @@ instantossettings() {
     menu ':b Autologin'
     menu ':g Neovim preconfig'
     menu ':r instantOS development tools'
+    menu ':b Settings position'
     menu ':b Back'
 
     CHOICE="$(meta instantossettings menu | sidebar)"
@@ -1026,10 +1026,28 @@ This will override any neovim configurations done previously" | imenu -C; then
         instantinstall alttab
         instantossettings
         ;;
+    *position)
+        positionsettings
+        ;;
     *)
         LOOPSETTING="True"
         ;;
     esac
+
+}
+
+positionsettings() {
+    menu '>>h Settings window positioning'
+    menu 'Left'
+    menu 'Center'
+    menu 'Right'
+    menu ':b Back'
+    CHOICE="$(meta positionsettings menu | sidebar)"
+    if [ -z "$CHOICE" ] || grep -iq "back" <<<"$CHOICE"; then
+        export LOOPSETTING="True"
+    else
+        iconf settingsposition "$(tr '[:upper:]' '[:lower:]' <<<"$CHOICE")"
+    fi
 
 }
 

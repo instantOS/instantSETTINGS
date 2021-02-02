@@ -3,9 +3,30 @@
 sidebar() {
     querystring="${1:-search...}"
     shift
-    sbs="$SIDEBARSEARCH"
+    if [ -n "$SIDEBARPOS" ]; then
+        case "$SIDEBARPOS" in
+        center)
+            instantmenu -it "$SIDEBARSEARCH" -l 2000 -w -400 -i -h -1 -c -bw 4 -H -q "$querystring" "$@" -pm
+            SIDEBARSEARCH=
+            return
+            ;;
+        left)
+            SIDE_X="0"
+            ;;
+        right)
+            SIDE_X="10000"
+            ;;
+        *)
+            imenu -e 'invalid settings position'
+            iconf -r settingsposition
+            exit 1
+            ;;
+        esac
+    else
+        SIDE_X="10000"
+    fi
+    instantmenu -it "$SIDEBARSEARCH" -l 2000 -w -400 -i -h -1 -x "$SIDE_X" -y -1 -bw 4 -H -q "$querystring" "$@" -pm
     SIDEBARSEARCH=
-    instantmenu -it "$sbs" -l 2000 -w -400 -i -h -1 -x 100000 -y -1 -bw 4 -H -q "$querystring" "$@" -pm
 }
 
 die() {
