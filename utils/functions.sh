@@ -6,7 +6,7 @@ sidebar() {
     if [ -n "$SIDEBARPOS" ]; then
         case "$SIDEBARPOS" in
         center)
-            instantmenu -it "$SIDEBARSEARCH" -l 2000 -w -400 -i -h -1 -c -bw 4 -H -q "$querystring" "$@" -pm
+            instantmenu -r -it "$SIDEBARSEARCH" -l 2000 -w -400 -i -h -1 -c -bw 4 -H -q "$querystring" "$@" -pm
             SIDEBARSEARCH=
             return
             ;;
@@ -25,7 +25,7 @@ sidebar() {
     else
         SIDE_X="10000"
     fi
-    instantmenu -it "$SIDEBARSEARCH" -l 2000 -w -400 -i -h -1 -x "$SIDE_X" -y -1 -bw 4 -H -q "$querystring" "$@" -pm
+    instantmenu -r -it "$SIDEBARSEARCH" -l 2000 -w -400 -i -h -1 -x "$SIDE_X" -y -1 -bw 4 -H -q "$querystring" "$@" -pm
     SIDEBARSEARCH=
 }
 
