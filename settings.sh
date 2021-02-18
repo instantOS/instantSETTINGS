@@ -1097,9 +1097,11 @@ Try regardless?' | imenu -C; then
         fi
     fi
 
+    instantinstall pulseaudio-bluetooth
+
     if ! systemctl is-active --quiet bluetooth; then
         if imenu -c "enable bluetooth?"; then
-            instantsudo /usr/share/instantsettings/utils/enablebluetooth.sh
+            instantsudo systemctl enable --now bluetooth
         else
             return
         fi
