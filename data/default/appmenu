@@ -2,7 +2,7 @@ b appmenu:appmenu:instantutils,rofi
 b jgmenu:jgmenu_run:jgmenu
 b instantMENU:instantmenu_smartrun:instantmenu
 b dmenu:dmenu_run:dmenu
-b rofi:rofi -show run:rofi-git
+b rofi:rofi -show run:rofi
 b panther:panther_launcher:panther-launcher-git
 b albert:instantalbert:instantutils,albert
 g xfce4-appfinder:xfce4-appfinder
