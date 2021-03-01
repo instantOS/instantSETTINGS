@@ -811,7 +811,6 @@ instantossettings() {
     menu '>>h instantOS settings'
     menu ':b Edit Autostart script'
     menu ':b Edit Session Environment'
-    menu ':b Theming'
     menu ':y Potato'
     menu ':b 𧻓Animations'
     menu ':b ﰪConky Widgets'
@@ -851,10 +850,6 @@ instantossettings() {
                 ~/.instantsession
         fi
         instantutils open editor ~/.instantsession &
-        ;;
-    *Theming)
-        toggleiconf notheming "enable instantOS theming?" i
-        instantossettings
         ;;
     *bar)
         toggleiconf nostatus "enable default status text?" i
@@ -997,12 +992,14 @@ This will override any neovim configurations done previously" | imenu -C; then
         toggleiconf desktopicons "show desktop icons?"
         if iconf -i desktopicons; then
             iconf -i desktop 1
-            rox --pinboard Default &
+            pgrep ROX || rox --pinboard Default &
         else
             iconf -i desktop 0
-            pgrep ROX && pkill ROX
-            sleep 0.5
-            instantwallpaper
+            {
+                pgrep ROX && pkill ROX
+                sleep 0.5
+                instantwallpaper
+            } &
         fi
         instantossettings
         ;;
