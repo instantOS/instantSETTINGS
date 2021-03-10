@@ -1302,11 +1302,12 @@ while [ -n "$LOOPSETTING" ]; do
         keyboardsettings
         ;;
     *Printing)
-        instantinstall cups system-config-printer ghostscript || exit
+        instantinstall cups system-config-printer ghostscript avahi || exit
         if ! systemctl is-active --quiet cups; then
             if imenu -c "enable printer support?"; then
                 enableservices() {
                     systemctl enable --now cups
+                    systemctl enable --now avahi-daemon.service
                 }
                 instantsudo bash -c "$(declare -f enableservices); enableservices"
                 sleep 2
