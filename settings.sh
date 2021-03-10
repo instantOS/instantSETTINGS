@@ -1303,13 +1303,17 @@ while [ -n "$LOOPSETTING" ]; do
         ;;
     *Printing)
         instantinstall cups system-config-printer ghostscript || exit
-        if ! systemctl is-active --quiet org.cups.cupsd.service; then
+        if ! systemctl is-active --quiet cups; then
             if imenu -c "enable printer support?"; then
                 enableservices() {
-                    systemctl enable org.cups.cupsd.service
-                    systemctl start org.cups.cupsd.service
+                    systemctl enable --now cups
                 }
                 instantsudo bash -c "$(declare -f enableservices); enableservices"
+                sleep 2
+                systemctl is-active --quiet cups || {
+                    notify-send 'printing service is either not enabled or still starting'
+                    exit 1
+                }
             else
                 exit
             fi
