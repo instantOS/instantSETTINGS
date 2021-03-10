@@ -1302,12 +1302,16 @@ while [ -n "$LOOPSETTING" ]; do
         keyboardsettings
         ;;
     *Printing)
-        instantinstall cups system-config-printer ghostscript avahi || exit
+        instantinstall cups system-config-printer ghostscript avahi nss-mdns || exit 1
         if ! systemctl is-active --quiet cups; then
             if imenu -c "enable printer support?"; then
                 enableservices() {
                     systemctl enable --now cups
                     systemctl enable --now avahi-daemon.service
+                    if ! grep -q 'mdns_minimal' /etc/nsswitch.conf; then
+                        echo "configuring nsswitch"
+                        sed -i '/^hosts/s/ files / files mdns_minimal /g' /etc/nsswitch.conf
+                    fi
                 }
                 instantsudo bash -c "$(declare -f enableservices); enableservices"
                 sleep 2
