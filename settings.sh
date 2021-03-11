@@ -351,6 +351,11 @@ displaysettings() {
         ;;
     *docking)
         toggleiconf autoswitch "auto detect new monitors being plugged in?"
+        if iconf -i autoswitch; then
+            iconf -i noautoswitch 0
+        else
+            iconf -i noautoswitch 1
+        fi
         displaysettings
         ;;
     *HiDPI)
