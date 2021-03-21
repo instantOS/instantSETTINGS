@@ -788,6 +788,7 @@ toggleiconf() {
             CONFSTATUS="enabled"
         fi
     fi
+    unset SIDEBARSEARCH
     CONFPROMPT=">>h $2
 > Currently $CONFSTATUS
 :g Yes
