@@ -992,6 +992,11 @@ This will override any neovim configurations done previously" | imenu -C; then
         ;;
     *Widgets)
         toggleiconf noconky "show desktop widgets?" i
+        if iconf -i noconky; then
+            pgrep conky && pkill conky
+        else
+            pgrep conky || instantutils conky
+        fi
         instantossettings
         ;;
     *icons)
