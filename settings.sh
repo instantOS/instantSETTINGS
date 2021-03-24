@@ -1138,6 +1138,7 @@ mousesettings() {
     menu '>>h Mouse settings'
     menu ':b Sensitivity'
     menu ':b Reverse scrolling'
+    menu ':b 社Reset mouse'
     menu ':b Back'
 
     CHOICE="$(meta mousesettings menu | sidebar)"
@@ -1148,6 +1149,7 @@ mousesettings() {
         PRESPEED=$(echo "($CURRENTSPEED + 1) * 50" | bc -l | grep -o '^[^.]*')
         islide -s "$PRESPEED" -c "instantmouse m " -p "mouse sensitivity"
         iconf mousespeed "$(instantmouse l)"
+        iconf -i nomousesetting 0
         ;;
     *scrolling)
         toggleiconf reversemouse "Reverse mouse scrolling?"
@@ -1157,6 +1159,13 @@ mousesettings() {
             instantmouse r 0
         fi
         mousesettings
+        iconf -i nomousesetting 0
+        ;;
+    *mouse)
+        echo 'resetting mouse'
+        iconf -d mousespeed
+        iconf -i reversemouse 0
+        iconf -i nomousesetting 1
         ;;
     *)
         LOOPSETTING="True"
