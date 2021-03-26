@@ -272,7 +272,7 @@ $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:
     fi
 
     if ! grep -q ':' <<<"$CHOICE"; then
-        instantinstall "$(sed 's/^....//g')"
+        instantinstall "$(sed 's/^....//g')" || exit 1
         return
     fi
     echo "choice: $CHOICE"
@@ -290,13 +290,13 @@ $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:
         if command -v "$SETCOMMAND"; then
             return
         fi
-        instantinstall "$INSTALLCOMMAND"
+        instantinstall "$INSTALLCOMMAND" || exit 1
     else
         echo "multiple dependencies detected"
         INSTALLLIST="$(sed 's/\,/ /g' <<<"$INSTALLCOMMAND")"
         for i in $(echo $INSTALLLIST); do
             echo "multi installing"
-            instantinstall "$i"
+            instantinstall "$i" || exit 1
         done
     fi
 
@@ -343,7 +343,7 @@ displaysettings() {
         ;;
     *permanent)
         notify-send "saving current monitor settings"
-        instantinstall autorandr
+        instantinstall autorandr || exit 1
         autorandr --force --save instantos
         ;;
     *screen)
@@ -352,6 +352,11 @@ displaysettings() {
     *docking)
         toggleiconf autoswitch "auto detect new monitors being plugged in?"
         if iconf -i autoswitch; then
+            instantinstall udevwait || {
+                iconf -i autoswitch 0
+                iconf -i noautoswitch 1
+                exit 1
+            }
             iconf -i noautoswitch 0
         else
             iconf -i noautoswitch 1
@@ -402,19 +407,19 @@ advancedsettings() {
     CHOICE="$(meta advancedsettings menu | sidebar)"
     case $CHOICE in
     *Firewall)
-        instantinstall gufw
+        instantinstall gufw || exit 1
         gufw &
         ;;
     *TLP)
-        instantinstall tlpui
+        instantinstall tlpui || exit 1
         tlpui &
         ;;
     *Bootloader)
-        instantinstall grub-customizer
+        instantinstall grub-customizer || exit 1
         grub-customizer &
         ;;
     *Pacman*cache*autoclean)
-        instantinstall pacman-contrib
+        instantinstall pacman-contrib || exit 1
         if imenu -c 'Enable weekly autoclean pacman cache?'; then
             instantsudo bash -c 'sed -e "s;paccache -r;paccache -rk3 -ruk1;g" /usr/lib/systemd/system/paccache.service | tee /usr/lib/systemd/system/instantpaccache.service; cp /usr/lib/systemd/system/paccache.timer /usr/lib/systemd/system/instantpaccache.timer; systemctl daemon-reload; systemctl enable --now instantpaccache.timer'
         else
@@ -422,7 +427,7 @@ advancedsettings() {
         fi
         ;;
     *Systemd)
-        instantinstall cockpit chromium
+        instantinstall cockpit chromium || exit 1
         if ! systemctl is-enabled cockpit.socket; then
             instantsudo systemctl enable --now cockpit.socket || exit 1
             sleep 4
@@ -872,7 +877,7 @@ instantossettings() {
         if ! iconf -i clipmanager; then
             pgrep -f clipmenud && pkill -f clipmenud
         else
-            instantinstall clipmenu
+            instantinstall clipmenu || exit 1
             pgrep -f clipmenud || clipmenud &
         fi
         instantossettings
@@ -964,7 +969,7 @@ This will override any neovim configurations done previously" | imenu -C; then
         fi
         iconf neovimconfig 1
         iconf -i neovimconfig 1
-        instantinstall neovim-git neovim-qt nodejs npm python-pip
+        instantinstall neovim-git neovim-qt nodejs npm python-pip || exit 1
         mkdir -p ~/.cache/instantosneovim
         cd ~/.cache/instantosneovim || exit 1
         checkinternet || {
@@ -1031,7 +1036,7 @@ This will override any neovim configurations done previously" | imenu -C; then
             instantwmctrl alttab 1
         fi
 
-        instantinstall alttab
+        instantinstall alttab || exit 1
         instantossettings
         ;;
     *position)
@@ -1068,11 +1073,11 @@ storagesettings() {
     CHOICE="$(meta storagesettings menu | sidebar)"
     case $CHOICE in
     *management)
-        instantinstall gnome-disk-utility
+        instantinstall gnome-disk-utility || exit 1
         gnome-disks &
         ;;
     *disks)
-        instantinstall udiskie
+        instantinstall udiskie || exit 1
         toggleiconf udiskie "auto mount disks (udiskie)?"
         if iconf -i udiskie; then
             pgrep udiskie || udiskie -t &
@@ -1105,7 +1110,7 @@ Try regardless?' | imenu -C; then
         fi
     fi
 
-    instantinstall pulseaudio-bluetooth
+    instantinstall pulseaudio-bluetooth || exit 1
 
     if ! systemctl is-active --quiet bluetooth; then
         if imenu -c "enable bluetooth?"; then
