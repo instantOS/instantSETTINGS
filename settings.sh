@@ -1120,7 +1120,7 @@ Try regardless?' | imenu -C; then
         fi
     fi
 
-    CHOICE="$(meta bluethoothsettings menu | sidebar)"
+    CHOICE="$(meta bluetoothsettings menu | sidebar)"
     case "$CHOICE" in
     *applet)
         toggleiconf bluetoothapplet "enable bluetooth applet?"
