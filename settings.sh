@@ -1148,6 +1148,7 @@ mousesettings() {
     menu '>>h Mouse settings'
     menu ':b Sensitivity'
     menu ':b Reverse scrolling'
+    menu ':b Primary mouse button'
     menu ':b 社Reset mouse'
     menu ':b Back'
 
@@ -1176,6 +1177,26 @@ mousesettings() {
         iconf -d mousespeed
         iconf -i reversemouse 0
         iconf -i nomousesetting 1
+        ;;
+    *button)
+        CHOICE="$(
+            echo ">>h Primary mouse button
+:b Left
+:b Right
+:b Back" | sidebar
+        )"
+        [ -z "$CHOICE" ] && exit
+        case $CHOICE in
+        *Left)
+            instantmouse p 0
+            ;;
+        *Right)
+            instantmouse p 1
+            ;;
+        *)
+            LOOPSETTING="True"
+            ;;
+        esac
         ;;
     *)
         LOOPSETTING="True"

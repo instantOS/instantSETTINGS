@@ -3,4 +3,4 @@ y Gedit:gedit
 r Pluma:pluma
 b Visual-studio-code:code
 g Vim:gvim
-g neovide:neovide-git
+g neovide:neovide:neovide-git
