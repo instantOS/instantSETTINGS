@@ -1301,9 +1301,12 @@ keyboardsettings() {
         LAYOUTFILE="$HOME/.config/instantos/keylayoutlist"
         if ! [ -e "$LAYOUTFILE" ]; then
             mkdir -p ~/.config/instantos
-            setxkbmap -query | grep layout | grep -o '..$' >"$LAYOUTFILE"
+            setxkbmap -query | grep layout | grep -o '..$' >"$LAYOUTFILE" # This has to generate with a default variant, probably the best option is to store that in setting.db
         fi
-        LAYOUTLIST="$(imenu -E 'keyboard layout list' 'localectl list-x11-keymap-layouts | imenu -l' <"$LAYOUTFILE")"
+        LAYOUTLIST="$(imenu -E 'keyboard layout list' 'x=$(localectl list-x11-keymap-layouts | imenu -l); \
+            echo $x" ("$(localectl list-x11-keymap-variants $x | imenu -l)")"' <"$LAYOUTFILE")"
+        LAYOUTLIST=${LAYOUTLIST// (/:}
+        LAYOUTLIST=${LAYOUTLIST//)/}
         if [ -z "$LAYOUTLIST" ]; then
             rm ~/.config/instantos/layouts
         else
