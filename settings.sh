@@ -894,7 +894,7 @@ instantossettings() {
         toggleiconf potato "do you consider this pc a potato?
 > this disables multiple effects
 > in order to improve performance
-> on weak machines this won't
+> on weak machines, this won't
 > help much on faster machines
 >>h --------"
         instantossettings
