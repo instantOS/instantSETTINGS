@@ -160,10 +160,14 @@ defaultapplicationsettings() {
     menu ':b Application launcher'
     menu ':y Text editor'
     menu ':r Lock screen'
+    menu ':r Terminal file manager'
     menu ':b Back'
 
     CHOICE="$(meta defaultapplicationsettings menu | sidebar)"
     case "$CHOICE" in
+    *Terminal*manager)
+        selecttermfilemanager
+        ;;
     *manager)
         selectfilemanager
         ;;
@@ -240,6 +244,10 @@ selectsystemmonitor() {
 
 selectfilemanager() {
     selectdefault filemanager "File Manager"
+}
+
+selecttermfilemanager() {
+    selectdefault termfilemanager "Terminal file Manager"
 }
 
 selectdefault() {
