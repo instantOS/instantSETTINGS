@@ -822,6 +822,7 @@ instantossettings() {
     menu '>>h instantOS settings'
     menu ':b Edit Autostart script'
     menu ':b Edit Session Environment'
+    menu ':b Edit Startup Applications'
     menu ':y Potato'
     menu ':b 𧻓Animations'
     menu ':b ﰪConky Widgets'
@@ -862,6 +863,9 @@ instantossettings() {
         fi
         instantutils open editor ~/.instantsession &
         ;;
+    *Applications)
+        lxsession-edit
+        ;;        
     *bar)
         toggleiconf nostatus "enable default status text?" i
         if iconf -i nostatus; then
