@@ -127,6 +127,7 @@ notificationsettings() {
     CHOICE="$(meta notificationsettings menu | sidebar)"
     case $CHOICE in
     *Custom)
+        instantinstall zenity || return
         SOUNDPATH="$(zenity --file-selection)"
         if [ -z "$SOUNDPATH" ]; then
             notificationsettings
@@ -474,6 +475,7 @@ wallpapersettings() {
         ;;
     *Export*)
         if [ -e ~/instantos/wallpapers/instantwallpaper.png ]; then
+            instantinstall zenity || return
             SAVEPATH="$(zenity --file-selection --save --confirm-overwrite)"
             if [ -n "$SAVEPATH" ]; then
                 cp ~/instantos/wallpapers/instantwallpaper.png "$SAVEPATH"
@@ -527,6 +529,7 @@ coloredwallsettings() {
     CHOICE="$(meta coloredwallsettings menu | sidebar)"
 
     askcolor() {
+        instantinstall zenity || return
         RETCOLOR="$(zenity --color-selection)"
         [ -z "$RETCOLOR" ] && return 1
         printf "#%02x%02x%02x\n" $(grep -o '[0-9,]*' <<<"$RETCOLOR" | sed 's/,/ /g')
