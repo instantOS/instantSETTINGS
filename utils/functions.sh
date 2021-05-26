@@ -18,7 +18,7 @@ sidebar() {
             ;;
         *)
             imenu -e 'invalid settings position'
-            iconf -r settingsposition
+            iconf -d settingsposition
             exit 1
             ;;
         esac
