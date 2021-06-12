@@ -24,19 +24,20 @@ fi
 asksetting() {
     menu '>>h Settings'
     menu ':y SEARCH ALL' #  
-    menu ':b 墳Sound'
     menu ':b instantOS'
+    menu ':b 墳Sound'
     menu ':b Display'
     menu ':g Network'
     menu ':b Install Software'
-    menu ':y Appearance'
     menu ':b Bluetooth'
-    menu ':g Power'
+    menu ':y Appearance'
     menu ':b Keyboard'
     menu ':b Mouse'
-    menu ':b Default applications'
+    menu ':b Default applications'
+    menu ':g Power'
     menu ':b Language'
     menu ':g Time and date'
+    menu ':b File types'
     menu ':b 朗Printing'
     menu ':r Storage'
     menu ':y Advanced'
@@ -325,6 +326,20 @@ selecteditor() {
 
 selectlockscreen() {
     selectdefault lockscreen "Lock Screen"
+}
+
+mimesettings() {
+    MIMETYPES="$(cat /usr/share/applications/mimeinfo.cache | grep -o '^[^=]*' | sort -u)"
+    MIMECHOICE="$(
+        echo "$MIMETYPES" | sidebar
+    )"
+    [ -z "$MIMECHOICE" ] && exit
+    APPCHOICE="$(
+        cat /usr/share/applications/mimeinfo.cache | grep "^$MIMECHOICE" | sed 's/^[^=]*=//g' | sed 's/;/\n/g' | grep '...' | sed 's/\.desktop$//g' | sidebar
+    )"
+    [ -z "$APPCHOICE" ] && exit
+    echo "setting $MIMECHOICE to open with $APPCHOICE"
+    xdg-mime default "$APPCHOICE".desktop "$MIMECHOICE"
 }
 
 displaysettings() {
@@ -1359,6 +1374,9 @@ while [ -n "$LOOPSETTING" ]; do
         ;;
     *Display)
         displaysettings
+        ;;
+    *types)
+        mimesettings
         ;;
     *Keyboard)
         keyboardsettings
