@@ -1,0 +1,15 @@
+Folder:inode/directory
+Plain text:text/plain
+PDF:application/pdf
+Epub:application/epub+zip
+JSON:application/json
+PNG:image/png
+Jpeg:image/jpg
+GIF:image/gif
+金MP4:video/mp4
+金MP4:video/mp4
+Link:x-scheme-handler/http:x-scheme-handler/https
+Zip:application/zip
+GZ:application/gzip
+XZ:application/x-xz
+縉SVG:image/svg
