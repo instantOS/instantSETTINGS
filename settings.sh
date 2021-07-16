@@ -329,17 +329,36 @@ selectlockscreen() {
 }
 
 mimesettings() {
-    MIMETYPES="$(cat /usr/share/applications/mimeinfo.cache | grep -o '^[^=]*' | sort -u)"
-    MIMECHOICE="$(
-        echo "$MIMETYPES" | sidebar
+
+    FIRSTCHOICE="$(
+        {
+            echo ":b Show all"
+            grep -o '^:[^:]*' /usr/share/instantsettings/data/filetypes | grep '..'
+        } | sidebar
     )"
-    [ -z "$MIMECHOICE" ] && exit
+
+    [ -z "$FIRSTCHOICE" ] && exit
+
+    if [ "$FIRSTCHOICE" = ":b Show all" ]; then
+        echo 'editing manual mime options'
+        MIMETYPES="$(grep -o '^[^=]*' /usr/share/applications/mimeinfo.cache | sort -u)"
+        MIMECHOICE="$(
+            echo "$MIMETYPES" | sidebar
+        )"
+        [ -z "$MIMECHOICE" ] && exit
+    else
+        MIMECHOICE="$(grep "$FIRSTCHOICE" /usr/share/instantsettings/data/filetypes | sed 's/^:[^:]*://g' | sed 's/:/\n/g')"
+        echo "MIME $MIMECHOICE"
+    fi
+
     APPCHOICE="$(
-        cat /usr/share/applications/mimeinfo.cache | grep "^$MIMECHOICE" | sed 's/^[^=]*=//g' | sed 's/;/\n/g' | grep '...' | sed 's/\.desktop$//g' | sidebar
+        cat /usr/share/applications/mimeinfo.cache | grep "^$(head -1 <<<"$MIMECHOICE")" | sed 's/^[^=]*=//g' | sed 's/;/\n/g' | grep '...' | sed 's/\.desktop$//g' | sidebar
     )"
     [ -z "$APPCHOICE" ] && exit
     echo "setting $MIMECHOICE to open with $APPCHOICE"
-    xdg-mime default "$APPCHOICE".desktop "$MIMECHOICE"
+    while read -r mime; do
+        xdg-mime default "$APPCHOICE".desktop "$mime"
+    done <<<"$MIMECHOICE"
 }
 
 displaysettings() {
