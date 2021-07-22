@@ -197,6 +197,7 @@ defaultapplicationsettings() {
     esac
     if [ -z "$LOOPSETTING" ]; then
         instantutils default
+        defaultapplicationsettings
     fi
 }
 
