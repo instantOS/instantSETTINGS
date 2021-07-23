@@ -1,4 +1,4 @@
-b Ranger:instantutils open terminal -e ranger:ranger
-b nnn:instantutils open terminal -e nnn:nnn
-b Midnight commander:instantutils open terminal -e mc:mc
-b vifm:instantutils open terminal -e vifm:vifm
+b Ranger:ranger
+b nnn:nnn
+b Midnight commander:mc
+b vifm:vifm

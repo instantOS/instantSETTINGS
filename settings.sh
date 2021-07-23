@@ -269,6 +269,7 @@ $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:
         CUSTOMAPP="$(imenu -i "default $1")"
         [ -z "$CUSTOMAPP" ] && return 1
         iconf "$1" "$CUSTOMAPP"
+        return 0
         ;;
     *Back)
         defaultapplicationsettings
@@ -276,38 +277,34 @@ $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:
         ;;
     esac
 
-    CHOICE="$(grep "$APPCHOICE" /usr/share/instantsettings/data/default/"$1")"
-    if [ -z "$CHOICE" ]; then
-        return 1
-    fi
+    APPID="$(grep "$APPCHOICE" /usr/share/instantsettings/data/default/"$1" | sed 's/^[^:]*://g')"
 
-    if ! grep -q ':' <<<"$CHOICE"; then
-        instantinstall "$(sed 's/^....//g')" || exit 1
-        return
-    fi
-    echo "choice: $CHOICE"
-    SETCOMMAND="$(sed 's/^[^:]*://g' <<<"$CHOICE" | grep -o '^[^:]*')"
-    iconf "$1" "$SETCOMMAND"
-    echo "echo setting command to $SETCOMMAND"
+    [ -z "$APPID" ] && return 1
 
-    if grep -q '.*:.*:' <<<"$CHOICE"; then
-        INSTALLCOMMAND="$(grep -o '[^:]*$' <<<"$CHOICE")"
-    else
-        INSTALLCOMMAND="$SETCOMMAND"
-    fi
-
-    if ! grep -q ',' <<<"$INSTALLCOMMAND"; then
-        if command -v "$SETCOMMAND"; then
-            return
+    if [ -e /usr/share/instantsettings/data/default/defaultconfig/"$1"/"$APPID" ]; then
+        DEFAULTSETTING="$1"
+        getvalue() {
+            grep -i "^$1:" /usr/share/instantsettings/data/default/defaultconfig/"$DEFAULTSETTING"/"$APPID" | sed 's/^[^:]*://g'
+        }
+        SETCOMMAND="$(getvalue command)"
+        [ "$SETCOMMAND" ] || return 1
+        iconf "$1" "$SETCOMMAND"
+        PACKAGES="$(getvalue package)"
+        if [ -n "$PACKAGES" ]; then
+            if grep -q ',' <<<"$PACKAGES"; then
+                echo "multiple dependencies detected"
+                INSTALLLIST="$(sed 's/\,/ /g' <<<"$PACKAGES")"
+                for i in $(echo $INSTALLLIST); do
+                    instantinstall "$i" || exit 1
+                done
+            else
+                instantinstall "$PACKAGES"
+            fi
         fi
-        instantinstall "$INSTALLCOMMAND" || exit 1
     else
-        echo "multiple dependencies detected"
-        INSTALLLIST="$(sed 's/\,/ /g' <<<"$INSTALLCOMMAND")"
-        for i in $(echo $INSTALLLIST); do
-            echo "multi installing"
-            instantinstall "$i" || exit 1
-        done
+        instantinstall "$APPID" || exit 1
+        iconf "$1" "$APPID"
+        return
     fi
 
 }

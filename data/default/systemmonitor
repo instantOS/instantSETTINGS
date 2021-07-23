@@ -1,6 +1,6 @@
 b 龍Mate-system-monitor:mate-system-monitor
-b 龍ytop:instantutils open terminal -e ytop:ytop-bin,instantutils
-b 龍htop:instantutils open terminal -e htop:htop,instantutils
+b 龍ytop:ytop
+b 龍htop:htop
 y 龍Gnome system monitor:gnome-system-monitor
 b 龍ksysguard:ksysguard
-b 龍bottom:instantutils open terminal -e btm:bottom-bin
+b 龍bottom:bottom

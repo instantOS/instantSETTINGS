@@ -1,5 +1,4 @@
-
 b slock:slock
-b instantLOCK:ilock:instantlock
-b i3lock:i3lock:i3lock-color
-b xlock:xlock:xlockmore
+b instantLOCK:instantlock
+b i3lock:i3lock
+b xlock:xlock

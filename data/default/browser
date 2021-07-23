@@ -1,5 +1,5 @@
-
 y Firefox:firefox
-y Brave:brave:brave-bin
+y Brave:brave
 b Chromium:chromium
-y Chrome:google-chrome-stable:google-chrome
+y Chrome:chrome
+y Firefox-ESR:firefox-esr

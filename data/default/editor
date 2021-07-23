@@ -1,6 +1,6 @@
-g Neovim-Qt:nvim-qt:neovim,neovim-qt
+g Neovim-Qt:nvim-qt
 y Gedit:gedit
 r Pluma:pluma
 b Visual-studio-code:code
 g Vim:gvim
-g neovide:neovide:neovide-git
+g neovide:neovide

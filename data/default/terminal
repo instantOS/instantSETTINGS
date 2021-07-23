@@ -1,5 +1,5 @@
-b st:st:st-instantos
-b Urxvt:urxvt:rxvt-unicode
+b st:st
+b Urxvt:urxvt
 b Xterm:xterm
 y alacritty:alacritty
 b kitty:kitty
