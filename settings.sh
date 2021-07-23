@@ -245,7 +245,7 @@ selectsystemmonitor() {
 }
 
 selectfilemanager() {
-    selectdefault filemanager "File Manager"
+    selectdefault filemanager "File Manager" "inode/directory"
 }
 
 selecttermfilemanager() {
