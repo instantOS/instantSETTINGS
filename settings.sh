@@ -277,9 +277,10 @@ $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:
         ;;
     esac
 
-    APPID="$(grep "$APPCHOICE" /usr/share/instantsettings/data/default/"$1" | sed 's/^[^:]*://g')"
+    APPID="$(grep "${APPCHOICE}:" /usr/share/instantsettings/data/default/"$1" | sed 's/^[^:]*://g')"
 
     [ -z "$APPID" ] && return 1
+    echo "app id $APPID"
 
     if [ -e /usr/share/instantsettings/data/default/defaultconfig/"$1"/"$APPID" ]; then
         DEFAULTSETTING="$1"
@@ -300,6 +301,15 @@ $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:
             else
                 instantinstall "$PACKAGES"
             fi
+            if [ -n "$3" ]; then
+                XDGSETTING="$(getvalue xdg)"
+                [ -z "$XDGSETTING" ] && return
+
+                while read -r mime; do
+                    echo "setting mime type $mime to $XDGSETTING"
+                    xdg-mime default "$XDGSETTING.desktop" "$mime"
+                done <<<"$(sed 's/ /\n/g' <<<"$3")"
+            fi
         fi
     else
         instantinstall "$APPID" || exit 1
@@ -314,7 +324,7 @@ selectterminal() {
 }
 
 selectbrowser() {
-    selectdefault browser "Web Browser"
+    selectdefault browser "Web Browser" "x-scheme-handler/http x-scheme-handler/https"
 }
 
 selecteditor() {
