@@ -328,7 +328,7 @@ selectbrowser() {
 }
 
 selecteditor() {
-    selectdefault editor "Text editor"
+    selectdefault editor "Text editor" 'text/plain'
 }
 
 selectlockscreen() {
