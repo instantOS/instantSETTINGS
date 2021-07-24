@@ -44,7 +44,9 @@ asksetting() {
     menu ':y Dotfiles'
     menu ':r Close Settings'
     SIDEBARSEARCH="${SIDEBARSEARCH:-SEARCH ALL}"
+    export SIDEBARINDEX=0
     meta asksetting menu | sidebar "Search categories"
+    unset SIDEBARINDEX
 }
 
 # Variables for global settings search
@@ -77,7 +79,9 @@ searchall() {
         done
         declare -p allsettings >"$CFG_CACHE" 2>/dev/null
     fi
+    export SIDEBARINDEX=0
     CHOICE=$(for k in "${!allsettings[@]}"; do echo "$k"; done | sidebar)
+    unset SIDEBARINDEX
     if [ -z "$CHOICE" ]; then
         LOOPSETTING=true
         return
