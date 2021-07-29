@@ -573,8 +573,9 @@ coloredwallsettings() {
     menu ':b Back'
     CHOICE="$(meta coloredwallsettings menu | sidebar)"
 
+    instantinstall zenity || return
+
     askcolor() {
-        instantinstall zenity || return
         RETCOLOR="$(zenity --color-selection)"
         [ -z "$RETCOLOR" ] && return 1
         printf "#%02x%02x%02x\n" $(grep -o '[0-9,]*' <<<"$RETCOLOR" | sed 's/,/ /g')
@@ -585,7 +586,7 @@ coloredwallsettings() {
             echo "refreshing colored wallpaper"
             notify-send 'generating colored wallpaper'
             {
-                instantwallpaper color "$(iconf bgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
+                instantwallpaper color "$(iconf fgcolor:\#ffffff)" "$(iconf bgcolor:\#00000)"
                 instantwallpaper set ~/instantos/wallpapers/color/customcolor.png
             } &
         else
@@ -597,7 +598,7 @@ coloredwallsettings() {
         toggleiconf coloredwallpaper "use solid colors as wallpaper?"
         if iconf -i coloredwallpaper; then
             [ -e ~/instantos/wallpapers/color/customcolor.png ] || instantwallpaper color "$(iconf fgcolor:\#ffffff)" "$(iconf fgcolor:\#00000)"
-            instantwallpaper set ~/instantos/wallpapers/color/customcolor.png
+            refreshwall
         else
             instantwallpaper clear
         fi
@@ -606,14 +607,22 @@ coloredwallsettings() {
         ;;
     *Foreground*)
         FGCOLOR="$(askcolor)"
-        [ -n "$FGCOLOR" ] && iconf fgcolor "$FGCOLOR"
+        if [ -n "$FGCOLOR" ]; then
+            iconf fgcolor "$FGCOLOR"
+        else
+            return
+        fi
         refreshwall
         coloredwallsettings
         return
         ;;
     *Background*)
         BGCOLOR="$(askcolor)"
-        [ -n "$BGCOLOR" ] && iconf bgcolor "$BGCOLOR"
+        if [ -n "$BGCOLOR" ]; then
+            iconf bgcolor "$BGCOLOR"
+        else
+            return
+        fi
         refreshwall
         coloredwallsettings
         return
