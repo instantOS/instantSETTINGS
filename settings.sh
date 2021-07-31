@@ -98,7 +98,9 @@ searchall() {
         LOOPSETTING=true
         return
     fi
+    export SIDEBARINDEX=0
     "${allsettings["$CHOICE"]}"
+    unset SIDEBARINDEX
     SIDEBARSEARCH=
 }
 
