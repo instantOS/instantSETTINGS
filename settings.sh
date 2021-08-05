@@ -457,6 +457,7 @@ advancedsettings() {
     menu ':g Bootloader'
     menu ':b Pacman cache autoclean'
     menu ':b 力Systemd'
+    menu ':b Firmware'
     menu ':b Lightdm'
     menu ':b Back'
 
@@ -491,6 +492,10 @@ advancedsettings() {
         fi
         chromium --app="http://localhost:9090" &
         exit
+        ;;
+    *Firmware)
+        instantinstall gnome-firmware || exit 1
+        gnome-firmware &
         ;;
     *Lightdm)
         instantinstall lightdm-gtk-greeter-settings || exit 1
