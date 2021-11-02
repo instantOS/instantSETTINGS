@@ -35,6 +35,7 @@ asksetting() {
     menu ':b Mouse'
     menu ':b Default applications'
     menu ':g Power'
+    menu ':b Users'
     menu ':b Language'
     menu ':g Time and date'
     menu ':b File types'
@@ -1216,6 +1217,80 @@ Try regardless?' | imenu -C; then
 
 }
 
+usersettings() {
+    menu '>>h User account settings'
+    menu ":b ﳳChange a user's password"
+    menu ':g Create a user'
+    menu ':r Delete a user'
+    menu ':b Back'
+
+    CHOICE="$(meta usersettings menu | sidebar)"
+    case "$CHOICE" in
+    *password)
+        SELECTED_USER="$(list_users)"
+
+        PASSWORD_NO_MATCH=false
+        SUCCESS=false
+        while ! $SUCCESS; do
+            # using variables to store plaintext passwords isn't amazingly secure,
+            # so we will 'mitigate' the problem by unsetting them afterward
+            ! $PASSWORD_NO_MATCH \
+            && NEW_PASSWORD="$(imenu -P 'new password')" \
+            || NEW_PASSWORD="$(imenu -P 'try again')"
+            NEW_PASSWORD_CONFIRM="$(imenu -P 'confirm password')"
+
+            instantsudo sh -c "printf '$NEW_PASSWORD\n$NEW_PASSWORD_CONFIRM' \
+            | passwd '$SELECTED_USER'"
+        
+            case $? in
+            0)  exit 0;;
+            1)
+                imenu -e 'failed to change password: permission denied'
+                exit 1
+                ;;
+            2)
+                imenu -e 'failed to change password: invalid combination of options'
+                exit 2
+                ;;
+            3)
+                imenu -e 'failed to change password: unexpected failure, nothing done'
+                exit 3
+                ;;
+            4)
+                imenu -e 'failed to change password: unexpected failure, passwd file missing'
+                exit 4
+                ;;
+            5)
+                imenu -e 'failed to change password: passwd file busy, try again'
+                exit 5
+                ;;
+            6)
+                imenu -e 'failed to change password: invalid argument to option'
+                exit 6
+                ;;
+            10) PASSWORD_NO_MATCH=true;; # passwords didn't match
+                
+            esac
+        done
+        
+        unset NEW_PASSWORD NEW_PASSWORD_CONFIRM SUCCESS PASSWORD_NO_MATCH
+        ;;
+    *Create*)
+        USERNAME="$(imenu -i 'username')"
+        unset USERNAME
+        ;;
+    *Delete*)
+        USERNAME="$(list_users)"
+        unset USERNAME
+        ;;
+    *)
+        imenu -e 'invalid option'
+        exit 1
+        ;;
+
+    esac
+}
+
 mousesettings() {
     menu '>>h Mouse settings'
     menu ':b Sensitivity'
@@ -1460,6 +1535,9 @@ while [ -n "$LOOPSETTING" ]; do
         ;;
     *Power)
         xfce4-power-manager-settings &
+        ;;
+    *Users)
+        usersettings
         ;;
     *Language)
         languagesettings
