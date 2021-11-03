@@ -1227,11 +1227,10 @@ usersettings() {
     CHOICE="$(meta usersettings menu | sidebar)"
     case "$CHOICE" in
     *password)
-        SELECTED_USER="$(list_users)"
+        SELECTED_USER="$(list_users | imenu -l)"
 
         PASSWORD_NO_MATCH=false
-        SUCCESS=false
-        while ! $SUCCESS; do
+        while :; do
             # using variables to store plaintext passwords isn't amazingly secure,
             # so we will 'mitigate' the problem by unsetting them afterward
             ! $PASSWORD_NO_MATCH \
@@ -1241,53 +1240,50 @@ usersettings() {
 
             instantsudo sh -c "printf '$NEW_PASSWORD\n$NEW_PASSWORD_CONFIRM' \
             | passwd '$SELECTED_USER'"
-        
-            case $? in
-            0)  exit 0;;
-            1)
-                imenu -e 'failed to change password: permission denied'
-                exit 1
-                ;;
-            2)
-                imenu -e 'failed to change password: invalid combination of options'
-                exit 2
-                ;;
-            3)
-                imenu -e 'failed to change password: unexpected failure, nothing done'
-                exit 3
-                ;;
-            4)
-                imenu -e 'failed to change password: unexpected failure, passwd file missing'
-                exit 4
-                ;;
-            5)
-                imenu -e 'failed to change password: passwd file busy, try again'
-                exit 5
-                ;;
-            6)
-                imenu -e 'failed to change password: invalid argument to option'
-                exit 6
-                ;;
-            10) PASSWORD_NO_MATCH=true;; # passwords didn't match
-                
+
+            CODE=$?
+            case $CODE in
+                0) break;;
+                10) PASSWORD_NO_MATCH=true;; # passwords didn't match
+                *)
+                    imenu -e "failed to change password; passwd exited ($CODE)"
+                    exit $CODE
             esac
         done
-        
-        unset NEW_PASSWORD NEW_PASSWORD_CONFIRM SUCCESS PASSWORD_NO_MATCH
+        unset NEW_PASSWORD NEW_PASSWORD_CONFIRM SUCCESS PASSWORD_NO_MATCH CODE
+        usersettings
         ;;
     *Create*)
-        USERNAME="$(imenu -i 'username')"
-        unset USERNAME
+        USER_TO_CREATE="$(imenu -i 'username')"
+
+        instantsudo useradd "$USER_TO_CREATE" \
+        || imenu -e "failed to create user: useradd exited ($CODE)"
+        
+        unset USER_TO_CREATE
+        usersettings
         ;;
     *Delete*)
-        USERNAME="$(list_users)"
-        unset USERNAME
+        USER_TO_DELETE="$(list_users | imenu -l)"
+
+        imenu -c "    Are you sure you want to delete $USER_TO_DELETE? \
+This cannot be undone."
+
+        CODE=$?
+        if [ $CODE = 0 ]; then 
+            instantsudo userdel "$USER_TO_DELETE"
+
+        else
+            imenu -e "failed to delete user: userdel exited ($CODE)"
+            exit $CODE
+        fi
+        
+        unset USER_TO_DELETE
+        usersettings
         ;;
     *)
-        imenu -e 'invalid option'
-        exit 1
+        LOOPSETTING="True"
         ;;
-
+    
     esac
 }
 

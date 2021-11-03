@@ -69,5 +69,5 @@ list_func_names() {
 
 list_users() {
     # list real human users (uid above 1000, not 'nobody')  
-    awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd | imenu -l
+    awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd
 }
