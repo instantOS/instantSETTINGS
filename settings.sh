@@ -1258,6 +1258,10 @@ usersettings() {
 
         instantsudo useradd "$USER_TO_CREATE" \
         || imenu -e "failed to create user: useradd exited ($CODE)"
+
+        printf "created user '$USER_TO_CREATE'\n\
+make sure to change its password!" \
+        | imenu -M
         
         unset USER_TO_CREATE
         usersettings
