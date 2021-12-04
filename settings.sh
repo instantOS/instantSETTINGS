@@ -1026,7 +1026,13 @@ instantossettings() {
         fi
         ;;
     *tools)
-        imenu -c "install instantOS development tools?" || exit
+        DEVUTILDIR=/usr/local/share/instanttools/
+        if [ ! -d "$DEVUTILDIR" ]; then
+            imenu -c "install instantOS development tools?" || exit
+        else
+            imenu -m "InstantOS development tools are already installed"
+            exit
+        fi
         checkinternet || {
             imenu -e "internet is required"
             exit 1
