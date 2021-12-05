@@ -1027,7 +1027,8 @@ instantossettings() {
         ;;
     *tools)
         DEVUTILDIR=/usr/local/share/instanttools/
-        if [ ! -d "$DEVUTILDIR" ]; then
+        DEVUTILCOMMAND=/bin/ibuild
+        if [ ! -d "$DEVUTILDIR" && ! -e "$DEVUTILCOMMAND"]; then
             imenu -c "install instantOS development tools?" || exit
         else
             imenu -m "InstantOS development tools are already installed"
