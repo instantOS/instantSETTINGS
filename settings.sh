@@ -1183,6 +1183,7 @@ Try regardless?' | imenu -C; then
     fi
 
     instantinstall pulseaudio-bluetooth || exit 1
+    instantinstall blueman || exit 1
 
     if ! systemctl is-active --quiet bluetooth; then
         if imenu -c "enable bluetooth?"; then
