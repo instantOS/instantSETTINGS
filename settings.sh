@@ -80,7 +80,7 @@ searchall() {
         declare -p allsettings >"$CFG_CACHE" 2>/dev/null
     fi
     export SIDEBARINDEX=0
-    CHOICE=$(for k in "${!allsettings[@]}"; do echo "$k"; done | sidebar)
+    CHOICE=`printf '%s\n' "${!allsettings[@]}" | sidebar`
     unset SIDEBARINDEX
     if [ -z "$CHOICE" ]; then
         LOOPSETTING=true
