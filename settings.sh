@@ -762,11 +762,11 @@ choosenumber() {
 
 timesettings() {
     echo "changing time/date"
-    YEAR="$(date +%Y)"
-    MONTH="$(date +%m)"
-    DAY="$(date +%d)"
-    HOUR="$(date +%H)"
-    MINUTE="$(date +%M)"
+    printf -v YEAR '%(%Y)T' -1
+    printf -v MONTH '%(%m)T' -1
+    printf -v DAY '%(%d)T' -1
+    printf -v HOUR '%(%H)T' -1
+    printf -v MINUTE '%(%M)T' -1
     while :; do
         DATECHOICE="$(echo ">>h Change date
 Auto detect
