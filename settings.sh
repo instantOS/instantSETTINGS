@@ -22,7 +22,7 @@ if iconf settingsposition; then
 fi
 
 asksetting() {
-    menu '>>h Settings     |     ⌘ + Ctrl + E'
+    menu '>>h Settings     |     ⌘ + Ctrl + C'
     menu ':y SEARCH ALL' #  
     menu ':b instantOS'
     menu ':b 墳Sound'
