@@ -35,6 +35,7 @@ asksetting() {
     menu ':b Mouse'
     menu ':b Default applications'
     menu ':g Power'
+    menu ':b Users'
     menu ':b Language'
     menu ':g Time and date'
     menu ':b File types'
@@ -1223,6 +1224,80 @@ Try regardless?' | imenu -C; then
 
 }
 
+usersettings() {
+    menu '>>h User account settings'
+    menu ":b ﳳChange a user's password"
+    menu ':g Create a user'
+    menu ':r Delete a user'
+    menu ':b Back'
+
+    CHOICE="$(meta usersettings menu | sidebar)"
+    case "$CHOICE" in
+    *password)
+        SELECTED_USER="$(list_users | imenu -l)"
+
+        PASSWORD_NO_MATCH=false
+        while :; do
+            # using variables to store plaintext passwords isn't amazingly secure,
+            # so we will 'mitigate' the problem by unsetting them afterward
+            ! $PASSWORD_NO_MATCH \
+            && NEW_PASSWORD="$(imenu -P 'new password')" \
+            || NEW_PASSWORD="$(imenu -P 'try again')"
+            NEW_PASSWORD_CONFIRM="$(imenu -P 'confirm password')"
+
+            instantsudo sh -c "printf '$NEW_PASSWORD\n$NEW_PASSWORD_CONFIRM' \
+            | passwd '$SELECTED_USER'"
+
+            CODE=$?
+            case $CODE in
+                0) break;;
+                10) PASSWORD_NO_MATCH=true;; # passwords didn't match
+                *)
+                    imenu -e "failed to change password; passwd exited ($CODE)"
+                    exit $CODE
+            esac
+        done
+        unset NEW_PASSWORD NEW_PASSWORD_CONFIRM SUCCESS PASSWORD_NO_MATCH CODE
+        usersettings
+        ;;
+    *Create*)
+        USER_TO_CREATE="$(imenu -i 'username')"
+
+        instantsudo useradd "$USER_TO_CREATE" \
+        || imenu -e "failed to create user: useradd exited ($CODE)"
+
+        printf "created user '$USER_TO_CREATE'\n\
+make sure to change its password!" \
+        | imenu -M
+        
+        unset USER_TO_CREATE
+        usersettings
+        ;;
+    *Delete*)
+        USER_TO_DELETE="$(list_users | imenu -l)"
+
+        imenu -c "    Are you sure you want to delete $USER_TO_DELETE? \
+This cannot be undone."
+
+        CODE=$?
+        if [ $CODE = 0 ]; then 
+            instantsudo userdel "$USER_TO_DELETE"
+
+        else
+            imenu -e "failed to delete user: userdel exited ($CODE)"
+            exit $CODE
+        fi
+        
+        unset USER_TO_DELETE
+        usersettings
+        ;;
+    *)
+        LOOPSETTING="True"
+        ;;
+    
+    esac
+}
+
 mousesettings() {
     menu '>>h Mouse settings'
     menu ':b Sensitivity'
@@ -1467,6 +1542,9 @@ while [ -n "$LOOPSETTING" ]; do
         ;;
     *Power)
         xfce4-power-manager-settings &
+        ;;
+    *Users)
+        usersettings
         ;;
     *Language)
         languagesettings
