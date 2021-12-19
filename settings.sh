@@ -777,6 +777,7 @@ Day $DAY
 Hour $HOUR
 Minute $MINUTE
 :g Apply
+:b 12-hour clock
 :b Back" | sidebar)"
         echo "datechoice $DATECHOICE"
         case "$DATECHOICE" in
@@ -813,6 +814,9 @@ Minute $MINUTE
                 instantsudo systemctl disable --now systemd-timesyncd
             fi
             instantsudo timedatectl set-time "$YEAR-$MONTH-$DAY $HOUR:$MINUTE:$(date +%S)"
+            ;;
+        *clock)
+            toggleiconf 12hclock "enable 12-hour clock?"
             ;;
         *)
             LOOPSETTING="True"
