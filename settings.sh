@@ -81,7 +81,7 @@ searchall() {
         declare -p allsettings >"$CFG_CACHE" 2>/dev/null
     fi
     export SIDEBARINDEX=0
-    CHOICE=$(for k in "${!allsettings[@]}"; do echo "$k"; done | sidebar)
+    CHOICE=`printf '%s\n' "${!allsettings[@]}" | sidebar`
     unset SIDEBARINDEX
     if [ -z "$CHOICE" ]; then
         LOOPSETTING=true
@@ -763,11 +763,11 @@ choosenumber() {
 
 timesettings() {
     echo "changing time/date"
-    YEAR="$(date +%Y)"
-    MONTH="$(date +%m)"
-    DAY="$(date +%d)"
-    HOUR="$(date +%H)"
-    MINUTE="$(date +%M)"
+    printf -v YEAR '%(%Y)T' -1
+    printf -v MONTH '%(%m)T' -1
+    printf -v DAY '%(%d)T' -1
+    printf -v HOUR '%(%H)T' -1
+    printf -v MINUTE '%(%M)T' -1
     while :; do
         DATECHOICE="$(echo ">>h Change date
 Auto detect
