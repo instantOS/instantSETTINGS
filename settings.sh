@@ -275,7 +275,7 @@ $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:
     *Custom)
         CUSTOMAPP="$(imenu -i "default $1")"
         [ -z "$CUSTOMAPP" ] && return 1
-        iconf "$1" "$CUSTOMAPP"
+        iconf "$1" "$CUSTOMAPP \$@"
         return 0
         ;;
     *Back)
