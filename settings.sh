@@ -273,7 +273,22 @@ $(grep -o '^[^:][^:]*' /usr/share/instantsettings/data/default/"$1" | sed 's/^/:
 
     case "$APPCHOICE" in
     *Custom)
-        CUSTOMAPP="$(imenu -i "default $1")"
+        if [ "$1" == "systemmonitor" ]; then
+            CHOICE="$(echo -e "GUI\nCLI" | instantmenu -l 2 -c -bw 4 -w 100 -h -1 -i -q "What kind")"
+
+            case "$CHOICE" in
+                GUI)
+                    CUSTOMAPP="$(imenu -i "default $1")"
+                    ;;
+                CLI)
+                    CUSTOMAPP="$(imenu -i "default $1")"
+                    CUSTOMAPP="instantutils open terminal -e $CUSTOMAPP"
+                    ;;
+            esac
+        else
+            CUSTOMAPP="$(imenu -i "default $1")"
+        fi
+
         [ -z "$CUSTOMAPP" ] && return 1
         iconf "$1" "$CUSTOMAPP \$@"
         return 0
