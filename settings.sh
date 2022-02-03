@@ -1379,6 +1379,7 @@ appearancesettings() {
     menu ':b Enable compositing'
     menu ':b 並V-Sync'
     menu ':b Blur'
+    menu ':b Flash windows on focus'
     menu ':b Autotheming'
     menu ':b Back'
 
@@ -1422,6 +1423,18 @@ appearancesettings() {
             pkill picom
             sleep 0.3
             ipicom &
+        fi
+        appearancesettings
+        ;;
+    *focus)
+        toggleiconf flashfocus "enable flashing windows on focus?" i
+        
+        pkill flashfocus >/dev/null |:
+        while pgrep flashfocus; do sleep 0.1; done
+        
+        if ! iconf -i flashfocus; then
+            instantinstall flashfocus || exit 1
+            flashfocus &
         fi
         appearancesettings
         ;;
