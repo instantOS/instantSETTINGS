@@ -71,3 +71,8 @@ list_users() {
     # list real human users (uid above 1000, not 'nobody')  
     awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd
 }
+
+list_groups() {
+    # list groups the user is likely to want access to (gid above 970, not 'nobody')
+    awk -F: '$3 >= 970 && $1 != "nobody" {print $1}' /etc/group
+}
