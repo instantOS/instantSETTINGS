@@ -1237,12 +1237,16 @@ usersettings() {
     menu ":b ﳳChange a user's password"
     menu ':g Create a user'
     menu ':r Delete a user'
+    menu ':g Create a group'
+    menu ':r Delete a group'
+    menu ':g Add a user to a group'
+    menu ':r Remove a user from a group'
     menu ':b Back'
 
     CHOICE="$(meta usersettings menu | sidebar)"
     case "$CHOICE" in
     *password)
-        SELECTED_USER="$(list_users | imenu -l)"
+        SELECTED_USER="$(list_users | imenu -l user)"
 
         PASSWORD_NO_MATCH=false
         while :; do
@@ -1268,11 +1272,18 @@ usersettings() {
         unset NEW_PASSWORD NEW_PASSWORD_CONFIRM SUCCESS PASSWORD_NO_MATCH CODE
         usersettings
         ;;
-    *Create*)
+    *Create*user)
         USER_TO_CREATE="$(imenu -i 'username')"
 
-        instantsudo useradd "$USER_TO_CREATE" \
-        || imenu -e "failed to create user: useradd exited ($CODE)"
+        instantsudo useradd "$USER_TO_CREATE" || {
+            CODE=$?
+
+            [ $CODE = 9 ] \
+            && imenu -e "'$USER_TO_CREATE' already exists!" \
+            || imenu -e "failed to create user: useradd exited ($CODE)"
+            
+            exit $CODE
+        }
 
         printf "created user '$USER_TO_CREATE'\n\
 make sure to change its password!" \
@@ -1281,28 +1292,100 @@ make sure to change its password!" \
         unset USER_TO_CREATE
         usersettings
         ;;
-    *Delete*)
-        USER_TO_DELETE="$(list_users | imenu -l)"
+    *Delete*user)
+        USER_TO_DELETE="$(printf "$(list_users)\nﰸ   Cancel" | imenu -l user)"
+
+        [ "$USER_TO_DELETE" = 'ﰸ   Cancel' ] && exit
 
         imenu -c "    Are you sure you want to delete $USER_TO_DELETE? \
 This cannot be undone."
 
         CODE=$?
-        if [ $CODE = 0 ]; then 
+        [ $CODE = 0 ] && { 
             instantsudo userdel "$USER_TO_DELETE"
-
-        else
+            CODE=$?
+        }
+        
+        [ $CODE != 0 ] && {
             imenu -e "failed to delete user: userdel exited ($CODE)"
             exit $CODE
-        fi
+        }
         
         unset USER_TO_DELETE
         usersettings
         ;;
+    *Create*group)
+        GROUP_TO_CREATE="$(imenu -i 'group name')"
+
+        instantsudo groupadd "$GROUP_TO_CREATE" || {
+            CODE=$?
+
+            [ $CODE = 9 ] \
+            && imenu -e "'$GROUP_TO_CREATE' already exists!" \
+            || imenu -e "failed to create user: groupadd exited ($CODE)"
+            
+            exit $CODE
+        }
+        printf "created group '$GROUP_TO_CREATE'" | imenu -M
+
+        unset GROUP_TO_CREATE
+        usersettings
+        ;;
+    
+    *Delete*group)
+        GROUP_TO_DELETE="$(printf "$(list_groups)\nﰸ   Cancel" | imenu -l group)"
+
+        [ "$GROUP_TO_DELETE" = 'ﰸ   Cancel' ] && exit
+
+        imenu -c "    Are you sure you want to delete $GROUP_TO_DELETE? \
+This cannot be undone."
+        
+        CODE=$?
+        [ $CODE = 0 ] && {
+            instantsudo groupdel "$GROUP_TO_DELETE"
+            CODE=$?
+        }
+
+        [ $CODE != 0 ] && {
+            imenu -e "failed to delete group: groupdel exited ($CODE)"
+            exit $CODE
+        }
+
+        unset GROUP_TO_DELETE
+        usersettings
+        ;;
+
+    *user*to*group)
+        USER_TO_MODIFY="$(printf "$(list_users)\nﰸ   Cancel" | imenu -l user)"
+        [ "$USER_TO_MODIFY" = 'ﰸ   Cancel' ] && exit
+        
+        GROUP_TO_MODIFY="$(printf "$(list_groups)\nﰸ   Cancel" | imenu -l group)"
+        [ "$GROUP_TO_MODIFY" = 'ﰸ   Cancel' ] && exit
+        
+        instantsudo usermod -aG "$GROUP_TO_MODIFY" "$USER_TO_MODIFY" \
+        || { CODE=$?; imenu -e "failed to modify user: usermod exited ($CODE)"; exit $CODE; }
+
+        printf "added $USER_TO_MODIFY to group '$GROUP_TO_MODIFY'" | imenu -M
+        unset GROUP_TO_MODIFY USER_TO_MODIFY
+        ;;
+
+    *user*from*group)
+        USER_TO_MODIFY="$(printf "$(list_users)\nﰸ   Cancel" | imenu -l user)"
+        [ "$USER_TO_MODIFY" = 'ﰸ   Cancel' ] && exit
+        
+        GROUP_TO_MODIFY="$(printf "$(groups "$USER_TO_MODIFY" | sed 's/ /\n/g')\nﰸ   Cancel" | imenu -l group)"
+        [ "$GROUP_TO_MODIFY" = 'ﰸ   Cancel' ] && exit
+        
+        instantsudo usermod -rG "$GROUP_TO_MODIFY" "$USER_TO_MODIFY" \
+        || { CODE=$?; imenu -e "failed to modify user: usermod exited ($CODE)"; exit $CODE; }
+
+        printf "removed $USER_TO_MODIFY from group '$GROUP_TO_MODIFY'" | imenu -M
+        unset GROUP_TO_MODIFY USER_TO_MODIFY
+        ;;
+
     *)
         LOOPSETTING="True"
         ;;
-    
     esac
 }
 
