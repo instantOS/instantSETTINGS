@@ -71,3 +71,11 @@ list_users() {
     # list real human users (uid above 1000, not 'nobody')  
     awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd
 }
+
+timeout() { imenu -m "$2" | $(read -t $1 || echo pkill instantmenu); }
+
+confirm() {
+    result=$(timeout "${1:-5}" "${2:-timeout}" 2>&1)
+    [ "$result" = 'Terminated' ] && return 1 || return 0
+}
+
