@@ -383,6 +383,7 @@ displaysettings() {
     menu ':b Autodetect monitor docking'
     menu ':b External screen'
     menu ':b HiDPI'
+    menu ':b 累Change refresh rate'
     menu ':b Keep screen on when locked'
 
     CHOICE="$({
@@ -392,7 +393,7 @@ displaysettings() {
         echo ':b Back'
     } | sidebar)"
     case $CHOICE in
-    *settings)
+    *display*)
         arandr &
         ;;
     *brightness)
@@ -436,6 +437,17 @@ displaysettings() {
         instantdpi
         xrdb ~/.Xresources
         ;;
+	*refresh*)
+		REFRESH=$(imenu -i 'enter refresh rate (default is 60)')
+		[ -z "$REFRESH" ] && return
+
+		xrandr -r "$REFRESH" && {
+			confirm 10 'confirm refresh rate? (timeout after 10 seconds)' || xrandr -r 60
+		} || {
+		    imenu -e "unable to set ${REFRESH}Hz refresh rate"
+		}
+		displaysettings
+		;;
     *locked)
         toggleiconf nolocktimeout "keep monitor on when the screen is locked?"
         displaysettings
