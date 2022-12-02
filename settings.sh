@@ -1055,7 +1055,8 @@ This will override any neovim configurations done previously" | imenu -C; then
         fi
         iconf neovimconfig 1
         iconf -i neovimconfig 1
-        instantinstall neovim-git neovim-qt nodejs npm python-pip || exit 1
+        instantinstall neovim neovide nodejs npm python-pip \
+            python-virtualenv sqlite3 luarocks || exit 1
         mkdir -p ~/.cache/instantosneovim
         cd ~/.cache/instantosneovim || exit 1
         checkinternet || {
@@ -1064,9 +1065,9 @@ This will override any neovim configurations done previously" | imenu -C; then
         }
 
         notify-send "downloading config"
-        git clone --depth=1 https://github.com/paperbenni/init.vim
+        git clone --depth=1 https://github.com/paperbenni/init.lua
 
-        cd init.vim || exit 1
+        cd init.lua || exit 1
         chmod +x ./*.sh
         st -e bash -c "./install.sh"
         ;;
