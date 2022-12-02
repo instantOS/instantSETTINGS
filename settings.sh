@@ -42,7 +42,6 @@ asksetting() {
     menu ':b 朗Printing'
     menu ':r Storage'
     menu ':y Advanced'
-    menu ':y Dotfiles'
     menu ':r Close Settings'
     SIDEBARSEARCH="${SIDEBARSEARCH:-SEARCH ALL}"
     export SIDEBARINDEX=0
@@ -1543,10 +1542,6 @@ while [ -n "$LOOPSETTING" ]; do
         ;;
     *Bluetooth)
         bluetoothsettings
-        ;;
-    *Dotfiles)
-        [ -e ~/.instantrc ] || instantdotfiles
-        instantutils open editor ~/.instantrc
         ;;
     *Power)
         xfce4-power-manager-settings &
