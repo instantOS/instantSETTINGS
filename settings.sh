@@ -1092,18 +1092,7 @@ This will override any neovim configurations done previously" | imenu -C; then
         instantossettings
         ;;
     *icons)
-        toggleiconf desktopicons "show desktop icons?"
-        if iconf -i desktopicons; then
-            iconf -i desktop 1
-            pgrep ROX || rox --pinboard Default &
-        else
-            iconf -i desktop 0
-            {
-                pgrep ROX && pkill ROX
-                sleep 0.5
-                instantwallpaper
-            } &
-        fi
+        desktopiconsettings
         instantossettings
         ;;
     *screen)
@@ -1177,6 +1166,21 @@ storagesettings() {
         LOOPSETTING="True"
         ;;
     esac
+}
+
+desktopiconsettings() {
+        toggleiconf desktopicons "show desktop icons?"
+        if iconf -i desktopicons; then
+            iconf -i desktop 1
+            pgrep ROX || rox --pinboard Default &
+        else
+            iconf -i desktop 0
+            {
+                pgrep ROX && pkill ROX
+                sleep 0.5
+                instantwallpaper
+            } &
+        fi
 }
 
 bluetoothsettings() {
