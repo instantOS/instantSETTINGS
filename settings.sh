@@ -80,7 +80,7 @@ searchall() {
         declare -p allsettings >"$CFG_CACHE" 2>/dev/null
     fi
     export SIDEBARINDEX=0
-    CHOICE=`printf '%s\n' "${!allsettings[@]}" | sidebar`
+    CHOICE=$(printf '%s\n' "${!allsettings[@]}" | sidebar)
     unset SIDEBARINDEX
     if [ -z "$CHOICE" ]; then
         LOOPSETTING=true
@@ -341,6 +341,10 @@ selectlockscreen() {
     selectdefault lockscreen "Lock Screen"
 }
 
+getmimetypes() {
+    grep -o '^[^=]*' /usr/share/applications/mimeinfo.cache | sort -u
+}
+
 mimesettings() {
 
     FIRSTCHOICE="$(
@@ -354,7 +358,7 @@ mimesettings() {
 
     if [ "$FIRSTCHOICE" = ":b Show all" ]; then
         echo 'editing manual mime options'
-        MIMETYPES="$(grep -o '^[^=]*' /usr/share/applications/mimeinfo.cache | sort -u)"
+        MIMETYPES="$(getmimetypes)"
         MIMECHOICE="$(
             echo "$MIMETYPES" | sidebar
         )"
@@ -924,8 +928,7 @@ instantossettings() {
             else
                 echo "# instantOS autostart script
 # This script gets executed when $(whoami) logs in
-# Add & (a literal) ampersand to the end of a line to make it run in the background" > \
-                    ~/.config/instantos/autostart.sh
+# Add & (a literal) ampersand to the end of a line to make it run in the background" >~/.config/instantos/autostart.sh
             fi
         fi
         instantutils open editor ~/.config/instantos/autostart.sh &
@@ -934,14 +937,13 @@ instantossettings() {
         if ! [ -e ~/.instantsession ]; then
             echo "# instantOS Session Environment Script
 # This script gets sourced when $(whoami) logs in
-# Add environment variables that should be available to all processes executed from your desktop session." > \
-                ~/.instantsession
+# Add environment variables that should be available to all processes executed from your desktop session." >~/.instantsession
         fi
         instantutils open editor ~/.instantsession &
         ;;
     *Applications)
         lxsession-edit
-        ;;        
+        ;;
     *bar)
         toggleiconf nostatus "enable default status text?" i
         if iconf -i nostatus; then
@@ -1168,19 +1170,39 @@ storagesettings() {
     esac
 }
 
+# rox by default doesn't use xdg to open files
+# this configures all mime categories to use xdg-open
+configurerox() {
+    ROXPATH="$HOME/.config/rox.sourceforge.net/MIME-types"
+    [ -e "$ROXPATH" ] || mkdir -p "$ROXPATH"
+    getmimetypes | grep -o '^[^/]*' |
+        uniq | grep -v '^\[' |
+        while read -r LINE; do
+            if ! [ -e "$ROXPATH/$LINE" ]; then
+                echo '#! /bin/sh
+exec xdg-open "$@"' >"$ROXPATH/$LINE"
+                chmod 755 "$ROXPATH/$LINE"
+            fi
+        done
+}
+
 desktopiconsettings() {
-        toggleiconf desktopicons "show desktop icons?"
-        if iconf -i desktopicons; then
-            iconf -i desktop 1
-            pgrep ROX || rox --pinboard Default &
-        else
-            iconf -i desktop 0
-            {
-                pgrep ROX && pkill ROX
-                sleep 0.5
-                instantwallpaper
-            } &
-        fi
+    toggleiconf desktopicons "show desktop icons?"
+    if iconf -i desktopicons; then
+        iconf -i desktop 1
+        pgrep ROX || rox --pinboard Default &
+        {
+            sleep 2
+            configurerox
+        } &
+    else
+        iconf -i desktop 0
+        {
+            pgrep ROX && pkill ROX
+            sleep 0.5
+            instantwallpaper
+        } &
+    fi
 }
 
 bluetoothsettings() {
@@ -1252,9 +1274,9 @@ usersettings() {
         while :; do
             # using variables to store plaintext passwords isn't amazingly secure,
             # so we will 'mitigate' the problem by unsetting them afterward
-            ! $PASSWORD_NO_MATCH \
-            && NEW_PASSWORD="$(imenu -P 'new password')" \
-            || NEW_PASSWORD="$(imenu -P 'try again')"
+            ! $PASSWORD_NO_MATCH &&
+                NEW_PASSWORD="$(imenu -P 'new password')" ||
+                NEW_PASSWORD="$(imenu -P 'try again')"
             NEW_PASSWORD_CONFIRM="$(imenu -P 'confirm password')"
 
             instantsudo sh -c "printf '$NEW_PASSWORD\n$NEW_PASSWORD_CONFIRM' \
@@ -1262,11 +1284,12 @@ usersettings() {
 
             CODE=$?
             case $CODE in
-                0) break;;
-                10) PASSWORD_NO_MATCH=true;; # passwords didn't match
-                *)
-                    imenu -e "failed to change password; passwd exited ($CODE)"
-                    exit $CODE
+            0) break ;;
+            10) PASSWORD_NO_MATCH=true ;; # passwords didn't match
+            *)
+                imenu -e "failed to change password; passwd exited ($CODE)"
+                exit $CODE
+                ;;
             esac
         done
         unset NEW_PASSWORD NEW_PASSWORD_CONFIRM SUCCESS PASSWORD_NO_MATCH CODE
@@ -1275,13 +1298,13 @@ usersettings() {
     *Create*)
         USER_TO_CREATE="$(imenu -i 'username')"
 
-        instantsudo useradd "$USER_TO_CREATE" \
-        || imenu -e "failed to create user: useradd exited ($CODE)"
+        instantsudo useradd "$USER_TO_CREATE" ||
+            imenu -e "failed to create user: useradd exited ($CODE)"
 
         printf "created user '$USER_TO_CREATE'\n\
-make sure to change its password!" \
-        | imenu -M
-        
+make sure to change its password!" |
+            imenu -M
+
         unset USER_TO_CREATE
         usersettings
         ;;
@@ -1292,21 +1315,21 @@ make sure to change its password!" \
 This cannot be undone."
 
         CODE=$?
-        if [ $CODE = 0 ]; then 
+        if [ $CODE = 0 ]; then
             instantsudo userdel "$USER_TO_DELETE"
 
         else
             imenu -e "failed to delete user: userdel exited ($CODE)"
             exit $CODE
         fi
-        
+
         unset USER_TO_DELETE
         usersettings
         ;;
     *)
         LOOPSETTING="True"
         ;;
-    
+
     esac
 }
 
