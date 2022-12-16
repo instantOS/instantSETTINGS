@@ -1190,11 +1190,14 @@ desktopiconsettings() {
     toggleiconf desktopicons "show desktop icons?"
     if iconf -i desktopicons; then
         iconf -i desktop 1
-        pgrep ROX || rox --pinboard Default &
-        {
-            sleep 2
-            configurerox
-        } &
+        if ! pgrep ROX; then
+            rox --pinboard Default &
+            {
+                sleep 4
+                configurerox
+                instantwallpaper restore
+            } &
+        fi
     else
         iconf -i desktop 0
         {
