@@ -5,3 +5,4 @@ y alacritty:alacritty
 b kitty:kitty
 b lxterminal:lxterminal
 y Gnome terminal:gnome-terminal
+y Terminator:terminator
