@@ -648,6 +648,7 @@ coloredwallsettings() {
 
 networksettings() {
     menu '>>h Network settings'
+    menu ':b Edit connections'
     menu ':b Start network applet'
     menu ':g Autostart network applet'
     menu ':b IP info'
@@ -656,6 +657,10 @@ networksettings() {
 
     CHOICE="$(meta networksettings menu | sidebar)"
     case "$CHOICE" in
+    *connections*)
+        nm-connection-editor
+        exit 
+        ;;
     *Autostart*)
         toggleiconf wifiapplet "Show network applet on startup?"
         if iconf -i wifiapplet; then
@@ -669,6 +674,7 @@ networksettings() {
     *Start*)
         pgrep nm-applet || nm-applet &
         ;;
+
     *info)
 
         getlocalip() {
@@ -1226,7 +1232,10 @@ Try regardless?' | imenu -C; then
         fi
     fi
 
-    instantinstall pulseaudio-bluetooth || exit 1
+    if ! pacman -Qs pipewire-pulse
+    then
+        instantinstall pulseaudio-bluetooth || exit 1
+    fi
     instantinstall blueman || exit 1
 
     if ! systemctl is-active --quiet bluetooth; then
