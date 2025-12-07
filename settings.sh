@@ -1083,9 +1083,9 @@ This will override any neovim configurations done previously" | imenu -C; then
         toggleiconf noanimations "enable animations?" i
 
         if iconf -i noanimations; then
-            instantwmctrl animated 1
+            instantwmctl animated 1
         else
-            instantwmctrl animated 3
+            instantwmctl animated 3
         fi
 
         instantossettings
@@ -1111,13 +1111,13 @@ This will override any neovim configurations done previously" | imenu -C; then
         toggleiconf alttab "use graphical alttab menu?"
 
         if iconf -i alttab; then
-            instantwmctrl alttab 3
+            instantwmctl alttab 3
             sleep 0.5
             instantutils alttab
         else
             pkill alttab
             sleep 0.5
-            instantwmctrl alttab 1
+            instantwmctl alttab 1
         fi
 
         instantinstall alttab || exit 1
