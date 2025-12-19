@@ -34,7 +34,6 @@ asksetting() {
     menu ':b Keyboard'
     menu ':b Mouse'
     menu ':b Default applications'
-    menu ':g Power'
     menu ':b Users'
     menu ':b Language'
     menu ':g Time and date'
@@ -1574,9 +1573,6 @@ while [ -n "$LOOPSETTING" ]; do
         ;;
     *Bluetooth)
         bluetoothsettings
-        ;;
-    *Power)
-        xfce4-power-manager-settings &
         ;;
     *Users)
         usersettings
