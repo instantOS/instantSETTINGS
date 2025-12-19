@@ -1232,10 +1232,7 @@ Try regardless?' | imenu -C; then
         fi
     fi
 
-    if ! pacman -Qs pipewire-pulse
-    then
-        instantinstall pulseaudio-bluetooth || exit 1
-    fi
+    instantinstall pipewire-pulse || exit 1
     instantinstall blueman || exit 1
 
     if ! systemctl is-active --quiet bluetooth; then
@@ -1418,7 +1415,6 @@ appearancesettings() {
     menu ':b Enable compositing'
     menu ':b 並V-Sync'
     menu ':b Blur'
-    menu ':b Autotheming'
     menu ':b Back'
 
     CHOICE="$(meta appearancesettings menu | sidebar)"
@@ -1440,10 +1436,6 @@ appearancesettings() {
         else
             pgrep picom || ipicom
         fi
-        appearancesettings
-        ;;
-    *Autotheming)
-        toggleiconf notheming "enable instantOS theming? (disable for custom gtk themes)?" i
         appearancesettings
         ;;
     *V-Sync)
