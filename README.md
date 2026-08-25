@@ -4,6 +4,9 @@
     <img width="300" height="300" src="https://raw.githubusercontent.com/instantOS/instantLOGO/master/png/settings.png">
 </div>
 
+> **Archived:** settings are now handled by `ins settings` in
+> [instantCLI](https://github.com/instantOS/instantCLI).
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/instantOS/instantLOGO/master/screeenshots/settings.png">
 </p>
